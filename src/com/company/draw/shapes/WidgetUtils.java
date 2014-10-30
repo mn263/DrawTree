@@ -9,10 +9,23 @@ import java.util.*;
 public class WidgetUtils {
 
 	private static SwingTree swingTree;
-	public enum MouseStatus { UP, PRESSED}
-	public static MouseStatus mouseStatus = MouseStatus.UP;
+	public static boolean sliderBeingUsed;
 
+	public enum MouseStatus {RELEASED, PRESSED}
 	public static enum mouseType { UP, DOWN, MOVE }
+	private static MouseStatus mouseStatus = MouseStatus.RELEASED;
+
+
+	public static MouseStatus getMouseStatus() {
+		return mouseStatus;
+	}
+
+	public static void setMouseStatus(MouseStatus mouseStatus) {
+		WidgetUtils.mouseStatus = mouseStatus;
+		if (mouseStatus == MouseStatus.RELEASED) {
+			sliderBeingUsed = false;
+		}
+	}
 
 	public static void setSwingTree(SwingTree swingTree) {
 		WidgetUtils.swingTree = swingTree;

@@ -58,7 +58,7 @@ public class Button extends SOReflect implements Drawable, Interactable {
 			this.state = "idle";
 			changeState(this.idle, mouseType);
 		} else {
-			if (WidgetUtils.mouseStatus == MouseStatus.PRESSED) {
+			if (WidgetUtils.getMouseStatus() == MouseStatus.PRESSED) {
 				this.state = "active";
 				changeState(this.active, mouseType);
 			} else {

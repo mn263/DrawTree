@@ -1,15 +1,15 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.Point;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
 
-import static com.company.draw.shapes.WidgetUtils.handleMouse;
-import static com.company.draw.shapes.WidgetUtils.mouseStatus;
-import static com.company.draw.shapes.WidgetUtils.mouseType.UP;
+import static com.company.draw.shapes.WidgetUtils.*;
+import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
 public class ScrollV extends SOReflect implements Drawable, Interactable {
 
@@ -22,6 +22,7 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 	public double max;
 	public double min;
 	public double step;
+	private Point sliderLast;
 
 	@Override
 	public Root getPanel() {
@@ -40,7 +41,13 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
+		if (WidgetUtils.sliderBeingUsed) {
+			moveSlider(x, y);
+			return true;
+		} else {
+			sliderLast = null;
+			return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
+		}
 	}
 
 	@Override
@@ -58,7 +65,7 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 			this.state = "idle";
 			changeState(this.idle, x, y, myTransform, mouseType);
 		} else {
-			if (mouseStatus == WidgetUtils.MouseStatus.PRESSED) {
+			if (WidgetUtils.getMouseStatus() == WidgetUtils.MouseStatus.PRESSED) {
 				this.state = "active";
 				changeState(this.active, x, y, myTransform, mouseType);
 			} else {
@@ -73,37 +80,59 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			Selectable selectable = (Selectable) so;
-//			UPDATE THE COLOR
+			//UPDATE THE COLOR
 			if (so.get("class") != null && "\"active\"".equals(so.get("class").toString())) {
 				selectable.setBackgroundColor(newState);
 			}
-			if (mouseType == UP) {
-//				MOVE SCROLL BAR IF "UP" IS PRESSED
+			if (mouseType == UP) { //MOVE SCROLL BAR IF "RELEASED" IS PRESSED
 				if (so.get("class") != null && "\"up\"".equals(so.get("class").toString())) {
 					if (selectable.select(x, y, 0, myTransform) != null) {
-						moveBar(-step, contents);
+						moveBar(-step);
 					}
-				}
-//				MOVE SCROLL BAR IF "DOWN" IS PRESSED
+				} //MOVE SCROLL BAR IF "DOWN" IS PRESSED
 				if (so.get("class") != null && "\"down\"".equals(so.get("class").toString())) {
 					if (selectable.select(x, y, 0, myTransform) != null) {
-						moveBar(step, contents);
+						moveBar(step);
 					}
 				}
-//				MOVE SCROLL BAR IF "SLIDER" IS PRESSED
+			}
+			if (mouseType == DOWN) {
+			//MOVE SCROLL BAR IF "SLIDER" IS PRESSED
 				if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
-					throw new NotImplementedException();
+					if (selectable.select(x, y, 0, myTransform) != null) {
+						this.sliderLast = new Point(x, y);
+						WidgetUtils.sliderBeingUsed = true;
+					}
 				}
 			}
 		}
 	}
 
-	private void moveBar(double step, SA contents) {
+	private void moveBar(double step) {
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
 				Rect slide = (Rect) so;
 				double newValue = slide.top + step;
+				if (newValue < min) {
+					slide.setTop(min);
+				} else if (newValue > max) {
+					slide.setTop(max);
+				} else {
+					slide.setTop(newValue);
+				}
+			}
+		}
+	}
+
+	private void moveSlider(double x, double y) {
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				Rect slide = (Rect) so;
+				double diff = y - sliderLast.getY();
+				sliderLast = new Point(x, y);
+				double newValue = slide.top + diff;
 				if (newValue < min) {
 					slide.setTop(min);
 				} else if (newValue > max) {

@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.draw.shapes.*;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -18,11 +20,13 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-        SwingTree.mousePressed(e);
+		WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.PRESSED);
+		SwingTree.mousePressed(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.RELEASED);
         SwingTree.mouseReleased(e);
 	}
 
