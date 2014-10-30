@@ -11,8 +11,8 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import static com.company.draw.shapes.StaticUtils.getTransform;
-import static com.company.draw.shapes.StaticUtils.handleMouse;
+import static com.company.draw.shapes.WidgetUtils.getTransform;
+import static com.company.draw.shapes.WidgetUtils.handleMouse;
 
 public class Group extends SOReflect implements Drawable, Selectable, Interactable {
 
@@ -106,20 +106,20 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(StaticUtils.mouseType.DOWN, x, y, myTransform);
+		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(StaticUtils.mouseType.MOVE, x, y, myTransform);
+		return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(StaticUtils.mouseType.UP, x, y, myTransform);
+		return callHandleMouse(WidgetUtils.mouseType.UP, x, y, myTransform);
 	}
 
-	private boolean callHandleMouse(StaticUtils.mouseType mouseType, double x, double y, AffineTransform oldTrans) {
+	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform oldTrans) {
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		newTransform.concatenate(oldTrans);

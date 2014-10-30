@@ -6,7 +6,7 @@ import spark.data.*;
 import java.awt.geom.*;
 import java.util.*;
 
-public class StaticUtils {
+public class WidgetUtils {
 
 	private static SwingTree swingTree;
 	public enum MouseStatus { UP, PRESSED}
@@ -15,7 +15,7 @@ public class StaticUtils {
 	public static enum mouseType { UP, DOWN, MOVE }
 
 	public static void setSwingTree(SwingTree swingTree) {
-		StaticUtils.swingTree = swingTree;
+		WidgetUtils.swingTree = swingTree;
 	}
 
 	public static void repaintAll() {
@@ -46,11 +46,11 @@ public class StaticUtils {
 			} else if (so instanceof Interactable) {
 				Interactable interactable = (Interactable) so;
 				boolean wasHandled = false;
-				if (mouseType == StaticUtils.mouseType.UP) {
+				if (mouseType == WidgetUtils.mouseType.UP) {
 					wasHandled = interactable.mouseUp(x, y, myTransform);
-				} else if (mouseType == StaticUtils.mouseType.DOWN) {
+				} else if (mouseType == WidgetUtils.mouseType.DOWN) {
 					wasHandled = interactable.mouseDown(x, y, myTransform);
-				} else if (mouseType == StaticUtils.mouseType.MOVE) {
+				} else if (mouseType == WidgetUtils.mouseType.MOVE) {
 					wasHandled = interactable.mouseMove(x, y, myTransform);
 				} else {
 					try {

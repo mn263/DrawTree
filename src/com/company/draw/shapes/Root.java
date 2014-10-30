@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import static com.company.draw.shapes.StaticUtils.*;
+import static com.company.draw.shapes.WidgetUtils.*;
 
 public class Root extends SOReflect implements Interactable, Drawable {
 
@@ -77,7 +77,7 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	}
 
 
-	private boolean callHandleMouse(StaticUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
+	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		newTransform.concatenate(myTransform);
 		return handleMouse(contents, x, y, newTransform, mouseType);
@@ -85,7 +85,7 @@ public class Root extends SOReflect implements Interactable, Drawable {
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(StaticUtils.mouseType.DOWN, x, y, myTransform);
+		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override

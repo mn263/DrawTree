@@ -7,8 +7,8 @@ import sun.reflect.generics.reflectiveObjects.*;
 import java.awt.*;
 import java.awt.geom.*;
 
-import static com.company.draw.shapes.StaticUtils.*;
-import static com.company.draw.shapes.StaticUtils.mouseType.*;
+import static com.company.draw.shapes.WidgetUtils.*;
+import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
 public class Button extends SOReflect implements Drawable, Interactable {
 
@@ -45,20 +45,20 @@ public class Button extends SOReflect implements Drawable, Interactable {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		if (this.state.equals("active")) {
-			StaticUtils.activeBtnSelected(this.model, this.value);
+			WidgetUtils.activeBtnSelected(this.model, this.value);
 		}
 
 		return callHandleMouse(UP, x, y, myTransform);
 	}
 
 
-	private boolean callHandleMouse(StaticUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
+	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
 			changeState(this.idle, mouseType);
 		} else {
-			if (StaticUtils.mouseStatus == MouseStatus.PRESSED) {
+			if (WidgetUtils.mouseStatus == MouseStatus.PRESSED) {
 				this.state = "active";
 				changeState(this.active, mouseType);
 			} else {
@@ -69,7 +69,7 @@ public class Button extends SOReflect implements Drawable, Interactable {
 		return isHandled;
 	}
 
-	public void changeState(SO newState, StaticUtils.mouseType mouseType) {
+	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			Selectable selectable = (Selectable) so;

@@ -7,9 +7,9 @@ import sun.reflect.generics.reflectiveObjects.*;
 import java.awt.*;
 import java.awt.geom.*;
 
-import static com.company.draw.shapes.StaticUtils.handleMouse;
-import static com.company.draw.shapes.StaticUtils.mouseStatus;
-import static com.company.draw.shapes.StaticUtils.mouseType.UP;
+import static com.company.draw.shapes.WidgetUtils.handleMouse;
+import static com.company.draw.shapes.WidgetUtils.mouseStatus;
+import static com.company.draw.shapes.WidgetUtils.mouseType.UP;
 
 public class ScrollV extends SOReflect implements Drawable, Interactable {
 
@@ -35,12 +35,12 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(StaticUtils.mouseType.DOWN, x, y, myTransform);
+		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(StaticUtils.mouseType.MOVE, x, y, myTransform);
+		return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
 	}
 
 	@Override
@@ -52,13 +52,13 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 	}
 
 
-	private boolean callHandleMouse(StaticUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
+	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
 			changeState(this.idle, x, y, myTransform, mouseType);
 		} else {
-			if (mouseStatus == StaticUtils.MouseStatus.PRESSED) {
+			if (mouseStatus == WidgetUtils.MouseStatus.PRESSED) {
 				this.state = "active";
 				changeState(this.active, x, y, myTransform, mouseType);
 			} else {
@@ -69,7 +69,7 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 		return isHandled;
 	}
 
-	public void changeState(SO newState, double x, double y, AffineTransform myTransform, StaticUtils.mouseType mouseType) {
+	public void changeState(SO newState, double x, double y, AffineTransform myTransform, WidgetUtils.mouseType mouseType) {
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			Selectable selectable = (Selectable) so;
