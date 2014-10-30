@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
+import static com.company.draw.shapes.StaticUtils.getTransform;
+import static com.company.draw.shapes.StaticUtils.handleMouse;
+
 public class Group extends SOReflect implements Drawable, Selectable, Interactable {
 
 	public SA contents;
@@ -84,12 +87,6 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	@Override
 	public Point2D[] controls() {
 		throw new UnsupportedOperationException("This method is not implemented");
-//		return new Point2D[0];
-	}
-
-	@Override
-	public String getClassStatus() {
-		throw new NotImplementedException();
 	}
 
 	@Override
@@ -109,37 +106,23 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Interactable interactable = (Interactable) so;
-			if (interactable.mouseDown(x, y, myTransform)) {
-				return true;
-			}
-		}
-		return false;
+		return callHandleMouse(StaticUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Interactable interactable = (Interactable) so;
-			if(interactable.mouseMove(x, y, myTransform)) {
-				return true;
-			}
-		}
-		return false;
+		return callHandleMouse(StaticUtils.mouseType.MOVE, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Interactable interactable = (Interactable) so;
-			if(interactable.mouseUp(x, y, myTransform)) {
-				return true;
-			}
-		}
-		return false;
+		return callHandleMouse(StaticUtils.mouseType.UP, x, y, myTransform);
+	}
+
+	private boolean callHandleMouse(StaticUtils.mouseType mouseType, double x, double y, AffineTransform oldTrans) {
+		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
+		// Add on old transform
+		newTransform.concatenate(oldTrans);
+		return handleMouse(contents, x, y, oldTrans, mouseType);
 	}
 }

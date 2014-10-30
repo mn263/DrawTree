@@ -84,11 +84,6 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	}
 
 	@Override
-	public String getClassStatus() {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	public void setBackgroundColor(SO newColor) {
 		throw new NotImplementedException();
 	}

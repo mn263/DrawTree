@@ -18,7 +18,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-//		Controller.inst().mousePressedHandler(e);
+        SwingTree.mousePressed(e);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-//        throw new UnsupportedOperationException("This method is not implemented");
+        SwingTree.mouseMoved(e);
 	}
 
 	@Override
@@ -38,11 +38,11 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-//		Controller.inst().mouseDraggedHandler(e);
+        SwingTree.mouseDragged(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-//        throw new UnsupportedOperationException("This method is not implemented");
+        SwingTree.mouseMoved(e);
 	}
 }

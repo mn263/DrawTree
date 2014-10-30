@@ -12,7 +12,6 @@ import java.util.*;
 
 public class Ellipse extends SOReflect implements Drawable, Selectable, Interactable {
 
-//	public String _class;
 	public double left;
 	public double top;
 	public double width;
@@ -87,11 +86,6 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 		retArray[2] = new Point(this.left, this.top + this.height);
 		retArray[3] = new Point(this.left + this.width, this.top + this.height);
 		return retArray;
-	}
-
-	@Override
-	public String getClassStatus() {
-		throw new NotImplementedException();
 	}
 
 	@Override

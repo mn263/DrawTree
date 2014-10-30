@@ -1,6 +1,7 @@
 package com.company;
 
 
+import com.company.draw.shapes.*;
 import spark.data.*;
 import spark.data.io.*;
 
@@ -9,11 +10,13 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.*;
 import java.io.*;
 
 public class SwingTree extends JFrame {
 
 	public static TreePanel treePanel = new TreePanel(new Mouse());
+	public static Root root = null;
 
 	public SwingTree() {
 //		Make Menu and MenuBar
@@ -59,6 +62,9 @@ public class SwingTree extends JFrame {
 					SO object = sv.getSO();
 					Drawable drawable = (Drawable) object;
 					treePanel.addDrawable(drawable);
+					if (object.getClass().toString().equals("class com.company.draw.shapes.Root") && root == null) {
+						root = (Root) object;
+					}
 					swingTree.getContentPane().repaint();
 				}
 			}
@@ -73,7 +79,6 @@ public class SwingTree extends JFrame {
 			String sCurrentLine;
 			br = new BufferedReader(new FileReader(filePath));
 			while ((sCurrentLine = br.readLine()) != null) {
-				System.out.println(sCurrentLine);
 				returnString += sCurrentLine;
 			}
 		} catch (IOException e) {
@@ -101,6 +106,18 @@ public class SwingTree extends JFrame {
 
 	public static void mouseReleased(MouseEvent e) {
 		treePanel.checkMouseEvent(e);
+		root.mouseUp(e.getX(), e.getY(), new AffineTransform());
 	}
 
+	public static void mousePressed(MouseEvent e) {
+//		treePanel.checkMouseEvent(e);
+	}
+
+	public static void mouseMoved(MouseEvent e) {
+//		treePanel.checkMouseEvent(e);
+	}
+
+	public static void mouseDragged(MouseEvent e) {
+//		treePanel.checkMouseEvent(e);
+	}
 }

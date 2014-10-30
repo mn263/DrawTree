@@ -7,6 +7,8 @@ import sun.reflect.generics.reflectiveObjects.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+import static com.company.draw.shapes.StaticUtils.*;
+
 public class Root extends SOReflect implements Interactable, Drawable {
 
 	public SV model;
@@ -17,12 +19,6 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	public double rotate;
 	public double tx;
 	public double ty;
-
-
-	public Root() {}
-	public Root(SV model) {
-		this.model = model;
-	}
 
 	public Interactable focus = null;
 
@@ -67,20 +63,31 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	}
 
 
+	private boolean callHandleMouse(StaticUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
+		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
+		newTransform.concatenate(myTransform);
+		return handleMouse(contents, x, y, newTransform, mouseType);
+	}
+
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		throw new NotImplementedException();
+		return callHandleMouse(StaticUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		throw new NotImplementedException();
+		return callHandleMouse(mouseType.MOVE, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		System.out.println(this.model);
-		throw new NotImplementedException();
+		SO modelObjects = this.model.getSO();
+		String[] modelAttrs = modelObjects.attributes();
+		for (String attr : modelAttrs) {
+			System.out.println(attr + " -> " + modelObjects.get(attr));
+		}
+
+		return callHandleMouse(mouseType.UP, x, y, myTransform);
 	}
 
 	@Override

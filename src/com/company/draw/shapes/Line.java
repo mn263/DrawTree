@@ -63,11 +63,6 @@ public class Line extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	@Override
-	public String getClassStatus() {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	public void setBackgroundColor(SO newColor) {
 		throw new NotImplementedException();
 	}

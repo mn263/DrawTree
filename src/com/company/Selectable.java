@@ -25,7 +25,5 @@ public interface Selectable {
 	 */
 	public Point2D[] controls();
 
-	public String getClassStatus();
-
 	public void setBackgroundColor(SO newColor);
 }

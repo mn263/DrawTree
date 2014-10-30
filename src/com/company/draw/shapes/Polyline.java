@@ -90,11 +90,6 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 	}
 
 	@Override
-	public String getClassStatus() {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	public void setBackgroundColor(SO newColor) {
 		throw new NotImplementedException();
 	}
