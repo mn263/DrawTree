@@ -9,6 +9,9 @@ import java.util.*;
 public class StaticUtils {
 
 	private static SwingTree swingTree;
+	public enum MouseStatus { UP, PRESSED}
+	public static MouseStatus mouseStatus = MouseStatus.UP;
+
 	public static enum mouseType { UP, DOWN, MOVE }
 
 	public static void setSwingTree(SwingTree swingTree) {
@@ -16,6 +19,7 @@ public class StaticUtils {
 	}
 
 	public static void repaintAll() {
+		swingTree.repaint();
 		swingTree.getContentPane().repaint();
 	}
 

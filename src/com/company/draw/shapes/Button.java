@@ -21,8 +21,6 @@ public class Button extends SOReflect implements Drawable, Interactable {
 	public SO active;
 	public String value;
 
-	public boolean mouseIsDown = false;
-
 
 	@Override
 	public Root getPanel() {
@@ -36,7 +34,6 @@ public class Button extends SOReflect implements Drawable, Interactable {
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		mouseIsDown = true;
 		return callHandleMouse(mouseType.DOWN, x, y, myTransform);
 	}
 
@@ -51,7 +48,6 @@ public class Button extends SOReflect implements Drawable, Interactable {
 			StaticUtils.activeBtnSelected(this.model, this.value);
 		}
 
-		mouseIsDown = false;
 		return callHandleMouse(UP, x, y, myTransform);
 	}
 
@@ -62,7 +58,7 @@ public class Button extends SOReflect implements Drawable, Interactable {
 			this.state = "idle";
 			changeState(this.idle, mouseType);
 		} else {
-			if (mouseIsDown) {
+			if (StaticUtils.mouseStatus == MouseStatus.PRESSED) {
 				this.state = "active";
 				changeState(this.active, mouseType);
 			} else {

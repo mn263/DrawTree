@@ -1,6 +1,7 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.Point;
 import spark.data.SA;
 import spark.data.SO;
 import spark.data.SOReflect;
@@ -23,16 +24,8 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 //		Make point arrays
-		int[] xArray = new int[points.size()];
-		int[] yArray = new int[points.size()];
-		for (int i = 0; i < points.size(); i++) {
-			SV xPoint = points.get(i).get("x");
-			SV yPoint = points.get(i).get("y");
-			Long x = xPoint.getLong();
-			Long y = yPoint.getLong();
-			xArray[i] = x.intValue();
-			yArray[i] = y.intValue();
-		}
+		int[] xArray = getPoints("X");
+		int[] yArray = getPoints("Y");
 
 		if (thickness > 0) {
 			Stroke stroke = new BasicStroke((int) thickness);
@@ -63,6 +56,36 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		g2.fillPolygon(xArray, yArray, points.size());
 	}
 
+	private ArrayList<Point> getPoints() {
+		int[] xArray = getPoints("X");
+		int[] yArray = getPoints("Y");
+
+		ArrayList<Point> points = new ArrayList<Point>();
+		for (int i = 0; i < xArray.length; i++) {
+			Point point = new Point(xArray[i], yArray[i]);
+			points.add(point);
+		}
+		return points;
+	}
+
+	private int[] getPoints(String coord) {
+		int[] xArray = new int[points.size()];
+		int[] yArray = new int[points.size()];
+		for (int i = 0; i < points.size(); i++) {
+			SV xPoint = points.get(i).get("x");
+			SV yPoint = points.get(i).get("y");
+			Long x = xPoint.getLong();
+			Long y = yPoint.getLong();
+			xArray[i] = x.intValue();
+			yArray[i] = y.intValue();
+		}
+		if (coord.equals("X")) {
+			return xArray;
+		} else {
+			return yArray;
+		}
+	}
+
 	/**
 	 * takes a point and if the object or its contents are selected then it returns a path to the selected object, not in the transformed coordinates
 	 * @param x in the coordinates of your panel
@@ -73,7 +96,17 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	 */
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
-		// TODO: implement when we are asked to
+		ArrayList<Point> points = getPoints();
+		int i;
+		int j;
+		boolean result = false;
+		for (i = 0, j = points.size() - 1; i < points.size(); j = i++) {
+			if ((points.get(i).getY() > y) != (points.get(j).getY() > y) &&
+					(x < (points.get(j).getX() - points.get(i).getX()) * (y - points.get(i).getY()) /
+							(points.get(j).getY() - points.get(i).getY()) + points.get(i).getX())) {
+				return new ArrayList<Integer>();
+			}
+		}
 		return null;
 	}
 
