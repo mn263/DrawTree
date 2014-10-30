@@ -6,6 +6,7 @@ import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.*;
 
 import static com.company.draw.shapes.StaticUtils.*;
 
@@ -32,6 +33,19 @@ public class Root extends SOReflect implements Interactable, Drawable {
 
 	public void releaseKeyFocus() { // Sets the key focus to null.
 		this.focus = null;
+	}
+
+	public void updateModel(SO modelObjects, ArrayList<String> path, String value) {
+		if (modelObjects == null) {
+			modelObjects = this.model.getSO();
+		}
+		if (path.size() == 1) {
+			modelObjects.set(path.get(0), value);
+			return;
+		}
+		modelObjects = modelObjects.get(path.get(0)).getSO();
+		path.remove(0);
+		updateModel(modelObjects, path, value);
 	}
 
 	@Override
@@ -81,13 +95,15 @@ public class Root extends SOReflect implements Interactable, Drawable {
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
+		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
+
 		SO modelObjects = this.model.getSO();
 		String[] modelAttrs = modelObjects.attributes();
 		for (String attr : modelAttrs) {
 			System.out.println(attr + " -> " + modelObjects.get(attr));
 		}
 
-		return callHandleMouse(mouseType.UP, x, y, myTransform);
+		return handeled;
 	}
 
 	@Override

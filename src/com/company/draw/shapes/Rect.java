@@ -90,7 +90,7 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public void setBackgroundColor(SO newColor) {
-		throw new NotImplementedException();
+		this.fill = newColor;
 	}
 
 	@Override

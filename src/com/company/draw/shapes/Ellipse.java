@@ -90,7 +90,7 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 
 	@Override
 	public void setBackgroundColor(SO newColor) {
-		throw new NotImplementedException();
+		this.fill = newColor;
 	}
 
 	@Override

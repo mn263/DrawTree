@@ -36,6 +36,7 @@ public class SwingTree extends JFrame {
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		StaticUtils.setSwingTree(this);
 	}
 
 	public JMenuItem getOpenOption(final SwingTree swingTree) {
@@ -103,21 +104,35 @@ public class SwingTree extends JFrame {
 		});
 	}
 
+	public static Root getRoot() {
+		return root;
+	}
 
 	public static void mouseReleased(MouseEvent e) {
-		treePanel.checkMouseEvent(e);
-		root.mouseUp(e.getX(), e.getY(), new AffineTransform());
+		if (root != null) {
+			root.mouseUp(e.getX(), e.getY(), new AffineTransform());
+			StaticUtils.repaintAll();
+		}
 	}
 
 	public static void mousePressed(MouseEvent e) {
-//		treePanel.checkMouseEvent(e);
+		if (root != null) {
+			root.mouseDown(e.getX(), e.getY(), new AffineTransform());
+			StaticUtils.repaintAll();
+		}
 	}
 
 	public static void mouseMoved(MouseEvent e) {
-//		treePanel.checkMouseEvent(e);
+		if (root != null) {
+		root.mouseMove(e.getX(), e.getY(), new AffineTransform());
+		StaticUtils.repaintAll();
+		}
 	}
 
 	public static void mouseDragged(MouseEvent e) {
-//		treePanel.checkMouseEvent(e);
+		if (root != null) {
+		root.mouseMove(e.getX(), e.getY(), new AffineTransform());
+		StaticUtils.repaintAll();
+		}
 	}
 }

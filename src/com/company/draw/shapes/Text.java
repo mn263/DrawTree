@@ -21,6 +21,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public void paint(Graphics g) {
+		g.setColor(Color.white);
 		Font gFont = new Font(font, Font.PLAIN, (int) size);
 		g.setFont(gFont);
 		if (text != null) {
@@ -63,21 +64,21 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public boolean key(char key) {
-		throw new NotImplementedException();
+		return false;
 	}
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		throw new NotImplementedException();
+		return false;
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		throw new NotImplementedException();
+		return false;
 	}
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		throw new NotImplementedException();
+		return false;
 	}
 }

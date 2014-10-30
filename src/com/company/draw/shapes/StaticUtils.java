@@ -4,17 +4,28 @@ import com.company.*;
 import spark.data.*;
 
 import java.awt.geom.*;
+import java.util.*;
 
 public class StaticUtils {
 
-	public static Root root;
+	private static SwingTree swingTree;
 	public static enum mouseType { UP, DOWN, MOVE }
+
+	public static void setSwingTree(SwingTree swingTree) {
+		StaticUtils.swingTree = swingTree;
+	}
+
+	public static void repaintAll() {
+		swingTree.getContentPane().repaint();
+	}
 
 	public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
 		transform.rotate(-Math.toRadians(rotate));
-		transform.scale(1 / sx, 1 / sy);
+		if (sx != 0 && sy != 0) {
+			transform.scale(1 / sx, 1 / sy);
+		}
 		return transform;
 	}
 
@@ -23,30 +34,40 @@ public class StaticUtils {
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
-			Interactable interactable = (Interactable) so;
-			boolean wasHandled = false;
-			if (mouseType == StaticUtils.mouseType.UP) {
-				wasHandled = interactable.mouseUp(x, y, myTransform);
-			} else if (mouseType == StaticUtils.mouseType.DOWN) {
-				wasHandled = interactable.mouseUp(x, y, myTransform);
-			} else if (mouseType == StaticUtils.mouseType.MOVE) {
-				wasHandled = interactable.mouseUp(x, y, myTransform);
-			} else {
-				try {
-					throw new Exception("mouse type must have been invalid");
-				} catch (Exception e) {
-					e.printStackTrace();
+			if (so instanceof Selectable) {
+				Selectable selectable = (Selectable) so;
+				if (selectable.select(x, y, 0, myTransform) != null) {
+					return true;
 				}
-			}
-			if (wasHandled) {
-				return true;
+			} else if (so instanceof Interactable) {
+				Interactable interactable = (Interactable) so;
+				boolean wasHandled = false;
+				if (mouseType == StaticUtils.mouseType.UP) {
+					wasHandled = interactable.mouseUp(x, y, myTransform);
+				} else if (mouseType == StaticUtils.mouseType.DOWN) {
+					wasHandled = interactable.mouseDown(x, y, myTransform);
+				} else if (mouseType == StaticUtils.mouseType.MOVE) {
+					wasHandled = interactable.mouseMove(x, y, myTransform);
+				} else {
+					try {
+						throw new Exception("mouse type must have been invalid");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (wasHandled) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	public static void buttonPressed(SA model) {
-		System.out.println("Here");
-//		model.get
+	public static void activeBtnSelected(SA model, String value) {
+		ArrayList<String> path = new ArrayList<String>();
+		for (int i = 0; i < model.size(); i++) {
+			path.add(model.getString(i));
+		}
+		SwingTree.root.updateModel(null, path, value);
 	}
 }
