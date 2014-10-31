@@ -49,7 +49,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
 		if (WidgetUtils.sliderBeingUsed(this)) {
-			moveSlider(y);
+			moveSlider(fromWindowCoords(y));
 			return true;
 		} else {
 			return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
@@ -63,7 +63,6 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 //		}
 		return callHandleMouse(UP, x, y, myTransform);
 	}
-
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		if (sliderLast == null) loadSliderLast();
@@ -148,7 +147,6 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 		}
 	}
 
-
 	private void setSlider(Rect slide, double value) {
 		sliderLast = new Point(0, value);
 		double slideCoords = toSliderCoords(value);
@@ -160,12 +158,12 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 		if (range == null) {
 			setRange();
 		}
-		return (value / (max - min) * range.getY());
+		return (value + range.getX()) / (max - min) * (range.getY() - range.getX());
 	}
 
 	private double fromWindowCoords(double value) {
 		if (range == null) setRange();
-		return (value - range.getX()) / range.getY() * (max - min);
+		return (value - range.getX()) / (range.getY() - range.getX()) * (max - min);
 	}
 
 	private void loadSliderLast() {
