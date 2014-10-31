@@ -24,11 +24,13 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	public double min;
 	public double step;
 	private Point sliderLast;
+	private Point range;
 
 	public ScrollV() {
 		WidgetUtils.addListener(this);
 	}
 
+//	INTERACTABLE
 	@Override
 	public Root getPanel() {
 		throw new NotImplementedException();
@@ -46,11 +48,10 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		if (WidgetUtils.sliderBeingUsed) {
+		if (WidgetUtils.sliderBeingUsed(this)) {
 			moveSlider(y);
 			return true;
 		} else {
-			sliderLast = null;
 			return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
 		}
 	}
@@ -65,10 +66,11 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
+		if (sliderLast == null) loadSliderLast();
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
-			changeState(this.idle, x, y, myTransform, mouseType);
+//			changeState(this.idle, x, y, myTransform, mouseType);
 		} else {
 			if (WidgetUtils.getMouseStatus() == WidgetUtils.MouseStatus.PRESSED) {
 				this.state = "active";
@@ -106,69 +108,95 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 				if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
 					if (selectable.select(x, y, 0, myTransform) != null) {
 						this.sliderLast = new Point(x, y);
-						WidgetUtils.sliderBeingUsed = true;
+						WidgetUtils.setSliderBeingUsed(this);
 					}
 				}
 			}
 		}
 	}
 
+// CLASS METHODS
 	private void moveBar(double step) {
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
 				Rect slide = (Rect) so;
-				double newValue = slide.top + step;
+
+				double newValue = sliderLast.getY() + step;
 				if (newValue < min) {
-					moveSlider(min);
-					sliderLast = new Point(0, min);
-					slide.setTop(min);
-					WidgetUtils.updateModel(model, String.valueOf(min));
+					setSlider(slide, min);
 				} else if (newValue > max) {
-					moveSlider(max);
-					sliderLast = new Point(0, max);
-					slide.setTop(max);
-					WidgetUtils.updateModel(model, String.valueOf(max));
+					setSlider(slide, max);
 				} else {
-					moveSlider(newValue);
-					sliderLast = new Point(0, newValue);
-					slide.setTop(newValue);
-					WidgetUtils.updateModel(model, String.valueOf(newValue));
+					setSlider(slide, newValue);
 				}
 			}
 		}
 	}
 
 	private void moveSlider(double y) {
-		if (sliderLast == null) {
-			sliderLast = new Point(0, -10000);
-		}
-		if (y == sliderLast.getY()) {
-			return; //NO NEED TO UPDATE IF IT IS THE SAME
-		}
+		if (y == sliderLast.getY()) return; //NO NEED TO UPDATE IF IT IS THE SAME
+
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
 				Rect slide = (Rect) so;
-				double diff = y - sliderLast.getY();
-				double newValue = slide.top + diff;
-				if (newValue < min) {
-					slide.setTop(min);
-					sliderLast = new Point(0, min);
-					WidgetUtils.updateModel(model, String.valueOf(min));
-				} else if (newValue > max) {
-					sliderLast = new Point(0, max);
-					slide.setTop(max);
-					WidgetUtils.updateModel(model, String.valueOf(max));
-				} else {
-					slide.setTop(newValue);
-					sliderLast = new Point(0, newValue);
-					WidgetUtils.updateModel(model, String.valueOf(newValue));
-				}
+				if (y < min) setSlider(slide, min);
+				else if (y > max) setSlider(slide, max);
+				else setSlider(slide, y);
 			}
 		}
 	}
 
+
+	private void setSlider(Rect slide, double value) {
+		sliderLast = new Point(0, value);
+		double slideCoords = toSliderCoords(value);
+		slide.setTop(slideCoords);
+		WidgetUtils.updateModel(model, String.valueOf(value));
+	}
+
+	private double toSliderCoords(double value) {
+		if (range == null) {
+			setRange();
+		}
+		return (value / (max - min) * range.getY());
+	}
+
+	private double fromWindowCoords(double value) {
+		if (range == null) setRange();
+		return (value - range.getX()) / range.getY() * (max - min);
+	}
+
+	private void loadSliderLast() {
+		double y = 0;
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				y = so.get("top").getDouble();
+			}
+		}
+		sliderLast = new Point(0, fromWindowCoords(y));
+	}
+
+	private void setRange() {
+		double rangeTip = 0;
+		double rangeHeight = 0;
+		double sliderHeight = 0;
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			if (so.get("class") != null && "\"range\"".equals(so.get("class").toString())) {
+				rangeTip = so.get("top").getDouble();
+				rangeHeight = so.get("height").getDouble();
+			}
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				sliderHeight = so.get("height").getDouble();
+			}
+		}
+		this.range = new Point(rangeTip, rangeTip + rangeHeight - sliderHeight);
+	}
+
+//	DRAWABLE
 	@Override
 	public void paint(Graphics g) {
 		int cSize = contents.size();
@@ -184,6 +212,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 		drawable.paint(g);
 	}
 
+//	MODEL LISTENER
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
 		if (modelPath.size() == model.size()) {

@@ -19,9 +19,11 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 	public SO border;
 	public SO fill;
 
-
 	public void setTop(double val) {
 		this.top = val;
+	}
+	public void setLeft(double val) {
+		this.left = val;
 	}
 
 	@Override

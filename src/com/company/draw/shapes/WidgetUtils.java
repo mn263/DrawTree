@@ -9,7 +9,7 @@ import java.util.*;
 public class WidgetUtils {
 
 	private static SwingTree swingTree;
-	public static boolean sliderBeingUsed;
+	private static ModelListener sliderBeingUsed;
 	private static ArrayList<ModelListener> modelListeners = new ArrayList<ModelListener>();
 	public enum MouseStatus {RELEASED, PRESSED}
 	public static enum mouseType { UP, DOWN, MOVE }
@@ -23,10 +23,18 @@ public class WidgetUtils {
 	public static void setMouseStatus(MouseStatus mouseStatus) {
 		WidgetUtils.mouseStatus = mouseStatus;
 		if (mouseStatus == MouseStatus.RELEASED) {
-			sliderBeingUsed = false;
+			sliderBeingUsed = null;
 		}
 	}
 
+	//	WIDGET
+	public static boolean sliderBeingUsed(ModelListener scroll) {
+		return sliderBeingUsed == scroll;
+	}
+
+	public static void setSliderBeingUsed(ModelListener scroll) {
+		sliderBeingUsed = scroll;
+	}
 
 // LISTENER
 	public static void addListener(ModelListener listener) {
