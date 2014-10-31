@@ -6,12 +6,11 @@ import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
-public class Button extends SOReflect implements ModelListener, Drawable, Interactable {
+public class Button extends SOReflect implements Drawable, Interactable {
 
 	public String label;
 	public SA contents;
@@ -22,12 +21,7 @@ public class Button extends SOReflect implements ModelListener, Drawable, Intera
 	public SO active;
 	public String value;
 
-	public Button() {
-		WidgetUtils.addListener(this);
-	}
-
-
-// INTERACTABLE
+	// INTERACTABLE
 	@Override
 	public Root getPanel() {
 		throw new NotImplementedException();
@@ -92,9 +86,10 @@ public class Button extends SOReflect implements ModelListener, Drawable, Intera
 		}
 	}
 
-// DRAWABLE
+	// DRAWABLE
 	@Override
 	public void paint(Graphics g) {
+		updateButtonLabel();
 		int cSize = contents.size();
 		Graphics2D g2 = (Graphics2D) g;
 		for (int i = 0; i < cSize; i++) {
@@ -108,16 +103,17 @@ public class Button extends SOReflect implements ModelListener, Drawable, Intera
 		drawable.paint(g);
 	}
 
-// MODEL LISTENER
-	@Override
-	public void modelUpdated(ArrayList<java.lang.String> modelPath, java.lang.String newValue) {
-		if (modelPath.size() == model.size()) {
-			for (int i = 0; i < model.size(); i++) {
-				if(!modelPath.get(i).equals(model.getString(i))) {
-					return; //IT WASN'T A MATCH
+	private void updateButtonLabel() {
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			Selectable selectable = (Selectable) so;
+			if (so.get("class") != null && "\"label\"".equals(so.get("class").toString())) {
+				if (selectable.getClass().toString().equals("class com.company.draw.shapes.Text")) {
+					Text text = (Text) selectable;
+					text.text = this.label;
 				}
 			}
-			this.label = newValue; //IT WAS A MATCH SO UPDATE THE LABEL
 		}
 	}
+
 }

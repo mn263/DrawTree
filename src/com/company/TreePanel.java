@@ -38,9 +38,6 @@ public  class TreePanel extends JPanel {
 	}
 
 	public void checkMouseEvent(MouseEvent e) {
-		System.out.println();
-		System.out.println();
-		System.out.println("(" + e.getX() + ", " + e.getY() + ")");
 		for(int i = 0; i < drawables.size(); i++) {
 			Drawable drawable = drawables.get(i);
 			if("class com.company.draw.shapes.Group".equals(drawable.getClass().toString())) {

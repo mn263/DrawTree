@@ -66,7 +66,6 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 
 		Point2D ptSrc = new Point(x, y);
 		Point2D ptDst = transform.transform(ptSrc, null);
-		System.out.println("(" + ptDst.getX() + ", " + ptDst.getY() + ")");
 
 		boolean isInEllipse = SelectUtils.checkIfInOvalShape(this, ptDst.getX(), ptDst.getY());
 
