@@ -7,11 +7,12 @@ import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
-public class ScrollV extends SOReflect implements Drawable, Interactable {
+public class ScrollV extends SOReflect implements ModelListener, Drawable, Interactable {
 
 	public String state;
 	public SA contents;
@@ -23,6 +24,10 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 	public double min;
 	public double step;
 	private Point sliderLast;
+
+	public ScrollV() {
+		WidgetUtils.addListener(this);
+	}
 
 	@Override
 	public Root getPanel() {
@@ -42,7 +47,7 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
 		if (WidgetUtils.sliderBeingUsed) {
-			moveSlider(x, y);
+			moveSlider(y);
 			return true;
 		} else {
 			sliderLast = null;
@@ -53,7 +58,7 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 //		if (this.state.equals("active")) {
-//			StaticUtils.activeBtnSelected(this.model, this.value);
+//			StaticUtils.updateModel(this.model, this.value);
 //		}
 		return callHandleMouse(UP, x, y, myTransform);
 	}
@@ -125,20 +130,28 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 		}
 	}
 
-	private void moveSlider(double x, double y) {
+	private void moveSlider(double y) {
+		if (y == sliderLast.getY()) {
+			return; //NO NEED TO UPDATE IF IT IS THE SAME
+		}
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
 				Rect slide = (Rect) so;
 				double diff = y - sliderLast.getY();
-				sliderLast = new Point(x, y);
 				double newValue = slide.top + diff;
 				if (newValue < min) {
 					slide.setTop(min);
+					sliderLast = new Point(0, min);
+					WidgetUtils.updateModel(model, String.valueOf(min));
 				} else if (newValue > max) {
+					sliderLast = new Point(0, max);
 					slide.setTop(max);
+					WidgetUtils.updateModel(model, String.valueOf(max));
 				} else {
 					slide.setTop(newValue);
+					sliderLast = new Point(0, newValue);
+					WidgetUtils.updateModel(model, String.valueOf(newValue));
 				}
 			}
 		}
@@ -159,4 +172,15 @@ public class ScrollV extends SOReflect implements Drawable, Interactable {
 		drawable.paint(g);
 	}
 
+	@Override
+	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
+		if (modelPath.size() == model.size()) {
+			for (int i = 0; i < model.size(); i++) {
+				if(!modelPath.get(i).equals(model.getString(i))) {
+					return; //IT WASN'T A MATCH
+				}
+			}
+			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
+		}
+	}
 }

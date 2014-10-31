@@ -35,17 +35,27 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		this.focus = null;
 	}
 
-	public void updateModel(SO modelObjects, ArrayList<String> path, String value) {
+	public void updateRoot(SO modelObjects, ArrayList<String> path, String value) {
 		if (modelObjects == null) {
 			modelObjects = this.model.getSO();
 		}
 		if (path.size() == 1) {
-			modelObjects.set(path.get(0), value);
+			try {
+				double dValue = modelObjects.get(path.get(0)).getDouble();
+				modelObjects.set(path.get(0), dValue);
+			} catch (Exception e) {
+				modelObjects.set(path.get(0), value);
+			}
 			return;
 		}
 		modelObjects = modelObjects.get(path.get(0)).getSO();
 		path.remove(0);
-		updateModel(modelObjects, path, value);
+		updateRoot(modelObjects, path, value);
+	}
+
+	public void updateModel(SO modelObjects, ArrayList<String> path, String value) {
+		updateRoot(modelObjects, path, value);
+		WidgetUtils.updateModListeners(path, value);
 	}
 
 	@Override

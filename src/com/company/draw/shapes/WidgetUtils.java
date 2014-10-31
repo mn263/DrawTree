@@ -10,12 +10,12 @@ public class WidgetUtils {
 
 	private static SwingTree swingTree;
 	public static boolean sliderBeingUsed;
-
+	private static ArrayList<ModelListener> modelListeners = new ArrayList<ModelListener>();
 	public enum MouseStatus {RELEASED, PRESSED}
 	public static enum mouseType { UP, DOWN, MOVE }
 	private static MouseStatus mouseStatus = MouseStatus.RELEASED;
 
-
+// MOUSE
 	public static MouseStatus getMouseStatus() {
 		return mouseStatus;
 	}
@@ -27,6 +27,27 @@ public class WidgetUtils {
 		}
 	}
 
+
+// LISTENER
+	public static void addListener(ModelListener listener) {
+		modelListeners.add(listener);
+	}
+
+	public static void updateModListeners(ArrayList<String> modelPath, String newValue) {
+		for (ModelListener listener : modelListeners) {
+			listener.modelUpdated(modelPath, newValue);
+		}
+	}
+
+	public static void updateModel(SA model, String value) {
+		ArrayList<String> path = new ArrayList<String>();
+		for (int i = 0; i < model.size(); i++) {
+			path.add(model.getString(i));
+		}
+		SwingTree.root.updateModel(null, path, value);
+	}
+
+// SWING TREE
 	public static void setSwingTree(SwingTree swingTree) {
 		WidgetUtils.swingTree = swingTree;
 	}
@@ -36,6 +57,7 @@ public class WidgetUtils {
 		swingTree.getContentPane().repaint();
 	}
 
+// WIDGET BUTTON UTILS
 	public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
@@ -78,13 +100,5 @@ public class WidgetUtils {
 			}
 		}
 		return false;
-	}
-
-	public static void activeBtnSelected(SA model, String value) {
-		ArrayList<String> path = new ArrayList<String>();
-		for (int i = 0; i < model.size(); i++) {
-			path.add(model.getString(i));
-		}
-		SwingTree.root.updateModel(null, path, value);
 	}
 }
