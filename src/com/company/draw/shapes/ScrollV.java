@@ -25,7 +25,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	public double step;
 	private Point sliderLast;
 	private Point range;
-
+	private double downDifference;
 	public ScrollV() {
 		WidgetUtils.addListener(this);
 	}
@@ -43,13 +43,14 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
+		this.downDifference = y - getSliderTop();
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
 		if (WidgetUtils.sliderBeingUsed(this)) {
-			moveSlider(fromWindowCoords(y));
+			moveSlider(fromWindowCoords(y - downDifference));
 			return true;
 		} else {
 			return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
@@ -65,11 +66,11 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	}
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
-		if (sliderLast == null) loadSliderLast();
+		if (sliderLast == null) sliderLast = new Point(0, fromWindowCoords(getSliderTop()));
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
-//			changeState(this.idle, x, y, myTransform, mouseType);
+			changeState(this.idle, x, y, myTransform, mouseType);
 		} else {
 			if (WidgetUtils.getMouseStatus() == WidgetUtils.MouseStatus.PRESSED) {
 				this.state = "active";
@@ -166,15 +167,19 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 		return (value - range.getX()) / (range.getY() - range.getX()) * (max - min);
 	}
 
-	private void loadSliderLast() {
-		double y = 0;
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
-				y = so.get("top").getDouble();
+	private double getSliderTop() {
+		try {
+			for (int i = 0; i < contents.size(); i++) {
+				SO so = contents.get(i).getSO();
+				if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+					return so.get("top").getDouble();
+				}
 			}
+			throw new Exception("Slider not found");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		sliderLast = new Point(0, fromWindowCoords(y));
+		return 0;
 	}
 
 	private void setRange() {
