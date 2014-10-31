@@ -120,17 +120,29 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 				Rect slide = (Rect) so;
 				double newValue = slide.top + step;
 				if (newValue < min) {
+					moveSlider(min);
+					sliderLast = new Point(0, min);
 					slide.setTop(min);
+					WidgetUtils.updateModel(model, String.valueOf(min));
 				} else if (newValue > max) {
+					moveSlider(max);
+					sliderLast = new Point(0, max);
 					slide.setTop(max);
+					WidgetUtils.updateModel(model, String.valueOf(max));
 				} else {
+					moveSlider(newValue);
+					sliderLast = new Point(0, newValue);
 					slide.setTop(newValue);
+					WidgetUtils.updateModel(model, String.valueOf(newValue));
 				}
 			}
 		}
 	}
 
 	private void moveSlider(double y) {
+		if (sliderLast == null) {
+			sliderLast = new Point(0, -10000);
+		}
 		if (y == sliderLast.getY()) {
 			return; //NO NEED TO UPDATE IF IT IS THE SAME
 		}

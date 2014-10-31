@@ -41,8 +41,8 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		}
 		if (path.size() == 1) {
 			try {
-				double dValue = modelObjects.get(path.get(0)).getDouble();
-				modelObjects.set(path.get(0), dValue);
+				modelObjects.get(path.get(0)).getDouble();
+				modelObjects.set(path.get(0), Double.valueOf(value));
 			} catch (Exception e) {
 				modelObjects.set(path.get(0), value);
 			}
