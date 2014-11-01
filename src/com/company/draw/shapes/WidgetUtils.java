@@ -62,7 +62,7 @@ public class WidgetUtils {
 		for (int i = 0; i < model.size(); i++) {
 			path.add(model.getString(i));
 		}
-		SwingTree.getRoot().updateModel(null, path, value);
+		SwingTree.getRoot().updateModel(path, value);
 	}
 
 // SWING TREE

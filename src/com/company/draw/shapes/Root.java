@@ -35,9 +35,6 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	}
 
 	public void updateRoot(SO modelObjects, ArrayList<String> path, String value) {
-		if (modelObjects == null) {
-			modelObjects = this.model.getSO();
-		}
 		if (path.size() == 1) {
 			try {
 				modelObjects.get(path.get(0)).getDouble();
@@ -52,8 +49,9 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		updateRoot(modelObjects, path, value);
 	}
 
-	public void updateModel(SO modelObjects, ArrayList<String> path, String value) {
-		updateRoot(modelObjects, path, value);
+	public void updateModel(ArrayList<String> path, String value) {
+		ArrayList<String> copyPath = new ArrayList<String>(path);
+		updateRoot(model.getSO(), copyPath, value);
 		WidgetUtils.updateModListeners(path, value);
 	}
 
