@@ -97,6 +97,12 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	 */
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
+
+		Point2D ptSrc = new Point(x, y);
+		Point2D ptDst = transform.transform(ptSrc, null);
+		x = ptDst.getX();
+		y = ptDst.getY();
+
 		int[] xArray = getPoints("X");
 		int[] yArray = getPoints("Y");
 		if (PolyContains.contains(x, y, xArray, yArray)) {
