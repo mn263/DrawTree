@@ -25,7 +25,7 @@ public class WidgetUtils {
 		if (mouseStatus == MouseStatus.RELEASED) {
 			sliderBeingUsed = null;
 		} else if (mouseStatus == MouseStatus.PRESSED) {
-			SwingTree.root.releaseKeyFocus();
+			SwingTree.getRoot().releaseKeyFocus();
 		}
 	}
 
@@ -40,9 +40,9 @@ public class WidgetUtils {
 
 	public static void setRootFocus(Interactable focus) {
 		if (focus == null) {
-			SwingTree.root.releaseKeyFocus();
+			SwingTree.getRoot().releaseKeyFocus();
 		} else {
-			SwingTree.root.setKeyFocus(focus);
+			SwingTree.getRoot().setKeyFocus(focus);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class WidgetUtils {
 		for (int i = 0; i < model.size(); i++) {
 			path.add(model.getString(i));
 		}
-		SwingTree.root.updateModel(null, path, value);
+		SwingTree.getRoot().updateModel(null, path, value);
 	}
 
 // SWING TREE
