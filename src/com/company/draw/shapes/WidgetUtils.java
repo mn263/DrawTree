@@ -79,7 +79,7 @@ public class WidgetUtils {
 	public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(-Math.toRadians(rotate));
+		transform.rotate(Math.toRadians(rotate));
 		if (sx != 0 && sy != 0) {
 			transform.scale(1 / sx, 1 / sy);
 		}
