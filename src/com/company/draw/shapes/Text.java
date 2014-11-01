@@ -55,7 +55,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	private void setCursor(double mX) {
-		if(edit && cursor >= 0) {
+		if(edit) {
 			int width = (int) (mX - x);
 			StringBuilder newText = new StringBuilder();
 			for (int i = 0; i < text.length(); i++) {
@@ -86,18 +86,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 				newText.append(letter);
 			}
 		}
+		cursor = -1;
 		text = newText.toString();
 	}
 
 	public void releaseFocus() {
 		this.removeCursor();
-	}
-
-	private int getCursorIndex() {
-		for (int i = 0; i < text.length(); i++) {
-			if (text.charAt(i) == '|') return i;
-		}
-		return -1;
 	}
 
 	@Override
@@ -122,15 +116,14 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public boolean key(char key) {
-		int cursorIndex = getCursorIndex();
-		if (edit && cursor >= 0 && cursorIndex != -1) {
+		if (edit && cursor >= 0 && cursor < 0) {
 			StringBuilder stringBuilder = new StringBuilder(text);
 			if (KeyEvent.getExtendedKeyCodeForChar(key) == 8) {
-				if (cursorIndex != 0) {
-					stringBuilder.deleteCharAt(cursorIndex - 1);
+				if (cursor != 0) {
+					stringBuilder.deleteCharAt((int) cursor - 1);
 				}
 			} else {
-				stringBuilder.insert(cursorIndex, key);
+				stringBuilder.insert((int) cursor, key);
 			}
 			text = stringBuilder.toString();
 		}
