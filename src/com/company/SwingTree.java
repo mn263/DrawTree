@@ -16,7 +16,7 @@ import java.io.*;
 public class SwingTree extends JFrame implements KeyListener {
 
 	public static TreePanel treePanel = new TreePanel(new Mouse());
-	public static Root root = null;
+	private static Root root = null;
 
 	public SwingTree() {
 //		Make Menu and MenuBar
@@ -113,31 +113,23 @@ public class SwingTree extends JFrame implements KeyListener {
 	}
 
 	public static void mouseReleased(MouseEvent e) {
-		if (root != null) {
-			root.mouseUp(e.getX(), e.getY(), new AffineTransform());
-			WidgetUtils.repaintAll();
-		}
+		root.mouseUp(e.getX(), e.getY(), new AffineTransform());
+		WidgetUtils.repaintAll();
 	}
 
 	public static void mousePressed(MouseEvent e) {
-		if (root != null) {
-			root.mouseDown(e.getX(), e.getY(), new AffineTransform());
-			WidgetUtils.repaintAll();
-		}
+		root.mouseDown(e.getX(), e.getY(), new AffineTransform());
+		WidgetUtils.repaintAll();
 	}
 
 	public static void mouseMoved(MouseEvent e) {
-		if (root != null) {
-			root.mouseMove(e.getX(), e.getY(), new AffineTransform());
-			WidgetUtils.repaintAll();
-		}
+		root.mouseMove(e.getX(), e.getY(), new AffineTransform());
+		WidgetUtils.repaintAll();
 	}
 
 	public static void mouseDragged(MouseEvent e) {
-		if (root != null) {
-			root.mouseMove(e.getX(), e.getY(), new AffineTransform());
-			WidgetUtils.repaintAll();
-		}
+		root.mouseMove(e.getX(), e.getY(), new AffineTransform());
+		WidgetUtils.repaintAll();
 	}
 
 	@Override

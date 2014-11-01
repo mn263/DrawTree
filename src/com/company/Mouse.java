@@ -14,20 +14,22 @@ import java.awt.event.MouseMotionListener;
 public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-//		GUIFunctions.refresh();
-	}
+	public void mouseClicked(MouseEvent e) { }
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.PRESSED);
-		SwingTree.mousePressed(e);
+		if (SwingTree.getRoot() != null) {
+			WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.PRESSED);
+			SwingTree.mousePressed(e);
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.RELEASED);
-        SwingTree.mouseReleased(e);
+		if (SwingTree.getRoot() != null) {
+			WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.RELEASED);
+			SwingTree.mouseReleased(e);
+		}
 	}
 
 	@Override
@@ -38,11 +40,15 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-        SwingTree.mouseDragged(e);
+		if (SwingTree.getRoot() != null) {
+			SwingTree.mouseDragged(e);
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-        SwingTree.mouseMoved(e);
+		if (SwingTree.getRoot() != null) {
+			SwingTree.mouseMoved(e);
+		}
 	}
 }
