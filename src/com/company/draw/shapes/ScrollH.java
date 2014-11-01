@@ -27,6 +27,10 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 	private Point range;
 	private double leftDifference;
 
+	private double rangeMax = -1;
+	private double rangeLeft;
+	private double maxMinDiff;
+
 	public ScrollH() {
 		WidgetUtils.addListener(this);
 	}
@@ -154,13 +158,15 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 	}
 
 	private double toSliderCoords(double value) {
-		if (range == null) setRange();
-		return (value + range.getX()) / (max - min) * (range.getY() - range.getX());
+		if (range == null) loadConversionDoubles();
+		return ((value - min) * (rangeMax / maxMinDiff)) + rangeLeft;
 	}
 
-	private double fromWindowCoords(double value) {
-		if (range == null) setRange();
-		return (value - range.getX()) / (range.getY() - range.getX()) * (max - min);
+	private double fromWindowCoords(double x) {
+		if (range == null) loadConversionDoubles();
+		double yOrigin = x - rangeLeft;
+		double yNomalized = yOrigin * (rangeMax/maxMinDiff);
+		return yNomalized + min;
 	}
 
 	private double getSliderLeft() {
@@ -178,21 +184,21 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 		return 0;
 	}
 
-	private void setRange() {
-		double rangeTip = 0;
-		double rangeHeight = 0;
-		double sliderHeight = 0;
+	private void loadConversionDoubles() {
+		double rangeWidth = 0;
+		double sliderWidth = 0;
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"range\"".equals(so.get("class").toString())) {
-				rangeTip = so.get("left").getDouble();
-				rangeHeight = so.get("width").getDouble();
+				this.rangeLeft = so.get("left").getDouble();
+				rangeWidth= so.get("width").getDouble();
 			}
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
-				sliderHeight = so.get("width").getDouble();
+				sliderWidth = so.get("width").getDouble();
 			}
 		}
-		this.range = new Point(rangeTip, rangeTip + rangeHeight - sliderHeight);
+		rangeMax = rangeWidth - sliderWidth;
+		maxMinDiff = max - min;
 	}
 
 	//	DRAWABLE
@@ -220,6 +226,7 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 					return; //IT WASN'T A MATCH
 				}
 			}
+			if (sliderLast == null) sliderLast = new Point(fromWindowCoords(getSliderLeft()), 0);
 			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
 		}
 	}
