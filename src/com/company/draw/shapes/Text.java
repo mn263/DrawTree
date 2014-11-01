@@ -54,8 +54,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		} else return null;
 	}
 
-	private void setCursor(double mX) {
+	private void setCursor(double mX, double mY, AffineTransform transform) {
 		if(edit) {
+			Point2D ptSrc = new Point(mX, mY);
+			Point2D ptDst = transform.transform(ptSrc, null);
+			mX = ptDst.getX();
+
 			int width = (int) (mX - x);
 			StringBuilder newText = new StringBuilder();
 			for (int i = 0; i < text.length(); i++) {
@@ -135,7 +139,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	@Override
 	public boolean mouseDown(double mx, double my, AffineTransform myTransform) {
 		if(!edit) return false;
-		setCursor(mx);
+		setCursor(mx, my, myTransform);
 		return true;
 	}
 
