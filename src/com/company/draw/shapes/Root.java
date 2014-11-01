@@ -22,9 +22,6 @@ public class Root extends SOReflect implements Interactable, Drawable {
 
 	public Interactable focus = null;
 
-	// When this method is called on a Root object it saves the pointer to the focus object,
-	// but not as a SPARK attribute.
-	// Whenever the Root receives a key() event it will call key() on the focus object if there is one.
 	public void setKeyFocus(Interactable focus) {
 		this.focus = focus;
 	}
@@ -86,7 +83,6 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		Drawable drawable = (Drawable) so;
 		drawable.paint(g);
 	}
-
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
