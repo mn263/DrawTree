@@ -29,13 +29,7 @@ public  class TreePanel extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		for (Drawable drawable : drawables) {
-//			if ("class com.company.draw.shapes.Group".equals(drawable.getClass().toString())) {
-//				Group group = (Group) drawable;
-//				this.selected = new Select(group);
-//				this.selected.paint(g);
-//			} else {
 			drawable.paint(g);
-//			}
 		}
 		if (this.selected != null) {
 			this.selected.paint(g);

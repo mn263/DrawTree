@@ -4,10 +4,11 @@ import com.company.*;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
+import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-public class Button extends SOReflect implements Interactable {
+public class Button extends SOReflect implements Drawable, Interactable {
 
 	public String label;
 	public SA contents;
@@ -19,6 +20,14 @@ public class Button extends SOReflect implements Interactable {
 	public double value;
 
 	public boolean mouseIsDown = false;
+
+	public Button() {}
+
+	public Button(SA model) {
+		this.model = model;
+	}
+
+
 
 	@Override
 	public Root getPanel() {
@@ -91,6 +100,20 @@ public class Button extends SOReflect implements Interactable {
 				selectable.setBackgroundColor(newState);
 			}
 		}
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		int cSize = contents.size();
+		Graphics2D g2 = (Graphics2D) g;
+		for (int i = 0; i < cSize; i++) {
+			callPaintOnContents(contents.get(i), g2);
+		}
+	}
+	public void callPaintOnContents(SV sv, Graphics g) {
+		SO so = sv.getSO();
+		Drawable drawable = (Drawable) so;
+		drawable.paint(g);
 	}
 
 //The Text object will have its text attribute replaced by "Hit" and the color of the first Ellipse object

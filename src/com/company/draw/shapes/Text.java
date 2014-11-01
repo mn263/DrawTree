@@ -23,8 +23,9 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	public void paint(Graphics g) {
 		Font gFont = new Font(font, Font.PLAIN, (int) size);
 		g.setFont(gFont);
-		g.drawString(text, (int) x, (int) y);
-
+		if (text != null) {
+			g.drawString(text, (int) x, (int) y);
+		}
 	}
 
 	@Override

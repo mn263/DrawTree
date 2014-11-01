@@ -38,8 +38,6 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		this.focus = null;
 	}
 
-
-
 	@Override
 	public void paint(Graphics g) {
 		int cSize = contents.size();
@@ -63,11 +61,9 @@ public class Root extends SOReflect implements Interactable, Drawable {
 
 	public void callPaintOnContents(SV sv, Graphics g) {
 		SO so = sv.getSO();
-		System.out.println(so.getClass());
-		if (!so.getClass().toString().equals("class com.company.draw.shapes.Button")) {
-			Drawable drawable = (Drawable) so;
-			drawable.paint(g);
-		}
+//		System.out.println(so.getClass());
+		Drawable drawable = (Drawable) so;
+		drawable.paint(g);
 	}
 
 
