@@ -24,16 +24,26 @@ public class WidgetUtils {
 		WidgetUtils.mouseStatus = mouseStatus;
 		if (mouseStatus == MouseStatus.RELEASED) {
 			sliderBeingUsed = null;
+		} else if (mouseStatus == MouseStatus.PRESSED) {
+			SwingTree.root.releaseKeyFocus();
 		}
 	}
 
-	//	WIDGET
+//	WIDGET
 	public static boolean sliderBeingUsed(ModelListener scroll) {
 		return sliderBeingUsed == scroll;
 	}
 
 	public static void setSliderBeingUsed(ModelListener scroll) {
 		sliderBeingUsed = scroll;
+	}
+
+	public static void setRootFocus(Interactable focus) {
+		if (focus == null) {
+			SwingTree.root.releaseKeyFocus();
+		} else {
+			SwingTree.root.setKeyFocus(focus);
+		}
 	}
 
 // LISTENER
@@ -81,12 +91,11 @@ public class WidgetUtils {
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
-			if (so instanceof Selectable) {
-				Selectable selectable = (Selectable) so;
-				if (selectable.select(x, y, 0, myTransform) != null) {
-					return true;
-				}
+			if (so instanceof Selectable && !(so instanceof Text)) {
+				return isSelectable(so, x, y, myTransform);
 			} else if (so instanceof Interactable) {
+				if (so instanceof Text && !isSelectable(so, x, y, myTransform)) return false;
+
 				Interactable interactable = (Interactable) so;
 				boolean wasHandled = false;
 				if (mouseType == WidgetUtils.mouseType.UP) {
@@ -108,5 +117,10 @@ public class WidgetUtils {
 			}
 		}
 		return false;
+	}
+
+	private static boolean isSelectable(SO so, double x, double y, AffineTransform myTransform) {
+		Selectable selectable = (Selectable) so;
+		return selectable.select(x, y, 0, myTransform) != null;
 	}
 }

@@ -13,7 +13,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.io.*;
 
-public class SwingTree extends JFrame {
+public class SwingTree extends JFrame implements KeyListener {
 
 	public static TreePanel treePanel = new TreePanel(new Mouse());
 	public static Root root = null;
@@ -21,6 +21,10 @@ public class SwingTree extends JFrame {
 	public SwingTree() {
 //		Make Menu and MenuBar
 		JMenu menu = new JMenu("Menu");
+
+		setFocusable(true);
+		addKeyListener(this);
+
 		JMenuBar mb = new JMenuBar();
 		menu.setMnemonic(KeyEvent.VK_M);
 		menu.add(getOpenOption(this)); // Add Option
@@ -134,5 +138,21 @@ public class SwingTree extends JFrame {
 			root.mouseMove(e.getX(), e.getY(), new AffineTransform());
 			WidgetUtils.repaintAll();
 		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		if (root != null) {
+			root.key(e.getKeyChar());
+			WidgetUtils.repaintAll();
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 }

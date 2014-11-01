@@ -2,7 +2,6 @@ package com.company.draw.shapes;
 
 import com.company.*;
 import spark.data.*;
-import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -28,10 +27,13 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	// Whenever the Root receives a key() event it will call key() on the focus object if there is one.
 	public void setKeyFocus(Interactable focus) {
 		this.focus = focus;
-//		this.focus.key();
 	}
 
 	public void releaseKeyFocus() { // Sets the key focus to null.
+		if (this.focus != null) {
+			Text text = (Text) focus;
+			text.releaseFocus();
+		}
 		this.focus = null;
 	}
 
@@ -117,7 +119,7 @@ public class Root extends SOReflect implements Interactable, Drawable {
 
 	@Override
 	public boolean key(char key) {
-		throw new NotImplementedException();
+		return this.focus != null && this.focus.key(key);
 	}
 
 	@Override

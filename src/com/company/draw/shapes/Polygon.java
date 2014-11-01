@@ -100,10 +100,8 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		int[] xArray = getPoints("X");
 		int[] yArray = getPoints("Y");
 		if (PolyContains.contains(x, y, xArray, yArray)) {
-			System.out.println("Contained");
 			return new ArrayList<Integer>();
 		} else {
-			System.out.println("NOPE");
 			return null;
 		}
 	}
