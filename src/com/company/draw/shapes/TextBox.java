@@ -95,7 +95,6 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 		}
 	}
 
-
 //	DRAWABLE
 	@Override
 	public void paint(Graphics g) {
