@@ -39,6 +39,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	@Override
 	public ArrayList<Integer> select(double mX, double mY, int myIndex, AffineTransform transform) {
 		if (metrics == null) return null;
+		if (text == null) text = "";
 
 		int height = metrics.getHeight();
 		int width = metrics.stringWidth(text);
