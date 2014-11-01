@@ -59,9 +59,6 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-//		if (this.state.equals("active")) {
-//			StaticUtils.updateModel(this.model, this.value);
-//		}
 		return callHandleMouse(UP, x, y, myTransform);
 	}
 
@@ -156,9 +153,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	}
 
 	private double toSliderCoords(double value) {
-		if (range == null) {
-			setRange();
-		}
+		if (range == null) setRange();
 		return (value + range.getX()) / (max - min) * (range.getY() - range.getX());
 	}
 

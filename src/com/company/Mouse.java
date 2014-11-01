@@ -38,11 +38,11 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-        SwingTree.mouseDragged(e);
+//        SwingTree.mouseDragged(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-        SwingTree.mouseMoved(e);
+//        SwingTree.mouseMoved(e);
 	}
 }

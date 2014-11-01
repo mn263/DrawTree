@@ -88,26 +88,24 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 
 	/**
 	 * takes a point and if the object or its contents are selected then it returns a path to the selected object, not in the transformed coordinates
-	 * @param x in the coordinates of your panel
-	 * @param y in the coordinates of your panel
+	 *
+	 * @param x         in the coordinates of your panel
+	 * @param y         in the coordinates of your panel
 	 * @param myIndex
 	 * @param transform - the full transform from current contents coordinates to the coordinates of your panel
 	 * @return - If the object or its contents are not selected, then NULL is returned
 	 */
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
-		ArrayList<Point> points = getPoints();
-		int i;
-		int j;
-		boolean result = false;
-		for (i = 0, j = points.size() - 1; i < points.size(); j = i++) {
-			if ((points.get(i).getY() > y) != (points.get(j).getY() > y) &&
-					(x < (points.get(j).getX() - points.get(i).getX()) * (y - points.get(i).getY()) /
-							(points.get(j).getY() - points.get(i).getY()) + points.get(i).getX())) {
-				return new ArrayList<Integer>();
-			}
+		int[] xArray = getPoints("X");
+		int[] yArray = getPoints("Y");
+		if (PolyContains.contains(x, y, xArray, yArray)) {
+			System.out.println("Contained");
+			return new ArrayList<Integer>();
+		} else {
+			System.out.println("NOPE");
+			return null;
 		}
-		return null;
 	}
 
 	@Override

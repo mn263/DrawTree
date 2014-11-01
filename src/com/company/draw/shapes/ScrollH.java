@@ -25,6 +25,7 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 	public double step;
 	private Point sliderLast;
 	private Point range;
+	private double leftDifference;
 
 	public ScrollH() {
 		WidgetUtils.addListener(this);
@@ -43,16 +44,16 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
+		this.leftDifference = x - getSliderLeft();
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
 		if (WidgetUtils.sliderBeingUsed(this)) {
-			moveSlider(x);
+			moveSlider(fromWindowCoords(x - leftDifference));
 			return true;
 		} else {
-//			sliderLast = null;
 			return callHandleMouse(WidgetUtils.mouseType.MOVE, x, y, myTransform);
 		}
 	}
@@ -63,6 +64,7 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 	}
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
+		if (sliderLast == null) sliderLast = new Point(fromWindowCoords(getSliderLeft()), 0);
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
@@ -117,17 +119,22 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
 				Rect slide = (Rect) so;
-				double newValue = slide.left + step;
-				if (newValue < min) setSlider(slide, min);
-				else if (newValue > max) setSlider(slide, max);
-				else setSlider(slide, newValue);
+
+				double newValue = sliderLast.getX() + step;
+				if (newValue < min) {
+					setSlider(slide, min);
+				} else if (newValue > max) {
+					setSlider(slide, max);
+				} else {
+					setSlider(slide, newValue);
+				}
 			}
 		}
 	}
 
 	private void moveSlider(double x) {
-		if (sliderLast == null) sliderLast = new Point(0, -10000);
 		if (x == sliderLast.getX()) return; //NO NEED TO UPDATE IF IT IS THE SAME
+
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
@@ -141,27 +148,51 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 
 	private void setSlider(Rect slide, double value) {
 		sliderLast = new Point(value, 0);
-		slide.setLeft(toSliderCoords(value));
+		double slideCoords = toSliderCoords(value);
+		slide.setLeft(slideCoords);
 		WidgetUtils.updateModel(model, String.valueOf(value));
 	}
 
 	private double toSliderCoords(double value) {
-		if (range == null) {
-			setRange();
-		}
+		if (range == null) setRange();
+		return (value + range.getX()) / (max - min) * (range.getY() - range.getX());
+	}
 
+	private double fromWindowCoords(double value) {
+		if (range == null) setRange();
+		return (value - range.getX()) / (range.getY() - range.getX()) * (max - min);
+	}
+
+	private double getSliderLeft() {
+		try {
+			for (int i = 0; i < contents.size(); i++) {
+				SO so = contents.get(i).getSO();
+				if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+					return so.get("left").getDouble();
+				}
+			}
+			throw new Exception("Slider not found");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
 
 	private void setRange() {
+		double rangeTip = 0;
+		double rangeHeight = 0;
+		double sliderHeight = 0;
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"range\"".equals(so.get("class").toString())) {
-				double rangeMin = so.get("left").getDouble();
-				double rangeMax = so.get("width").getDouble();
-				this.range = new Point(rangeMin, rangeMax);
+				rangeTip = so.get("left").getDouble();
+				rangeHeight = so.get("width").getDouble();
+			}
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				sliderHeight = so.get("width").getDouble();
 			}
 		}
+		this.range = new Point(rangeTip, rangeTip + rangeHeight - sliderHeight);
 	}
 
 	//	DRAWABLE
