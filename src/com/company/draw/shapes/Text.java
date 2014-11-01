@@ -116,14 +116,16 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public boolean key(char key) {
-		if (edit && cursor >= 0 && cursor < 0) {
+		if (edit && cursor >= 0) {
 			StringBuilder stringBuilder = new StringBuilder(text);
 			if (KeyEvent.getExtendedKeyCodeForChar(key) == 8) {
 				if (cursor != 0) {
 					stringBuilder.deleteCharAt((int) cursor - 1);
+					cursor--;
 				}
 			} else {
 				stringBuilder.insert((int) cursor, key);
+				cursor++;
 			}
 			text = stringBuilder.toString();
 		}
