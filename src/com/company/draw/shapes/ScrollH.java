@@ -165,7 +165,7 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 	private double fromWindowCoords(double x) {
 		if (range == null) loadConversionDoubles();
 		double yOrigin = x - rangeLeft;
-		double yNomalized = yOrigin * (rangeMax/maxMinDiff);
+		double yNomalized = yOrigin * (maxMinDiff / rangeMax);
 		return yNomalized + min;
 	}
 

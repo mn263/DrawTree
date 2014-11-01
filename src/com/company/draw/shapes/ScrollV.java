@@ -68,6 +68,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		if (sliderLast == null) sliderLast = new Point(0, fromWindowCoords(getSliderTop()));
+
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
@@ -164,7 +165,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	private double fromWindowCoords(double y) {
 		if (rangeMax == -1) loadConversionDoubles();
 		double yOrigin = y - rangeTop;
-		double yNomalized = yOrigin * (rangeMax/maxMinDiff);
+		double yNomalized = yOrigin * (maxMinDiff / rangeMax);
 		return yNomalized + min;
 	}
 
