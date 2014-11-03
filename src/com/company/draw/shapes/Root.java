@@ -1,6 +1,7 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.draw.*;
 import spark.data.*;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 
-public class Root extends SOReflect implements Interactable, Drawable {
+public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	public SV model;
 
@@ -119,5 +120,53 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	@Override
 	public Root getPanel() {
 		return this;
+	}
+
+
+//	LAYOUT
+
+	private Layout getOnlyChild() {
+		return null;
+	}
+
+	@Override
+	public double getMinWidth() {
+		Layout child = getOnlyChild();
+		return child.getMinWidth();
+	}
+
+	@Override
+	public double getDesiredWidth() {
+		return getOnlyChild().getDesiredWidth();
+	}
+
+	@Override
+	public double getMaxWidth() {
+		return getOnlyChild().getMaxWidth();
+	}
+
+	@Override
+	public void setHBounds(double left, double right) {
+		getOnlyChild().setHBounds(left, right);
+	}
+
+	@Override
+	public double getMinHeight() {
+		return getOnlyChild().getMinHeight();
+	}
+
+	@Override
+	public double getDesiredHeight() {
+		return getOnlyChild().getDesiredHeight();
+	}
+
+	@Override
+	public double getMaxHeight() {
+		return getOnlyChild().getMaxHeight();
+	}
+
+	@Override
+	public void setVBounds(double top, double bottom) {
+		getOnlyChild().setVBounds(top, bottom);
 	}
 }
