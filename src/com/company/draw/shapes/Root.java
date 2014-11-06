@@ -3,6 +3,7 @@ package com.company.draw.shapes;
 import com.company.*;
 import com.company.draw.*;
 import spark.data.*;
+import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -124,9 +125,8 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 
 //	LAYOUT
-
 	private Layout getOnlyChild() {
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override

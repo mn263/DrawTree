@@ -91,8 +91,8 @@ public class WidgetUtils {
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
-			if (so instanceof Selectable && !(so instanceof Text)) {
-				return isSelectable(so, x, y, myTransform);
+			if (so instanceof Selectable && !(so instanceof Text) && !(so instanceof Group)) {
+				if(isSelectable(so, x, y, myTransform)) return true;
 			} else if (so instanceof Interactable) {
 				if (so instanceof Text && !isSelectable(so, x, y, myTransform)) return false;
 
@@ -119,8 +119,44 @@ public class WidgetUtils {
 		return false;
 	}
 
+	public static boolean handleMouse(ArrayList<Drawable> contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
+		for (Drawable drawable : contents) {
+			if (drawable instanceof Selectable && !(drawable instanceof Text) && !(drawable instanceof Group)) {
+				if(isSelectable(drawable, x, y, myTransform)) return true;
+			} else if (drawable instanceof Interactable) {
+				if (drawable instanceof Text && !isSelectable(drawable, x, y, myTransform)) return false;
+
+				Interactable interactable = (Interactable) drawable;
+				boolean wasHandled = false;
+				if (mouseType == WidgetUtils.mouseType.UP) {
+					wasHandled = interactable.mouseUp(x, y, myTransform);
+				} else if (mouseType == WidgetUtils.mouseType.DOWN) {
+					wasHandled = interactable.mouseDown(x, y, myTransform);
+				} else if (mouseType == WidgetUtils.mouseType.MOVE) {
+					wasHandled = interactable.mouseMove(x, y, myTransform);
+				} else {
+					try {
+						throw new Exception("mouse type must have been invalid");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (wasHandled) {
+					return true;
+				}
+			}
+		}
+		return false;
+
+	}
+
 	private static boolean isSelectable(SO so, double x, double y, AffineTransform myTransform) {
 		Selectable selectable = (Selectable) so;
+		return selectable.select(x, y, 0, myTransform) != null;
+	}
+
+	private static boolean isSelectable(Drawable drawable, double x, double y, AffineTransform myTransform) {
+		Selectable selectable = (Selectable) drawable;
 		return selectable.select(x, y, 0, myTransform) != null;
 	}
 }

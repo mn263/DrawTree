@@ -20,6 +20,17 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	public SO border;
 	public SO fill;
 
+	public Ellipse(){}
+
+	public Ellipse(double left, double top, double width, double height) {
+		this.thickness = 0;
+		this.left = left;
+		this.top = top;
+		this.width = width;
+		this.height = height;
+	}
+
+
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;

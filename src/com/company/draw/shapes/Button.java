@@ -1,25 +1,46 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.draw.*;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
-public class Button extends SOReflect implements Drawable, Interactable {
+public class Button extends SOReflect implements Layout, Drawable, Interactable {
 
+//	The content list is generated programatically based on the dimensions specified in setHBounds() and setVBounds()
+//	public SA contents;
+	public ArrayList<Drawable> contents = new ArrayList<>();
 	public String label;
-	public SA contents;
 	public SA model;
 	public String state;
 	public SO idle;
 	public SO hover;
 	public SO active;
 	public String value;
+
+	private Ellipse ellipse = null;
+	private Text text = null;
+
+
+	public Button() { }
+	public Button(String label, SA model, String state, SO idle, SO hover, SO active, String value) {
+		this.label = label;
+		this.model = model;
+		this.state = state;
+		this.idle = idle;
+		this.hover = hover;
+		this.active = active;
+		this.value = value;
+//		this.contents.a
+		// TODO: figure out how to add Ellipse and Text to the contents
+	}
 
 	// INTERACTABLE
 	@Override
@@ -56,64 +77,99 @@ public class Button extends SOReflect implements Drawable, Interactable {
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
-			changeState(this.idle, mouseType);
+			changeState(this.idle);
 		} else {
 			if (WidgetUtils.getMouseStatus() == MouseStatus.PRESSED) {
 				this.state = "active";
-				changeState(this.active, mouseType);
+				changeState(this.active);
 			} else {
 				this.state = "hover";
-				changeState(this.hover, mouseType);
+				changeState(this.hover);
 			}
 		}
 		return isHandled;
 	}
 
-	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Selectable selectable = (Selectable) so;
-			if (so.get("class") != null && "\"active\"".equals(so.get("class").toString())) {
-				selectable.setBackgroundColor(newState);
-			}
-			if (so.get("class") != null && "\"label\"".equals(so.get("class").toString())
-					&& mouseType == UP && !this.state.equals("idle")) {
-				if (selectable.getClass().toString().equals("class com.company.draw.shapes.Text")) {
-					Text text = (Text) selectable;
-					text.text = this.label;
-				}
-			}
-		}
+	public void changeState(SO newState) {
+		this.ellipse.setBackgroundColor(newState);
+		this.text.text = this.label;
 	}
 
 	// DRAWABLE
 	@Override
 	public void paint(Graphics g) {
-		updateButtonLabel();
-		int cSize = contents.size();
-		Graphics2D g2 = (Graphics2D) g;
-		for (int i = 0; i < cSize; i++) {
-			callPaintOnContents(contents.get(i), g2);
+		if(this.text == null) initializeContents(g);
+		for (Drawable drawable : contents) {
+			drawable.paint(g);
 		}
 	}
 
-	public void callPaintOnContents(SV sv, Graphics g) {
-		SO so = sv.getSO();
-		Drawable drawable = (Drawable) so;
-		drawable.paint(g);
+	//	LAYOUT
+	private void initializeContents(Graphics g) {
+		int ellipseWidth = 40;
+		int ellipseHeight = 40;
+		this.text = new Text(this.label, 0, ellipseHeight/2, "sans-serif", 24, false, -1);
+		this.text.setFontMetrics(g);
+		this.text.adjustFontSize(this.label, 0, ellipseWidth, ellipseHeight);
+		this.ellipse = new Ellipse(0, 0, ellipseWidth, ellipseHeight);
+		this.ellipse.setBackgroundColor(this.idle);
+		this.contents.add(ellipse);
+		this.contents.add(text);
 	}
 
-	private void updateButtonLabel() {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Selectable selectable = (Selectable) so;
-			if (so.get("class") != null && "\"label\"".equals(so.get("class").toString())) {
-				if (selectable.getClass().toString().equals("class com.company.draw.shapes.Text")) {
-					Text text = (Text) selectable;
-					text.text = this.label;
-				}
-			}
-		}
+
+
+//	This should pick a default font size and then report
+
+	// min size that will create a button of that size based on the contents of the label attribute
+	@Override
+	public double getMinWidth() {
+		return this.text.getTextWidth() * 1.3;
 	}
 
+	@Override
+	public double getMinHeight() {
+		return this.text.getFontMetrics().getHeight() * 1.3;
+	}
+
+	// desired size that will create a button of that size based on the contents of the label attribute
+	@Override
+	public double getDesiredWidth() {
+		return this.text.getTextWidth() * 1.6;
+	}
+
+	@Override
+	public double getDesiredHeight() {
+		return this.text.getFontMetrics().getHeight() * 1.6;
+	}
+
+	// max size that will create a button of that size based on the contents of the label attribute
+	@Override
+	public double getMaxWidth() {
+		return this.text.getTextWidth() * 2.0;
+	}
+
+	@Override
+	public double getMaxHeight() {
+		return this.text.getFontMetrics().getHeight() * 2.0;
+	}
+
+
+	//	When the sizes are actually received via setHBounds() and setVBounds() you should adapt the font size so that the label, border and other visuals will fit in the bounds.
+	@Override
+	public void setHBounds(double left, double right) {
+		ellipse.left = left;
+		ellipse.width = right - left;
+		ellipse.setBackgroundColor(this.idle);
+		text.adjustFontSize(this.label, left, (left - right), -1);
+	}
+
+
+	@Override
+	public void setVBounds(double top, double bottom) {
+		ellipse.top = top;
+		ellipse.height = bottom - top;
+		ellipse.setBackgroundColor(this.idle);
+		text.adjustFontSize(this.label, ellipse.left, -1, bottom - top);
+	}
 }

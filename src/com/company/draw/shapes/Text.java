@@ -11,7 +11,7 @@ import java.awt.geom.*;
 import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
-import static java.lang.Math.max;
+import static java.lang.Math.*;
 
 public class Text extends SOReflect implements Drawable, Selectable, Interactable {
 
@@ -24,16 +24,28 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	public double cursor;
 
 	private FontMetrics metrics = null;
+	private Font gFont = null;
+
+	public Text(){}
+
+	public Text(String text, double x, double y, String font, double size, boolean edit, double cursor) {
+		this.text = text;
+		this.x = x;
+		this.y = y;
+		this.font = font;
+		this.size = size;
+		this.edit = edit;
+		this.cursor = cursor;
+	}
 
 	@Override
 	public void paint(Graphics g) {
 		g.setColor(Color.black);
-		Font gFont = new Font(font, Font.PLAIN, (int) size);
-		g.setFont(gFont);
+		setFontMetrics(g);
 		if (text != null) {
-			g.drawString(text, (int) x, (int) y);
+			g.setFont(gFont);
+			g.drawString(text, (int) x, (int) y + (metrics.getHeight() / 2));
 		}
-		this.metrics = g.getFontMetrics(gFont);
 	}
 
 	@Override
@@ -152,5 +164,58 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		return false;
+	}
+
+	//	LAYOUT
+	public void adjustFontSize(String label, double left, double width, double height) {
+		this.text = label;
+		if(width > 0) {
+			int textWidth = getTextWidth();
+			if (textWidth * 1.3 > width) {
+				double oldSize = this.size;
+				this.size = oldSize / (textWidth / (width / 1.6));
+				centerWidth(left, width, textWidth * (this.size / oldSize));
+			} else if (textWidth * 3.0 < width) {
+				this.size = this.size / (textWidth / (width / 1.6));
+				centerWidth(left, width, textWidth * (width / 1.6));
+			}
+		}
+		if (height > 0) {
+			int textHeight = this.metrics.getHeight();
+			if (textHeight * 1.3 > height) {
+				this.size = this.size / (textHeight / (width / 1.6));
+			} else if (textHeight * 3.0 < height) {
+				this.size = this.size / (textHeight / (width / 1.6));
+			}
+		}
+	}
+
+	private void centerWidth(double btnLeft, double btnWidth, double textWidth) {
+		double diff = btnWidth - textWidth;
+		if (diff < 0) try {
+			throw new Exception("Invalid width");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.x = btnLeft + diff/2;
+	}
+
+	public void setFontMetrics(Graphics g) {
+		gFont = new Font(this.font, Font.PLAIN, (int) this.size);
+		this.metrics = g.getFontMetrics(gFont);
+	}
+
+	public FontMetrics getFontMetrics() {
+		return this.metrics;
+	}
+
+	public int getTextWidth() {
+		if(this.metrics == null) return 0;
+
+		int width = 0;
+		for (int i = 0; i < this.text.length(); i++) {
+			width += metrics.charWidth(this.text.charAt(i));
+		}
+		return width;
 	}
 }

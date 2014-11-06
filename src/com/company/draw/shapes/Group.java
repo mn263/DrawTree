@@ -1,18 +1,14 @@
 package com.company.draw.shapes;
 
 import com.company.*;
-import spark.data.SA;
-import spark.data.SO;
-import spark.data.SOReflect;
-import spark.data.SV;
+import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import static com.company.draw.shapes.WidgetUtils.getTransform;
-import static com.company.draw.shapes.WidgetUtils.handleMouse;
+import static com.company.draw.shapes.WidgetUtils.*;
 
 public class Group extends SOReflect implements Drawable, Selectable, Interactable {
 
@@ -74,6 +70,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
+			if(!(so instanceof Selectable)) continue;
 			Selectable selectable = (Selectable) so;
 			ArrayList<Integer> path = selectable.select(x, y, i, transform);
 			if (path != null) {
@@ -123,6 +120,6 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		newTransform.concatenate(oldTrans);
-		return handleMouse(contents, x, y, oldTrans, mouseType);
+		return handleMouse(contents, x, y, newTransform, mouseType);
 	}
 }
