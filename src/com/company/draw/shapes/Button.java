@@ -109,7 +109,6 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	//	LAYOUT
-//	TODO: read pg. 114 and redo these methods accordingly
 	private void initializeContents(Graphics g) {
 		int ellipseWidth = 40;
 		int ellipseHeight = 40;
