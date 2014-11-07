@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.*;
 
-public  class TreePanel extends JPanel {
+public  class TreePanel extends JPanel implements ComponentListener {
 
 	public java.util.List<Drawable> drawables = new ArrayList<Drawable>();
 	public Mouse mouseListener;
@@ -50,4 +50,21 @@ public  class TreePanel extends JPanel {
 			}
 		}
 	}
+
+
+	//	WINDOW LISTENER METHODS:
+	@Override
+	public void componentResized(ComponentEvent e) {
+		Root root = SwingTree.getRoot();
+		root.handleComponentResize(e);
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) { }
+
+	@Override
+	public void componentShown(ComponentEvent e) { }
+
+	@Override
+	public void componentHidden(ComponentEvent e) { }
 }

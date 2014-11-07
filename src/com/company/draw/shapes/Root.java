@@ -6,6 +6,7 @@ import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.*;
 
@@ -168,5 +169,9 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	@Override
 	public void setVBounds(double top, double bottom) {
 		getOnlyChild().setVBounds(top, bottom);
+	}
+
+	public void handleComponentResize(ComponentEvent e) {
+		throw new NotImplementedException();
 	}
 }
