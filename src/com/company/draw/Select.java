@@ -14,7 +14,7 @@ public class Select extends Group implements Selectable {
 	private ArrayList<Integer> selected = new ArrayList<Integer>();
 
 	public Select(Group group) {
-		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate);
+		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate, group.width, group.height);
 	}
 
 
