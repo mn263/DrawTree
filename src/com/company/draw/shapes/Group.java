@@ -1,6 +1,7 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.draw.*;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 
-public class Group extends SOReflect implements Drawable, Selectable, Interactable {
+public class Group extends SOReflect implements Drawable, Selectable, Interactable, Layout {
 
 	public SA contents;
 	public double sx;
@@ -18,16 +19,20 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public double rotate;
 	public double tx;
 	public double ty;
+	public double width;
+	public double height;
 
 	public Group(){}
 
-	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate) {
+	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate, double width, double height) {
 		this.contents = contents;
 		this.sx	= sx;
 		this.sy = sy;
 		this.tx = tx;
 		this.ty = ty;
 		this.rotate = rotate;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
@@ -121,5 +126,47 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		// Add on old transform
 		newTransform.concatenate(oldTrans);
 		return handleMouse(contents, x, y, newTransform, mouseType);
+	}
+
+
+//	LAYOUT
+	@Override
+	public double getMinWidth() {
+		return this.width;
+	}
+
+	@Override
+	public double getDesiredWidth() {
+		return this.width;
+	}
+
+	@Override
+	public double getMaxWidth() {
+		return 10000000;
+	}
+
+	@Override
+	public void setHBounds(double left, double right) {
+
+	}
+
+	@Override
+	public double getMinHeight() {
+		return this.height;
+	}
+
+	@Override
+	public double getDesiredHeight() {
+		return this.height;
+	}
+
+	@Override
+	public double getMaxHeight() {
+		return 10000000;
+	}
+
+	@Override
+	public void setVBounds(double top, double bottom) {
+
 	}
 }
