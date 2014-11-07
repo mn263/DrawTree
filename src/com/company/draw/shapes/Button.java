@@ -1,6 +1,7 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.Point;
 import com.company.draw.*;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
@@ -25,9 +26,12 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	public SO active;
 	public String value;
 
+
+
 	private Ellipse ellipse = null;
 	private Text text = null;
-
+	private final double BEVEL = 3;
+	private final Point MARGIN = new Point(3, 3);
 
 	public Button() { }
 	public Button(String label, SA model, String state, SO idle, SO hover, SO active, String value) {
@@ -105,6 +109,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	//	LAYOUT
+//	TODO: read pg. 114 and redo these methods accordingly
 	private void initializeContents(Graphics g) {
 		int ellipseWidth = 40;
 		int ellipseHeight = 40;
@@ -117,41 +122,45 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		this.contents.add(text);
 	}
 
-
-
 //	This should pick a default font size and then report
 
 	// min size that will create a button of that size based on the contents of the label attribute
 	@Override
 	public double getMinWidth() {
-		return this.text.getTextWidth() * 1.3;
+//		return this.text.getTextWidth() * 1.3;
+		return (BEVEL*2) + (text.getTextWidth());
 	}
 
 	@Override
 	public double getMinHeight() {
-		return this.text.getFontMetrics().getHeight() * 1.3;
+//		return this.text.getFontMetrics().getHeight() * 1.3;
+		return (BEVEL*2) + (text.getFontMetrics().getHeight());
 	}
 
 	// desired size that will create a button of that size based on the contents of the label attribute
 	@Override
 	public double getDesiredWidth() {
-		return this.text.getTextWidth() * 1.6;
+//		return this.text.getTextWidth() * 1.6;
+		return (BEVEL*2) + (MARGIN.getWidth()*2) + (text.getTextWidth());
 	}
 
 	@Override
 	public double getDesiredHeight() {
-		return this.text.getFontMetrics().getHeight() * 1.6;
+//		return this.text.getFontMetrics().getHeight() * 1.6;
+		return (BEVEL*2) + (MARGIN.getHeight()*2) + (text.getFontMetrics().getHeight());
 	}
 
 	// max size that will create a button of that size based on the contents of the label attribute
 	@Override
 	public double getMaxWidth() {
-		return this.text.getTextWidth() * 2.0;
+//		return this.text.getTextWidth() * 2.0;
+		return getDesiredWidth();
 	}
 
 	@Override
 	public double getMaxHeight() {
-		return this.text.getFontMetrics().getHeight() * 2.0;
+//		return this.text.getFontMetrics().getHeight() * 2.0;
+		return getDesiredHeight();
 	}
 
 
