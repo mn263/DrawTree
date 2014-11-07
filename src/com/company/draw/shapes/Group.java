@@ -147,7 +147,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public void setHBounds(double left, double right) {
-
+		this.tx = left;
+		this.width = right - left;
 	}
 
 	@Override
@@ -167,6 +168,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-
+		this.ty = top;
+		this.height = top - bottom;
 	}
 }
