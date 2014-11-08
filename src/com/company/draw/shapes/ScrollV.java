@@ -148,6 +148,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private double getSliderTop() {
+		if(slideRect == null) return 0;
 		return slideRect.top;
 	}
 
@@ -294,6 +295,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		else if (newHeight >= getMaxHeight()) newHeight = getMaxHeight();
 
 		double heightRatio = newHeight / oldHeight;
+//		TODO: also update slide range...?
 		slideRect.height = slideRect.height * heightRatio;
 		slideRect.top = ((slideRect.top - oldTop) * heightRatio) + rangeRect.top;
 
