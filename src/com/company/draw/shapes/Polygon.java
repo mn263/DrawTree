@@ -19,6 +19,13 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	public SO border;
 	public SO fill;
 
+	public Polygon() {}
+
+	public Polygon(SA points, double thickness, SO fill) {
+		this.points = points;
+		this.thickness = thickness;
+		this.fill = fill;
+	}
 
 	@Override
 	public void paint(Graphics g) {
@@ -74,10 +81,17 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		for (int i = 0; i < points.size(); i++) {
 			SV xPoint = points.get(i).get("x");
 			SV yPoint = points.get(i).get("y");
-			Long x = xPoint.getLong();
-			Long y = yPoint.getLong();
-			xArray[i] = x.intValue();
-			yArray[i] = y.intValue();
+			try {
+				Long x = xPoint.getLong();
+				Long y = yPoint.getLong();
+				xArray[i] = x.intValue();
+				yArray[i] = y.intValue();
+			} catch (Exception e) {
+				double x = xPoint.getDouble();
+				double y = yPoint.getDouble();
+				xArray[i] = (int) x;
+				yArray[i] = (int) y;
+			}
 		}
 		if (coord.equals("X")) {
 			return xArray;
