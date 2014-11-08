@@ -95,6 +95,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	public void changeState(SO newState) {
+		if(this.text == null) return;
 		this.ellipse.setBackgroundColor(newState);
 		this.text.text = this.label;
 	}

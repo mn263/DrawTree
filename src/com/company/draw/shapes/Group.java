@@ -22,6 +22,10 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public double width;
 	public double height;
 
+	private int layoutCount = -1;
+//	private double rowCount;
+//	private double columnCount;
+
 	public Group(){}
 
 	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate, double width, double height) {
@@ -146,12 +150,6 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	}
 
 	@Override
-	public void setHBounds(double left, double right) {
-		this.tx = left;
-		this.width = right - left;
-	}
-
-	@Override
 	public double getMinHeight() {
 		return this.height;
 	}
@@ -166,9 +164,65 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		return 10000000;
 	}
 
+	//	TODO: redo the setting, also look at pg. 114
+	@Override
+	public void setHBounds(double left, double right) {
+		this.tx = left;
+		this.width = right - left;
+
+//		double individualWidth = width / getColumnCount();
+		double individualWidth = width / getLayoutContentCount();
+		double currLeft = left;
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			SO so = sv.getSO();
+			if (so instanceof Layout) {
+				Layout layout = (Layout) so;
+				layout.setHBounds(left, right);
+//				layout.setHBounds(currLeft, currLeft + individualWidth);
+//				currLeft += individualWidth;
+			}
+		}
+	}
+
 	@Override
 	public void setVBounds(double top, double bottom) {
 		this.ty = top;
 		this.height = top - bottom;
+
+//		double individualHeight = height / getRowCount();
+		double individualHeight = height / getLayoutContentCount();
+		double currTop = top;
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			SO so = sv.getSO();
+			if (so instanceof Layout) {
+				Layout layout = (Layout) so;
+				layout.setVBounds(top, bottom);
+//				layout.setVBounds(currTop, currTop + individualHeight);
+//				currTop += individualHeight;
+			}
+		}
 	}
+
+	private int getLayoutContentCount() {
+		if (layoutCount == -1) {
+			for (int i = 0; i < contents.size(); i++) {
+				SV sv = contents.get(i);
+				SO so = sv.getSO();
+				if (so instanceof Layout) {
+					layoutCount++;
+				}
+			}
+		}
+		return layoutCount;
+	}
+
+//	private double getRowCount() {
+//		return rowCount;
+//	}
+//
+//	private double getColumnCount() {
+//		return columnCount;
+//	}
 }
