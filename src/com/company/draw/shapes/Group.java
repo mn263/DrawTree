@@ -178,7 +178,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 			SO so = sv.getSO();
 			if (so instanceof Layout) {
 				Layout layout = (Layout) so;
-				layout.setHBounds(left, right);
+//				TODO: the next line might break with scales/rotations
+				layout.setHBounds(left, right - tx);
 //				layout.setHBounds(currLeft, currLeft + individualWidth);
 //				currLeft += individualWidth;
 			}
@@ -198,7 +199,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 			SO so = sv.getSO();
 			if (so instanceof Layout) {
 				Layout layout = (Layout) so;
-				layout.setVBounds(top, bottom);
+//				TODO: the next line might break with scales/rotations
+				layout.setVBounds(top - ty, bottom);
 //				layout.setVBounds(currTop, currTop + individualHeight);
 //				currTop += individualHeight;
 			}
