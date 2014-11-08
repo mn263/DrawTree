@@ -28,22 +28,11 @@ public class SelectUtils {
 				(mouseY >= rectangle.top) && (mouseY <= rectangle.top + rectangle.height);
 
 		if (isSelected) {
-			return new ArrayList<Integer>();
+			return new ArrayList<>();
 		} else {
 			return null;
 		}
 	}
-//	public static ArrayList<Integer> checkIfInText(Text text, double mouseX, double mouseY) {
-//		boolean isSelected =
-//				(mouseX >= text.x) && (mouseX <= text.x + text.text.length() * text.size) &&
-//				(mouseY >= text.y - text.size) && (mouseY <= text.y);
-//
-//		if (isSelected) {
-//			return new ArrayList<Integer>();
-//		} else {
-//			return null;
-//		}
-//	}
 
 	public static boolean checkIfInOvalShape(Ellipse ellipse, double x, double y) {
 		Point center = new Point(ellipse.left + ellipse.width/2, ellipse.top + ellipse.height/2);
