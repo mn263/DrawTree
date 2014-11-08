@@ -3,7 +3,6 @@ package com.company.draw.shapes;
 import com.company.*;
 import com.company.draw.*;
 import spark.data.*;
-import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -125,9 +124,16 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 
-//	LAYOUT
+	Layout onlyChild = null;
+
+	//	LAYOUT
 	private Layout getOnlyChild() {
-		throw new NotImplementedException();
+		if (onlyChild == null) {
+			SV sv = contents.get(0);
+			SO so = sv.getSO();
+			onlyChild = (Layout) so;
+		}
+		return onlyChild;
 	}
 
 	@Override
@@ -172,6 +178,9 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	public void handleComponentResize(ComponentEvent e) {
-		throw new NotImplementedException();
+		int width = e.getComponent().getWidth();
+		int height = e.getComponent().getHeight();
+		setHBounds(0, width);
+		setVBounds(0, height);
 	}
 }
