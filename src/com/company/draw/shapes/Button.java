@@ -25,6 +25,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	public SO hover;
 	public SO active;
 	public String value;
+	public double columnSpan;
 
 
 
@@ -120,6 +121,11 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		this.ellipse.setBackgroundColor(this.idle);
 		this.contents.add(ellipse);
 		this.contents.add(text);
+	}
+
+	@Override
+	public double getColumnSpan() {
+		return columnSpan;
 	}
 
 //	This should pick a default font size and then report

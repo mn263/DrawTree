@@ -21,6 +21,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	public double rotate;
 	public double tx;
 	public double ty;
+	public double columnSpan;
 
 	public Interactable focus = null;
 
@@ -134,6 +135,11 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			onlyChild = (Layout) so;
 		}
 		return onlyChild;
+	}
+
+	@Override
+	public double getColumnSpan() {
+		return columnSpan;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.company.draw;
 
 public interface Layout {
 
+	double getColumnSpan();
 
 	// Returns the minimum width that the widget will accept for drawing.
 	double getMinWidth();

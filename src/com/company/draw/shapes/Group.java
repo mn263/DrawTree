@@ -21,6 +21,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public double ty;
 	public double width;
 	public double height;
+	public double columnSpan;
 
 	private int layoutCount = -1;
 //	private double rowCount;
@@ -134,6 +135,12 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 
 //	LAYOUT
+
+	@Override
+	public double getColumnSpan() {
+		return columnSpan;
+	}
+
 	@Override
 	public double getMinWidth() {
 		return this.width;
