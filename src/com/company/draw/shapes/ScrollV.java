@@ -25,6 +25,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	public double min;
 	public double step;
 	private Point sliderLast;
+	public double columnSpan;
 
 	private Rect activeRect = null;
 	private Rect rangeRect = null;
@@ -167,7 +168,6 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	//	DRAWABLE
 	@Override
 	public void paint(Graphics g) {
-		if (this.slideRect == null) initializeContents();
 		Graphics2D g2 = (Graphics2D) g;
 		for (Drawable drawable : contents) {
 			drawable.paint(g2);
@@ -189,6 +189,12 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 //	LAYOUT
+
+	@Override
+	public double getColumnSpan() {
+		return columnSpan;
+	}
+
 
 	private SO getFill(double red, double green, double blue) {
 		SO fill = new SObj();
@@ -273,12 +279,10 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
+		if (this.slideRect == null) initializeContents();
 		double newWidth = right - left;
 		if (getMinWidth() >= newWidth) newWidth = getMinWidth();
 		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();
-//		activeRect.left = left;
-//		rangeRect.left = left;
-//		slideRect.left = left;
 		slideRect.left = activeRect.left;
 		activeRect.width = newWidth;
 		rangeRect.width = newWidth;
@@ -288,6 +292,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
+		if (this.slideRect == null) initializeContents();
 		double oldTop = rangeRect.top;
 		double oldHeight = activeRect.height;
 		double newHeight = bottom - top;
@@ -312,12 +317,11 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		double scrollLength = activeRect.height;
 		double left = 0;
 		double center = width / 2;
-		double right = width;
 		double top = activeRect.top;
 		double bottom_of_up = activeRect.top + 9;
 		double top_of_down = activeRect.top + scrollLength - 9;
 		double bottom = activeRect.top + scrollLength;
-		upPolygon.points = getPoints(left, bottom_of_up, center, top, right, bottom_of_up);
-		downPolygon.points = getPoints(left, top_of_down, center, bottom, right, top_of_down);
+		upPolygon.points = getPoints(left, bottom_of_up, center, top, width, bottom_of_up);
+		downPolygon.points = getPoints(left, top_of_down, center, bottom, width, top_of_down);
 	}
 }

@@ -25,6 +25,8 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	public Interactable focus = null;
 
+	private int width = -1;
+
 	public void setKeyFocus(Interactable focus) {
 		this.focus = focus;
 	}
@@ -60,6 +62,11 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	@Override
 	public void paint(Graphics g) {
+		if (width == -1) { //because contents aren't initialized yet
+			WidgetUtils.graphics = g;
+			return;
+		}
+
 		int cSize = contents.size();
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
@@ -184,7 +191,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	public void handleComponentResize(ComponentEvent e) {
-		int width = e.getComponent().getWidth();
+		width = e.getComponent().getWidth();
 		int height = e.getComponent().getHeight();
 		setHBounds(tx, width - tx);
 		setVBounds(ty, height - ty);

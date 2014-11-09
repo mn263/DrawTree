@@ -3,6 +3,7 @@ package com.company.draw.shapes;
 import com.company.*;
 import spark.data.*;
 
+import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
@@ -11,6 +12,8 @@ public class WidgetUtils {
 	private static SwingTree swingTree;
 	private static ModelListener sliderBeingUsed;
 	private static ArrayList<ModelListener> modelListeners = new ArrayList<ModelListener>();
+	public static Graphics graphics;
+
 	public enum MouseStatus {RELEASED, PRESSED}
 	public static enum mouseType { UP, DOWN, MOVE }
 	private static MouseStatus mouseStatus = MouseStatus.RELEASED;
