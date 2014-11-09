@@ -55,12 +55,14 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
+		if(slideRect == null) return false;
 		this.downDifference = y - getSliderTop();
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
+		if(slideRect == null) return false;
 		if (WidgetUtils.sliderBeingUsed(this)) {
 			moveSlider(fromWindowCoords(y - downDifference));
 			return true;
@@ -71,7 +73,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(UP, x, y, myTransform);
+		return slideRect != null && callHandleMouse(UP, x, y, myTransform);
 	}
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
@@ -274,9 +276,10 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		double newWidth = right - left;
 		if (getMinWidth() >= newWidth) newWidth = getMinWidth();
 		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();
-		activeRect.left = left;
-		rangeRect.left = left;
-		slideRect.left = left;
+//		activeRect.left = left;
+//		rangeRect.left = left;
+//		slideRect.left = left;
+		slideRect.left = activeRect.left;
 		activeRect.width = newWidth;
 		rangeRect.width = newWidth;
 		slideRect.width = newWidth;
@@ -295,7 +298,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		else if (newHeight >= getMaxHeight()) newHeight = getMaxHeight();
 
 		double heightRatio = newHeight / oldHeight;
-//		TODO: also update slide range...?
+		this.rangeMax = -1; // this will cause the other methods to call a method to convert from screen to object.
 		slideRect.height = slideRect.height * heightRatio;
 		slideRect.top = ((slideRect.top - oldTop) * heightRatio) + rangeRect.top;
 
