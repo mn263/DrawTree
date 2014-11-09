@@ -167,8 +167,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	//	TODO: redo the setting, also look at pg. 114
 	@Override
 	public void setHBounds(double left, double right) {
-		this.tx = left;
-		this.width = right - left;
+//		this.tx = left;
+//		this.width = right - left;
 
 //		double individualWidth = width / getColumnCount();
 		double individualWidth = width / getLayoutContentCount();
@@ -179,16 +179,19 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 			if (so instanceof Layout) {
 				Layout layout = (Layout) so;
 //				TODO: the next line might break with scales/rotations
-				layout.setHBounds(left, right - tx);
+//				layout.setHBounds(left, right - tx);
+				layout.setHBounds(left + tx, right);
 //				layout.setHBounds(currLeft, currLeft + individualWidth);
 //				currLeft += individualWidth;
 			}
 		}
+//		this.tx = left;
+		this.width = right - left;
 	}
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-		this.ty = top;
+//		this.ty = top;
 		this.height = top - bottom;
 
 //		double individualHeight = height / getRowCount();
@@ -200,7 +203,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 			if (so instanceof Layout) {
 				Layout layout = (Layout) so;
 //				TODO: the next line might break with scales/rotations
-				layout.setVBounds(top - ty, bottom);
+//				layout.setVBounds(top + ty, bottom);
+				layout.setVBounds(top + ty, bottom - ty);
 //				layout.setVBounds(currTop, currTop + individualHeight);
 //				currTop += individualHeight;
 			}

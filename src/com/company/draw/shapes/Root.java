@@ -180,7 +180,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	public void handleComponentResize(ComponentEvent e) {
 		int width = e.getComponent().getWidth();
 		int height = e.getComponent().getHeight();
-		setHBounds(0, width);
-		setVBounds(0, height);
+		setHBounds(tx, width - tx);
+		setVBounds(ty, height - ty);
 	}
 }
