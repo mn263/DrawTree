@@ -198,6 +198,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		double maxSizeHeightConstraint = size * (availableHeight / currentHeight);
 
 		this.size = min(maxSizeHeightConstraint * 0.8, maxSizeWidthConstraint * 0.7);
+		this.size = max(1, this.size);
 		setFontMetrics(WidgetUtils.graphics);
 	}
 
