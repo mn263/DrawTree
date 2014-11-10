@@ -170,8 +170,9 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	//	LAYOUT
 	public void adjustFontWidth(String label, double left, double availableWidth) {
+		if(!label.isEmpty()) this.text = label;
+
 		this.buttonWidth = availableWidth;
-		this.text = label;
 		size = max(1, getMaxWidth() * 0.7);
 		setFontMetrics(WidgetUtils.graphics);
 		int textWidth = getFontMetrics().stringWidth(text);
