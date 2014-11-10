@@ -35,7 +35,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	private final Point MARGIN = new Point(3, 3);
 
 	public Button() { }
-	public Button(String label, SA model, String state, SO idle, SO hover, SO active, String value) {
+	public Button(String label, SA model, String state, SO idle, SO hover, SO active, String value, double columnSpan) {
 		this.label = label;
 		this.model = model;
 		this.state = state;
@@ -43,7 +43,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		this.hover = hover;
 		this.active = active;
 		this.value = value;
-//		this.contents.a
+		this.columnSpan = columnSpan;
 	}
 
 	// INTERACTABLE
@@ -124,7 +124,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 

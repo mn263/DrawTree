@@ -148,7 +148,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 

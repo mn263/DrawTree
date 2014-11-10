@@ -133,7 +133,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //	LAYOUT
 
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 

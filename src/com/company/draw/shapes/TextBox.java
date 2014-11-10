@@ -16,7 +16,8 @@ import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
 
 	public String state;
-	public SA contents;
+	public ArrayList<Drawable> contents = new ArrayList<>();
+//	public SA contents;
 	public SO idle;
 	public SO hover;
 	public SO active;
@@ -83,25 +84,12 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private void loadContentText() {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Selectable selectable = (Selectable) so;
-			if (so.get("class") != null && "\"content\"".equals(so.get("class").toString())) {
-				if (selectable.getClass().toString().equals("class com.company.draw.shapes.Text")) {
-					this.content = (Text) selectable;
-				}
-			}
-		}
+		this.content = this.text;
 	}
 
 	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Selectable selectable = (Selectable) so;
-			if (so.get("class") != null && "\"active\"".equals(so.get("class").toString())) {
-				selectable.setBackgroundColor(newState);
-			}
-		}
+		if (this.rect == null) return;
+		this.rect.setBackgroundColor(newState);
 	}
 
 //	DRAWABLE
@@ -157,7 +145,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 

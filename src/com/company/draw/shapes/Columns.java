@@ -10,6 +10,7 @@ import java.awt.geom.*;
 import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
+import static java.lang.StrictMath.*;
 
 /**
  * This object computes a minimum, desired and maximum column width for each of its children.
@@ -87,7 +88,7 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 
 	//	LAYOUT
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 
@@ -125,9 +126,9 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 				currRow.add(child);
 				child.setHBounds(0, width);
 			} else { // fit as many as you can onto the row
-				double widthLeftInRow = width - columnWidths;
 				int currentColumn = 0;
-				int cellWidth = 1;
+				double cellWidth = max(1, child.getColSpan());
+				double widthLeftInRow = width - (columnWidths * cellWidth);
 				while (widthLeftInRow > 0) { // child fits in cellWidth add it and continue
 					if (child.getMinWidth() < cellWidth * columnWidths) {
 						currRow.add(child);
@@ -135,12 +136,12 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 						double right = left + (cellWidth * columnWidths);
 						child.setHBounds(left, right);
 						currentColumn += cellWidth;
-						cellWidth = 1;
 						i++;
 						if (i == children.size()) {
 							widthLeftInRow = -1;
 						} else {
 							child = children.get(i);
+							cellWidth = max(1, child.getColSpan());
 						}
 					} else { // increase columnSpan and continue
 						cellWidth++;
@@ -262,8 +263,8 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 			} else if (max == size.MIN) {
 				childMax = layout.getMinWidth();
 			}
-			if (layout.getColumnSpan() > 0) {
-				childMax = (childMax - (layout.getColumnSpan()-1)*gutter) / layout.getColumnSpan();
+			if (layout.getColSpan() > 0) {
+				childMax = (childMax - (layout.getColSpan()-1)*gutter) / layout.getColSpan();
 			}
 			if (childMax > maxOfChildren) maxOfChildren = childMax;
 		}

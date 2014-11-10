@@ -191,7 +191,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 //	LAYOUT
 
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 

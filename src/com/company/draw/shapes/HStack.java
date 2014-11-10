@@ -27,7 +27,7 @@ public class HStack extends SOReflect implements Layout {
 
 	//	LAYOUT
 	@Override
-	public double getColumnSpan() {
+	public double getColSpan() {
 		return columnSpan;
 	}
 
