@@ -156,8 +156,8 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private void loadConversionDoubles() {
-		double rangeHeight = 0;
-		double sliderHeight = 0;
+		double rangeHeight;
+		double sliderHeight;
 		rangeTop = rangeRect.top;
 		rangeHeight = rangeRect.height;
 		sliderHeight = slideRect.height;
