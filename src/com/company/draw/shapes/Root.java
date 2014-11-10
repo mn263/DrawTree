@@ -64,7 +64,10 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	public void paint(Graphics g) {
 		if (width == -1) { //because contents aren't initialized yet
 			WidgetUtils.graphics = g;
-			return;
+			setHBounds(tx, 600 - tx);
+			setVBounds(ty, 600 - ty);
+			width = (int) (600 - tx);
+//			return;
 		}
 
 		int cSize = contents.size();

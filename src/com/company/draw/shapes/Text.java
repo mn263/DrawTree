@@ -25,6 +25,8 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	private FontMetrics metrics = null;
 	private Font gFont = null;
+	private double buttonWidth = 0;
+	private double buttonHeight = 0;
 
 	public Text(){}
 
@@ -44,7 +46,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		setFontMetrics(g);
 		if (text != null) {
 			g.setFont(gFont);
-			g.drawString(text, (int) x, (int) y + (metrics.getHeight() / 2));
+			g.drawString(text, (int) x, (int) y + (metrics.getHeight() / 2) + ((int) buttonHeight / 2));
 		}
 	}
 
@@ -167,27 +169,32 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	//	LAYOUT
-	public void adjustFontSize(String label, double left, double width, double height) {
+	public void adjustFontWidth(String label, double left, double availableWidth) {
+		this.buttonWidth = availableWidth;
 		this.text = label;
-		if(width > 0) {
-			int textWidth = getTextWidth();
-			if (textWidth * 1.3 > width) {
-				double oldSize = this.size;
-				this.size = oldSize / (textWidth / (width / 1.6));
-				centerWidth(left, width, textWidth * (this.size / oldSize));
-			} else if (textWidth * 3.0 < width) {
-				this.size = this.size / (textWidth / (width / 1.6));
-				centerWidth(left, width, textWidth * (width / 1.6));
-			}
-		}
-		if (height > 0) {
-			int textHeight = this.metrics.getHeight();
-			if (textHeight * 1.3 > height) {
-				this.size = this.size / (textHeight / (width / 1.6));
-			} else if (textHeight * 3.0 < height) {
-				this.size = this.size / (textHeight / (width / 1.6));
-			}
-		}
+		size = max(1, getMaxWidth() * 0.7);
+		setFontMetrics(WidgetUtils.graphics);
+		int textWidth = getFontMetrics().stringWidth(text);
+		centerWidth(left, availableWidth, textWidth);
+	}
+
+	private double getMaxWidth() {
+		int textWidth = getFontMetrics().stringWidth(text);
+		return (size * (this.buttonWidth / textWidth));
+	}
+
+	public void adjustFontHeight(double top, double availableHeight) {
+		buttonHeight = availableHeight;
+		this.y = top;
+		double maxSizeWidthConstraint = getMaxWidth();
+
+		int currentHeight = getFontMetrics().getHeight();
+		double maxSizeHeightConstraint = size * (availableHeight / currentHeight);
+
+		this.size = min(maxSizeHeightConstraint * 0.8, maxSizeWidthConstraint * 0.7);
+		setFontMetrics(WidgetUtils.graphics);
+
+		System.out.print("new size: " + getFontMetrics().stringWidth(text));
 	}
 
 	private void centerWidth(double btnLeft, double btnWidth, double textWidth) {

@@ -103,19 +103,19 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	// DRAWABLE
 	@Override
 	public void paint(Graphics g) {
-		for (Drawable drawable : contents) {
-			drawable.paint(g);
-		}
+		ellipse.paint(g);
+		text.paint(g);
 	}
 
 	//	LAYOUT
 	private void initializeContents() {
 		int ellipseWidth = 40;
 		int ellipseHeight = 40;
-		this.text = new Text(this.label, 0, ellipseHeight / 2, "sans-serif", 24, false, -1);
+		this.text = new Text(this.label, 0, ellipseHeight / 2, "sans-serif", 36, false, -1);
 		Graphics g = WidgetUtils.graphics;
 		this.text.setFontMetrics(g);
-		this.text.adjustFontSize(this.label, 0, ellipseWidth, ellipseHeight);
+		this.text.adjustFontWidth(this.label, 0, ellipseWidth);
+		this.text.adjustFontHeight(0, ellipseHeight);
 		this.ellipse = new Ellipse(0, 0, ellipseWidth, ellipseHeight);
 		this.ellipse.setBackgroundColor(this.idle);
 		this.contents.add(ellipse);
@@ -132,23 +132,23 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	// min size that will create a button of that size based on the contents of the label attribute
 	@Override
 	public double getMinWidth() {
-		return (BEVEL*2) + (text.getTextWidth());
+		return (BEVEL*2) + (getText().getTextWidth());
 	}
 
 	@Override
 	public double getMinHeight() {
-		return (BEVEL*2) + (text.getFontMetrics().getHeight());
+		return (BEVEL*2) + (getText().getFontMetrics().getHeight());
 	}
 
 	// desired size that will create a button of that size based on the contents of the label attribute
 	@Override
 	public double getDesiredWidth() {
-		return (BEVEL*2) + (MARGIN.getWidth()*2) + (text.getTextWidth());
+		return (BEVEL*2) + (MARGIN.getWidth()*2) + (getText().getTextWidth());
 	}
 
 	@Override
 	public double getDesiredHeight() {
-		return (BEVEL*2) + (MARGIN.getHeight()*2) + (text.getFontMetrics().getHeight());
+		return (BEVEL*2) + (MARGIN.getHeight()*2) + (getText().getFontMetrics().getHeight());
 	}
 
 	// max size that will create a button of that size based on the contents of the label attribute
@@ -170,7 +170,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		ellipse.left = left;
 		ellipse.width = right - left;
 		ellipse.setBackgroundColor(this.idle);
-		text.adjustFontSize(this.label, left, (left - right), -1);
+		text.adjustFontWidth(this.label, left, (right - left));
 	}
 
 
@@ -180,6 +180,11 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		ellipse.top = top;
 		ellipse.height = bottom - top;
 		ellipse.setBackgroundColor(this.idle);
-		text.adjustFontSize(this.label, ellipse.left, -1, bottom - top);
+		text.adjustFontHeight(top, bottom - top);
+	}
+
+	private Text getText() {
+		if(this.text == null) initializeContents();
+		return text;
 	}
 }
