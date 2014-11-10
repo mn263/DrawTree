@@ -2,28 +2,31 @@ package com.company.draw.shapes;
 
 import com.company.*;
 import com.company.draw.*;
-import org.omg.CORBA.DynAnyPackage.*;
 import spark.data.*;
 
-import java.util.*;
+import java.awt.*;
 
-public class HStack extends SOReflect implements Layout {
+public class HStack extends SOReflect implements Layout, Drawable {
 
 	public SA contents;
-
-	private Point minSize;
-	private Point desiredSize;
-	private Point maxSize;
-	private boolean sizesAreValid;
 	public double columnSpan;
 
-	private ArrayList<Layout> stackContents = null;
+	private enum sizeType { MIN, DESIRED, MAX }
 
-	public HStack(){}
-	public HStack(SA contents) {
-		this.contents = contents;
+	public HStack() { }
+
+
+	//	DRAWABLE
+	@Override
+	public void paint(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			SO so = sv.getSO();
+			Drawable drawable = (Drawable) so;
+			drawable.paint(g2);
+		}
 	}
-
 
 	//	LAYOUT
 	@Override
@@ -33,103 +36,125 @@ public class HStack extends SOReflect implements Layout {
 
 	@Override
 	public double getMinWidth() {
-		if (sizesAreValid) return minSize.getX();
-		if (this.stackContents == null) fillStackContents();
-
-		for (Layout layout : stackContents) {
-			minSize.setX( minSize.getX() + layout.getMinWidth());
-			if (minSize.getY() < layout.getMinHeight()) minSize.setY(layout.getMinHeight());
-		}
-
-		sizesAreValid = true;
-		return minSize.getX();
+		return getTotalChildWidth(sizeType.MIN);
 	}
 
 	@Override
 	public double getDesiredWidth() {
-		if (sizesAreValid) return desiredSize.getX();
-		if (this.stackContents == null) fillStackContents();
-
-		for (Layout layout : stackContents) {
-			desiredSize.setX( desiredSize.getX() + layout.getDesiredWidth());
-			if (desiredSize.getY() < layout.getDesiredHeight()) desiredSize.setY(layout.getDesiredHeight());
-		}
-
-		sizesAreValid = true;
-		return desiredSize.getX();
+		return getTotalChildWidth(sizeType.DESIRED);
 	}
 
 	@Override
 	public double getMaxWidth() {
-		if (sizesAreValid) return maxSize.getX();
-		if (this.stackContents == null) fillStackContents();
+		return getTotalChildWidth(sizeType.MAX);
+	}
 
-		for (Layout layout : stackContents) {
-			maxSize.setX( maxSize.getX() + layout.getMaxWidth());
-			if (maxSize.getY() < layout.getMaxHeight()) maxSize.setY(layout.getMaxHeight());
+	private double getTotalChildWidth(sizeType size) {
+		double runningTotal = 0;
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			Layout layout = (Layout) sv.getSO();
+			if (size == sizeType.MIN) {
+				runningTotal += layout.getMinWidth();
+			} else if (size == sizeType.DESIRED) {
+				runningTotal += layout.getDesiredWidth();
+			} else if (size == sizeType.MAX) {
+				runningTotal += layout.getMaxWidth();
+			}
 		}
+		return runningTotal;
+	}
 
-		sizesAreValid = true;
-		return maxSize.getX();
+	private double getChildHeight(sizeType size) {
+		double widestChild = 0;
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			Layout layout = (Layout) sv.getSO();
+			if (size == sizeType.MIN) {
+				if (widestChild < layout.getMinHeight()) {
+					widestChild = layout.getMinHeight();
+				}
+			} else if (size == sizeType.DESIRED) {
+				if (widestChild < layout.getDesiredHeight()) {
+					widestChild = layout.getDesiredHeight();
+				}
+			} else if (size == sizeType.MAX) {
+				if (widestChild < layout.getMaxHeight()) {
+					widestChild = layout.getMaxHeight();
+				}
+			}
+		}
+		return widestChild;
 	}
 
 	@Override
 	public double getMinHeight() {
-		getMinWidth();
-		return minSize.getY();
+		return getChildHeight(sizeType.MIN);
 	}
 
 	@Override
 	public double getDesiredHeight() {
-		getMinWidth();
-		return minSize.getY();
+		return getChildHeight(sizeType.DESIRED);
 	}
 
 	@Override
 	public double getMaxHeight() {
-		getMaxWidth();
-		return maxSize.getY();
+		return getChildHeight(sizeType.MAX);
 	}
 
-//	TODO: redo again according to pg 119
-	@Override
-	public void setHBounds(double left, double right) {
-		if (this.stackContents == null) fillStackContents();
-		invalidateSizes();
-		double individualSize = (right - left) / stackContents.size();
-		double curr_left = left;
-		for (Layout layout : stackContents) {
-			layout.setHBounds(curr_left, curr_left + individualSize);
-			curr_left += individualSize;
-		}
-	}
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-		if (this.stackContents == null) fillStackContents();
-		invalidateSizes();
-		for (Layout layout : stackContents) {
-			layout.setVBounds(top, bottom);
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			Layout child = (Layout) sv.getSO();
+			child.setVBounds(top, bottom);
 		}
 	}
 
+	@Override
+	public void setHBounds(double left, double right) {
+		double min = getMinHeight();
+		double max = getMaxHeight();
+		double desired = getDesiredHeight();
+		double height = right - left;
 
-	private void invalidateSizes() { sizesAreValid = false; }
-
-	private void fillStackContents() {
-		try {
+		if (min >= height) {
+			double childLeft = left;
 			for (int i = 0; i < contents.size(); i++) {
 				SV sv = contents.get(i);
-				SO so = sv.getSO();
-				if(!(so instanceof Layout)) {
-					throw new InvalidValue("All contents must be of type layout");
-				} else {
-					Layout layout = (Layout) so;
-					stackContents.add(layout);
-				}
+				Layout child = (Layout) sv.getSO();
+				double childWidth = child.getMinHeight();
+				child.setHBounds(childLeft, childLeft + childWidth);
+				childLeft += childWidth;
 			}
-		} catch (InvalidValue invalidValue) {
-			invalidValue.printStackTrace();
+		} else if (desired >= height) {
+			double desiredMargin = (desired - min);
+			if(desiredMargin == 0) desiredMargin = 1;
+			double fraction = (height - min) / desiredMargin;
+			double childLeft = left;
+			for (int i = 0; i < contents.size(); i++) {
+				SV sv = contents.get(i);
+				Layout child = (Layout) sv.getSO();
+				double childMinHeight = child.getMinHeight();
+				double childDesiredHeight = child.getDesiredHeight();
+				double childWidth = childMinHeight + (childDesiredHeight - childMinHeight) * fraction;
+				child.setHBounds(childLeft, childLeft + childWidth);
+				childLeft += childWidth;
+			}
+		} else {
+			double maxMargin = (max - desired) == 0 ? 1 : (max - desired);
+			double fraction = (height - desired) / maxMargin;
+			double childLeft = left;
+			for (int i = 0; i < contents.size(); i++) {
+				SV sv = contents.get(i);
+				Layout child = (Layout) sv.getSO();
+				double childDesiredHeight = child.getDesiredHeight();
+				double childMaxHeight = child.getMaxHeight();
+				double childWidth = childDesiredHeight + (childMaxHeight - childDesiredHeight) * fraction;
+				child.setHBounds(childLeft, childLeft + childWidth);
+				childLeft += childWidth;
+			}
 		}
 	}
 }
