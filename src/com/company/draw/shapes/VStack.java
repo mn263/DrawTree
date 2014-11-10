@@ -76,11 +76,11 @@ public class VStack extends SOReflect implements Layout, Drawable {
 			SV sv = contents.get(i);
 			Layout layout = (Layout) sv.getSO();
 			if (size == sizeType.MIN) {
-				runningTotal += layout.getMinWidth();
+				runningTotal += layout.getMinHeight();
 			} else if (size == sizeType.DESIRED) {
-				runningTotal += layout.getDesiredWidth();
+				runningTotal += layout.getDesiredHeight();
 			} else if (size == sizeType.MAX) {
-				runningTotal += layout.getMaxWidth();
+				runningTotal += layout.getMaxHeight();
 			}
 		}
 		return runningTotal;
