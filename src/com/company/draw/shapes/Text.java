@@ -55,13 +55,13 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		if (metrics == null) return null;
 		if (text == null) text = "";
 
-		int height = metrics.getHeight();
+		int height = (metrics.getHeight() / 2) + ((int) buttonHeight / 2);
 		int width = metrics.stringWidth(text);
 
 		Point2D ptSrc = new Point(mX, mY);
 		Point2D ptDst = transform.transform(ptSrc, null);
 
-		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + 3) && (ptDst.getY() > y - height);
+		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + height + 3) && (ptDst.getY() > y);
 		if (isSelected) {
 			ArrayList<Integer> arrayList = new ArrayList<Integer>();
 			arrayList.add(myIndex);
@@ -171,6 +171,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	//	LAYOUT
 	public void adjustFontWidth(String label, double left, double availableWidth) {
 		if(!label.isEmpty()) this.text = label;
+		if(this.text.isEmpty()) this.text = "Type Here...";
 
 		this.buttonWidth = availableWidth;
 		size = max(1, getMaxWidth() * 0.7);
@@ -183,6 +184,10 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		int textWidth = getFontMetrics().stringWidth(text);
 		return (size * (this.buttonWidth / textWidth));
 	}
+
+//	private double getMaxHeight() {
+//
+//	}
 
 	public void adjustFontHeight(double top, double availableHeight) {
 		buttonHeight = availableHeight;
