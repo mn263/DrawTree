@@ -193,16 +193,18 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		this.size = min(maxSizeHeightConstraint * 0.8, maxSizeWidthConstraint * 0.7);
 		setFontMetrics(WidgetUtils.graphics);
-
-		System.out.print("new size: " + getFontMetrics().stringWidth(text));
 	}
 
 	private void centerWidth(double btnLeft, double btnWidth, double textWidth) {
 		double diff = btnWidth - textWidth;
-		if (diff < 0) try {
-			throw new Exception("Invalid width");
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (diff < 0) {
+			System.out.println("Invalid width");
+			diff = 0;
+//			try {
+//				throw new Exception("Invalid width");
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 		}
 		this.x = btnLeft + diff/2;
 	}

@@ -56,7 +56,6 @@ public  class TreePanel extends JPanel implements ComponentListener {
 	//	WINDOW LISTENER METHODS:
 	@Override
 	public void componentResized(ComponentEvent e) {
-		System.out.println("componentResized()");
 		Root root = SwingTree.getRoot();
 		if (root != null) {
 			root.handleComponentResize(e);
