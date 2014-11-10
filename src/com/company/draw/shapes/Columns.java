@@ -118,29 +118,32 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 
 	private void reLocateChildren() {
 		grid = new ArrayList<>();
-//		TODO: test this for bugs
 		if(children == null) loadChildren();
 		for (int i = 0; i < children.size(); i++) {
+			int j = 0;
 			Layout child = children.get(i);
 			if (child.getMinWidth() > width) { // give it the whole row
 				currRow.add(child);
 				child.setHBounds(0, width);
 			} else { // fit as many as you can onto the row
-				int currentColumn = 0;
+				j = i;
+				int startingColumn = 0;
+				int currentColumn = (int) max(1, child.getColSpan());
 				double cellWidth = max(1, child.getColSpan());
 				double widthLeftInRow = width - (columnWidths * cellWidth);
-				while (widthLeftInRow > 0) { // child fits in cellWidth add it and continue
+				while (widthLeftInRow > 0 && currentColumn <= nColumns) { // child fits in cellWidth add it and continue
 					if (child.getMinWidth() < cellWidth * columnWidths) {
 						currRow.add(child);
-						double left = currentColumn * columnWidths;
+						double left = startingColumn * columnWidths;
+						startingColumn = currentColumn;
 						double right = left + (cellWidth * columnWidths);
 						child.setHBounds(left, right);
 						currentColumn += cellWidth;
-						i++;
-						if (i == children.size()) {
+						j++;
+						if (j == children.size()) {
 							widthLeftInRow = -1;
 						} else {
-							child = children.get(i);
+							child = children.get(j);
 							cellWidth = max(1, child.getColSpan());
 						}
 					} else { // increase columnSpan and continue
@@ -149,6 +152,7 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 					widthLeftInRow -= columnWidths;
 				}
 			}
+			i += currRow.size() - 1;
 			saveRow();
 		}
 	}
