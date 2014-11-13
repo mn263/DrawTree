@@ -83,9 +83,9 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	@Override
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(this.left, this.top);
-		retArray[1] = new Point(this.left + this.width, this.top);
-		retArray[2] = new Point(this.left, this.top + this.height);
+		retArray[0] = new Point(this.left - 3, this.top - 2);
+		retArray[1] = new Point(this.left + this.width, this.top - 2);
+		retArray[2] = new Point(this.left - 3, this.top + this.height);
 		retArray[3] = new Point(this.left + this.width, this.top + this.height);
 		return retArray;
 	}

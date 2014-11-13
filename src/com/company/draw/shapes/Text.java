@@ -57,13 +57,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		int height = (metrics.getHeight() / 2) + ((int) buttonHeight / 2);
 		int width = metrics.stringWidth(text);
-
 		Point2D ptSrc = new Point(mX, mY);
 		Point2D ptDst = transform.transform(ptSrc, null);
 
 		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + height + 3) && (ptDst.getY() > y);
 		if (isSelected) {
-			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(myIndex);
 			return arrayList;
 		} else return null;
@@ -115,11 +114,13 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public Point2D[] controls() {
+		int width = metrics.stringWidth(text);
+		int height = metrics.getHeight() + (int) buttonHeight;
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(x, y - size);
-		retArray[1] = new Point(x + (size * text.length()), y - size);
-		retArray[2] = new Point(x, y);
-		retArray[3] = new Point(x + (size * text.length()), y);
+		retArray[0] = new Point(x - 3, y - height/2);
+		retArray[1] = new Point(x + width, y - height/2);
+		retArray[2] = new Point(x - 3, y + height/2 + 1);
+		retArray[3] = new Point(x + width, y + height/2 + 1);
 		return retArray;
 	}
 
