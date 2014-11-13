@@ -56,8 +56,7 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 			g2.setColor(lineColor);
 		}
 //		Draw fill
-		g2.drawRect((int) left, (int) top, (int) width, (int) height);
-
+		g2.fillRect((int) left, (int) top, (int) width, (int) height);
 		if (border != null) {
 			Double red = border.get("r").getDouble();
 			Double green = border.get("g").getDouble();
@@ -66,7 +65,7 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 			g2.setColor(lineColor);
 		}
 //		Draw border
-		g2.fillRect((int) left, (int) top, (int) width, (int) height);
+		g2.drawRect((int) left, (int) top, (int) width, (int) height);
 	}
 
 	/**
