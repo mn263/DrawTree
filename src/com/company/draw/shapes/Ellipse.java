@@ -54,6 +54,8 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	//		Draw fill
 			g2.fillOval((int) left, (int) top, (int) width, (int) height);
 		}
+//		Draw fill
+		g2.drawOval((int) left, (int) top, (int) width, (int) height);
 
 		if (border != null) {
 			Double red = border.get("r").getDouble();
@@ -67,6 +69,8 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 			g2.setColor(buttonBorder);
 			g2.drawOval((int) left, (int) top, (int) width, (int) height);
 		}
+//		Draw border
+		g2.fillOval((int) left, (int) top, (int) width, (int) height);
 	}
 
 	@Override
@@ -94,6 +98,15 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 		retArray[3] = new Point(this.left + this.width, this.top + this.height);
 		return retArray;
 	}
+//	@Override
+//	public Point2D[] controls() {
+//		Point2D[] retArray = new Point2D[4];
+//		retArray[0] = new Point(this.left, this.top);
+//		retArray[1] = new Point(this.left + this.width, this.top);
+//		retArray[2] = new Point(this.left, this.top + this.height);
+//		retArray[3] = new Point(this.left + this.width, this.top + this.height);
+//		return retArray;
+//	}
 
 	@Override
 	public void setBackgroundColor(SO newColor) {
