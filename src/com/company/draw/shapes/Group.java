@@ -12,7 +12,9 @@ import java.util.*;
 import static com.company.draw.shapes.WidgetUtils.*;
 
 public class Group extends SOReflect implements Drawable, Selectable, Interactable, Layout {
-
+//TODO: draw background for my projects
+//	TODO: test projects on windows before submitting
+//	todo: don't forget to do the above
 	public SA contents;
 	public double sx;
 	public double sy;
@@ -22,6 +24,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public double width;
 	public double height;
 	public double columnSpan;
+	public SV model;
 
 	public Group(){}
 	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate, double width, double height) {
