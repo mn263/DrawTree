@@ -11,8 +11,7 @@ import java.util.*;
 public class Select extends Group implements Selectable {
 
 	//When selected changes we should call repaint
-	private ArrayList<Integer> selected = new ArrayList<Integer>();
-	public double columnSpan;
+	private ArrayList<Integer> selected = new ArrayList<>();
 
 	public Select(Group group) {
 		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate, group.width, group.height);
@@ -39,7 +38,6 @@ public class Select extends Group implements Selectable {
 		revertTransform.rotate(-Math.toRadians(rotate));
 		revertTransform.scale(1/sx, 1/sy);
 		for (int i = selected.size() - 2; i >= 0; i--) {
-//		for (int i = 0 ; i < selected.size(); i++) {
 			int index = selected.get(i);
 			if (sv == null) {
 				sv = contents.get(index);

@@ -11,17 +11,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 
-public class Root extends SOReflect implements Layout, Interactable, Drawable {
-
-	public SV model;
-
-	public SA contents;
-	public double sx;
-	public double sy;
-	public double rotate;
-	public double tx;
-	public double ty;
-	public double columnSpan;
+public class Root extends Group {
 
 	public Interactable focus = null;
 
@@ -55,7 +45,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	public void updateModel(ArrayList<String> path, String value) {
-		ArrayList<String> copyPath = new ArrayList<String>(path);
+		ArrayList<String> copyPath = new ArrayList<>(path);
 		updateRoot(model.getSO(), copyPath, value);
 		WidgetUtils.updateModListeners(path, value);
 	}
@@ -67,7 +57,6 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			setHBounds(tx, 600 - tx);
 			setVBounds(ty, 600 - ty);
 			width = (int) (600 - tx);
-//			return;
 		}
 
 		int cSize = contents.size();
@@ -102,24 +91,14 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	@Override
-	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
-	}
-
-	@Override
-	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(mouseType.MOVE, x, y, myTransform);
-	}
-
-	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
 
-//		SO modelObjects = this.model.getSO();
-//		String[] modelAttrs = modelObjects.attributes();
-//		for (String attr : modelAttrs) {
-//			System.out.println(attr + " -> " + modelObjects.get(attr));
-//		}
+		SO modelObjects = this.model.getSO();
+		String[] modelAttrs = modelObjects.attributes();
+		for (String attr : modelAttrs) {
+			System.out.println(attr + " -> " + modelObjects.get(attr));
+		}
 
 		return handeled;
 	}
@@ -145,11 +124,6 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			onlyChild = (Layout) so;
 		}
 		return onlyChild;
-	}
-
-	@Override
-	public double getColSpan() {
-		return columnSpan;
 	}
 
 	@Override

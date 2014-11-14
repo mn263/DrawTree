@@ -41,7 +41,9 @@ public  class TreePanel extends JPanel implements ComponentListener {
 	public void checkMouseEvent(MouseEvent e) {
 		for(int i = 0; i < drawables.size(); i++) {
 			Drawable drawable = drawables.get(i);
-			if("class com.company.draw.shapes.Group".equals(drawable.getClass().toString())) {
+			if("class com.company.draw.shapes.Group".equals(drawable.getClass().toString()) ||
+			"class com.company.draw.shapes.Root".equals(drawable.getClass().toString()) ||
+			"class com.company.draw.shapes.Select".equals(drawable.getClass().toString())) {
 				Group group = (Group) drawable;
 				this.selected = new Select(group);
 				ArrayList<Integer> path = selected.select(e.getX(), e.getY(), i, new AffineTransform());
