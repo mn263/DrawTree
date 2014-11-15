@@ -63,7 +63,7 @@ public class Root extends Group {
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 //		Perform Transformations
-		if (sx != 0) g2.scale(sx, sy);
+		if (sx != 0 && sy != 0) g2.scale(sx, sy);
 		g2.rotate(-Math.toRadians(rotate));
 		g2.translate((int) tx, (int) ty);
 
@@ -75,7 +75,7 @@ public class Root extends Group {
 //		Revert Transformations
 		g2.translate((int) -tx, (int) -ty);
 		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0) g2.scale(1 / sx, 1 / sy);
+		if (sx != 0 && sy != 0) g2.scale(1 / sx, 1 / sy);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -93,13 +93,13 @@ public class Root extends Group {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
-
-		SO modelObjects = this.model.getSO();
-		String[] modelAttrs = modelObjects.attributes();
-		for (String attr : modelAttrs) {
-			System.out.println(attr + " -> " + modelObjects.get(attr));
+		if(this.model != null) {
+			SO modelObjects = this.model.getSO();
+			String[] modelAttrs = modelObjects.attributes();
+			for (String attr : modelAttrs) {
+				System.out.println(attr + " -> " + modelObjects.get(attr));
+			}
 		}
-
 		return handeled;
 	}
 

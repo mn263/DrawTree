@@ -45,7 +45,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 //		Perform Transformations
-		if (sx != 0) g2.scale(sx, sy);
+		if (sx != 0 && sy != 0) g2.scale(sx, sy);
 		g2.rotate(-Math.toRadians(rotate));
 		g2.translate((int) tx, (int) ty);
 
@@ -57,7 +57,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		Revert Transformations
 		g2.translate((int) -tx, (int) -ty);
 		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0) g2.scale(1 / sx, 1 / sy);
+		if (sx != 0 && sy != 0) g2.scale(1 / sx, 1 / sy);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -71,8 +71,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform oldTrans) {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(-Math.toRadians(rotate));
-		transform.scale(1 / sx, 1 / sy);
+		transform.rotate(Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
@@ -185,7 +185,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-		this.height = top - bottom;
+		this.height = bottom - top;
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();

@@ -85,9 +85,9 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[4];
 		retArray[0] = new Point(this.left - 3, this.top - 2);
-		retArray[1] = new Point(this.left + this.width, this.top - 2);
+		retArray[1] = new Point(this.left + this.width + 1, this.top - 2);
 		retArray[2] = new Point(this.left - 3, this.top + this.height);
-		retArray[3] = new Point(this.left + this.width, this.top + this.height);
+		retArray[3] = new Point(this.left + this.width + 1, this.top + this.height);
 		return retArray;
 	}
 

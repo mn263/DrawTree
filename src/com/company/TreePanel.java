@@ -1,6 +1,5 @@
 package com.company;
 
-import com.company.draw.*;
 import com.company.draw.shapes.*;
 
 import javax.swing.*;
@@ -34,7 +33,7 @@ public  class TreePanel extends JPanel implements ComponentListener {
 			drawable.paint(g);
 		}
 		if (this.selected != null) {
-			this.selected.paint(g);
+			this.selected.paintSelected(g);
 		}
 	}
 

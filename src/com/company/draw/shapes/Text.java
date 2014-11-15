@@ -118,9 +118,9 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		int height = metrics.getHeight() + (int) buttonHeight;
 		Point2D[] retArray = new Point2D[4];
 		retArray[0] = new Point(x - 3, y - height/2);
-		retArray[1] = new Point(x + width, y - height/2);
+		retArray[1] = new Point(x + width + 1, y - height/2);
 		retArray[2] = new Point(x - 3, y + height/2 + 1);
-		retArray[3] = new Point(x + width, y + height/2 + 1);
+		retArray[3] = new Point(x + width + 1, y + height/2 + 1);
 		return retArray;
 	}
 
