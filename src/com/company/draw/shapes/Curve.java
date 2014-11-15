@@ -2,30 +2,28 @@ package com.company.draw.shapes;
 
 import com.company.*;
 import com.company.Point;
-import spark.data.SA;
-import spark.data.SO;
-import spark.data.SOReflect;
-import spark.data.SV;
+import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-public class Polygon extends SOReflect implements Drawable, Selectable, Interactable {
+import static java.lang.Math.pow;
 
+public class Curve extends SOReflect implements Drawable, Selectable, Interactable {
+
+	//	Curve{ just like Polygon } This has points just like Polygon.
+	// The difference is that these points define a Catmull-Rom curve rather than a polygon.
+	// If the first point and the last point are the same, then the curve is closed and can have a fill: color.
+	// This should implement Selectable.
+	// If the curve is not filled, then it is selected if the point is within 3 pixels of the curve.
+	// If the curve is filled then it is selected if the point is inside the curve.
 	public SA points;
 	public double thickness;
 	public SO border;
 	public SO fill;
 
-	public Polygon() {}
-
-	public Polygon(SA points, double thickness, SO fill) {
-		this.points = points;
-		this.thickness = thickness;
-		this.fill = fill;
-	}
 
 	@Override
 	public void paint(Graphics g) {
@@ -49,30 +47,30 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
 		}
-//		Draw fill
-		g2.drawPolygon(xArray, yArray, points.size());
 
-		if (border != null) {
-			Double red = border.get("r").getDouble();
-			Double green = border.get("g").getDouble();
-			Double blue = border.get("b").getDouble();
-			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
-			g2.setColor(lineColor);
+//		CHECK IF CLOSED
+		if (isClosed(xArray, yArray)) {
+			// Draw fill
+			g2.drawPolygon(xArray, yArray, points.size());
+
+			if (border != null) {
+				Double red = border.get("r").getDouble();
+				Double green = border.get("g").getDouble();
+				Double blue = border.get("b").getDouble();
+				Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
+				g2.setColor(lineColor);
+			}
+			// Draw border
+			g2.fillPolygon(xArray, yArray, points.size());
+		} else {
+			for (int index = 0; index < xArray.length; index++) {
+				g2.drawRect(xArray[index] - 2, yArray[index] - 2, 4, 4);
+			}
 		}
-//		Draw border
-		g2.fillPolygon(xArray, yArray, points.size());
 	}
 
-	private ArrayList<Point> getPoints() {
-		int[] xArray = getPoints("X");
-		int[] yArray = getPoints("Y");
-
-		ArrayList<Point> points = new ArrayList<Point>();
-		for (int i = 0; i < xArray.length; i++) {
-			Point point = new Point(xArray[i], yArray[i]);
-			points.add(point);
-		}
-		return points;
+	private boolean isClosed(int[] xArray, int[] yArray) {
+		return xArray[xArray.length - 1] == xArray[0] && yArray[yArray.length - 1] == yArray[0];
 	}
 
 	private int[] getPoints(String coord) {
@@ -100,36 +98,39 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		}
 	}
 
-	/**
-	 * takes a point and if the object or its contents are selected then it returns a path to the selected object, not in the transformed coordinates
-	 *
-	 * @param x         in the coordinates of your panel
-	 * @param y         in the coordinates of your panel
-	 * @param myIndex
-	 * @param transform - the full transform from current contents coordinates to the coordinates of your panel
-	 * @return - If the object or its contents are not selected, then NULL is returned
-	 */
+
+
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
-
+		int[] xArray = getPoints("X");
+		int[] yArray = getPoints("Y");
 		Point2D ptSrc = new Point(x, y);
 		Point2D ptDst = transform.transform(ptSrc, null);
 		x = ptDst.getX();
 		y = ptDst.getY();
 
-		int[] xArray = getPoints("X");
-		int[] yArray = getPoints("Y");
-		if (PolyContains.contains(x, y, xArray, yArray)) {
-			return new ArrayList<Integer>();
+		if (isClosed(xArray, yArray)) {
+//			TODO: test this
+			if (PolyContains.contains(x, y, xArray, yArray)) return new ArrayList<>();
 		} else {
-			return null;
+			for (int i = 0; i < xArray.length; i++) {
+//				TODO: test this
+				Point currPoint = new Point(xArray[i], yArray[i]);
+				double xSqr = pow(currPoint.getX() - ptDst.getX(), 2);
+				double ySqr = pow(currPoint.getY() - ptDst.getY(), 2);
+				double distance = pow(xSqr + ySqr, 0.5);
+				if (distance <= 3) {
+					System.out.println("Selected");
+					return new ArrayList<>();
+				}
+			}
 		}
+		return null;
 	}
 
 	@Override
 	public Point2D[] controls() {
 		throw new UnsupportedOperationException("This method is not implemented");
-//		return new Point2D[0];
 	}
 
 	@Override
@@ -161,4 +162,5 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		return false;
 	}
+
 }

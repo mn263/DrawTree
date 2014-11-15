@@ -20,6 +20,17 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	public SO border;
 	public SO fill;
 
+	public Ellipse(){}
+
+	public Ellipse(double left, double top, double width, double height) {
+		this.thickness = 0;
+		this.left = left;
+		this.top = top;
+		this.width = width;
+		this.height = height;
+	}
+
+
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
@@ -40,7 +51,7 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 			g2.setColor(lineColor);
 		}
 //		Draw fill
-		g2.drawOval((int) left, (int) top, (int) width, (int) height);
+		g2.fillOval((int) left, (int) top, (int) width, (int) height);
 
 		if (border != null) {
 			Double red = border.get("r").getDouble();
@@ -50,17 +61,9 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 			g2.setColor(lineColor);
 		}
 //		Draw border
-		g2.fillOval((int) left, (int) top, (int) width, (int) height);
+		g2.drawOval((int) left, (int) top, (int) width, (int) height);
 	}
 
-	/**
-	 * takes a point and if the object or its contents are selected then it returns a path to the selected object, not in the transformed coordinates
-	 * @param x in the coordinates of your panel
-	 * @param y in the coordinates of your panel
-	 * @param myIndex
-	 * @param transform - the full transform from current contents coordinates to the coordinates of your panel
-	 * @return - If the object or its contents are not selected, then NULL is returned
-	 */
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
 
@@ -70,7 +73,7 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 		boolean isInEllipse = SelectUtils.checkIfInOvalShape(this, ptDst.getX(), ptDst.getY());
 
 		if (isInEllipse) {
-			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(myIndex);
 			return arrayList;
 		}
@@ -80,9 +83,9 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	@Override
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(this.left, this.top);
-		retArray[1] = new Point(this.left + this.width, this.top);
-		retArray[2] = new Point(this.left, this.top + this.height);
+		retArray[0] = new Point(this.left - 3, this.top - 2);
+		retArray[1] = new Point(this.left + this.width, this.top - 2);
+		retArray[2] = new Point(this.left - 3, this.top + this.height);
 		retArray[3] = new Point(this.left + this.width, this.top + this.height);
 		return retArray;
 	}

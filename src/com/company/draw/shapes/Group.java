@@ -1,37 +1,39 @@
 package com.company.draw.shapes;
 
 import com.company.*;
-import spark.data.SA;
-import spark.data.SO;
-import spark.data.SOReflect;
-import spark.data.SV;
+import com.company.draw.*;
+import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import static com.company.draw.shapes.WidgetUtils.getTransform;
-import static com.company.draw.shapes.WidgetUtils.handleMouse;
+import static com.company.draw.shapes.WidgetUtils.*;
 
-public class Group extends SOReflect implements Drawable, Selectable, Interactable {
-
+public class Group extends SOReflect implements Drawable, Selectable, Interactable, Layout {
 	public SA contents;
 	public double sx;
 	public double sy;
 	public double rotate;
 	public double tx;
 	public double ty;
+	public double width;
+	public double height;
+	public double columnSpan;
+	public SV model;
+
 
 	public Group(){}
-
-	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate) {
+	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate, double width, double height) {
 		this.contents = contents;
 		this.sx	= sx;
 		this.sy = sy;
 		this.tx = tx;
 		this.ty = ty;
 		this.rotate = rotate;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 //		Perform Transformations
-		if (sx != 0) g2.scale(sx, sy);
+		if (sx != 0 && sy != 0) g2.scale(sx, sy);
 		g2.rotate(-Math.toRadians(rotate));
 		g2.translate((int) tx, (int) ty);
 
@@ -52,7 +54,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		Revert Transformations
 		g2.translate((int) -tx, (int) -ty);
 		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0) g2.scale(1 / sx, 1 / sy);
+		if (sx != 0 && sy != 0) g2.scale(1 / sx, 1 / sy);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -66,14 +68,15 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform oldTrans) {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(-Math.toRadians(rotate));
-		transform.scale(1 / sx, 1 / sy);
+		transform.rotate(Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
+			if(!(so instanceof Selectable)) continue;
 			Selectable selectable = (Selectable) so;
 			ArrayList<Integer> path = selectable.select(x, y, i, transform);
 			if (path != null) {
@@ -86,7 +89,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public Point2D[] controls() {
-		throw new UnsupportedOperationException("This method is not implemented");
+		return new Point2D[0];
 	}
 
 	@Override
@@ -123,6 +126,70 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		newTransform.concatenate(oldTrans);
-		return handleMouse(contents, x, y, oldTrans, mouseType);
+		return handleMouse(contents, x, y, newTransform, mouseType);
+	}
+
+
+//	LAYOUT
+
+	@Override
+	public double getColSpan() {
+		return columnSpan;
+	}
+
+	@Override
+	public double getMinWidth() {
+		return this.width;
+	}
+
+	@Override
+	public double getDesiredWidth() {
+		return this.width;
+	}
+
+	@Override
+	public double getMaxWidth() {
+		return 10000000;
+	}
+
+	@Override
+	public double getMinHeight() {
+		return this.height;
+	}
+
+	@Override
+	public double getDesiredHeight() {
+		return this.height;
+	}
+
+	@Override
+	public double getMaxHeight() {
+		return 10000000;
+	}
+
+	@Override
+	public void setHBounds(double left, double right) {
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			SO so = sv.getSO();
+			if (so instanceof Layout) {
+				Layout layout = (Layout) so;
+				layout.setHBounds(left + tx, right);
+			}
+		}
+		this.width = right - left;
+	}
+
+	@Override
+	public void setVBounds(double top, double bottom) {
+		this.height = bottom - top;
+		for (int i = 0; i < contents.size(); i++) {
+			SV sv = contents.get(i);
+			SO so = sv.getSO();
+			if (so instanceof Layout) {
+				Layout layout = (Layout) so;
+				layout.setVBounds(top + ty, bottom - ty);
+			}
+		}
 	}
 }

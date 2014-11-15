@@ -1,6 +1,5 @@
 package com.company;
 
-import com.company.draw.*;
 import com.company.draw.shapes.*;
 
 import javax.swing.*;
@@ -9,9 +8,9 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.*;
 
-public  class TreePanel extends JPanel {
+public  class TreePanel extends JPanel implements ComponentListener {
 
-	public java.util.List<Drawable> drawables = new ArrayList<Drawable>();
+	public java.util.List<Drawable> drawables = new ArrayList<>();
 	public Mouse mouseListener;
 	public Select selected;
 
@@ -19,6 +18,7 @@ public  class TreePanel extends JPanel {
 		this.mouseListener = mouseListener;
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
+		this.addComponentListener(this);
 		this.setBackground(Color.black);
 		setSize(600,600);
 	}
@@ -33,14 +33,14 @@ public  class TreePanel extends JPanel {
 			drawable.paint(g);
 		}
 		if (this.selected != null) {
-			this.selected.paint(g);
+			this.selected.paintSelected(g);
 		}
 	}
 
 	public void checkMouseEvent(MouseEvent e) {
 		for(int i = 0; i < drawables.size(); i++) {
 			Drawable drawable = drawables.get(i);
-			if("class com.company.draw.shapes.Group".equals(drawable.getClass().toString())) {
+			if(drawable instanceof Group) {
 				Group group = (Group) drawable;
 				this.selected = new Select(group);
 				ArrayList<Integer> path = selected.select(e.getX(), e.getY(), i, new AffineTransform());
@@ -49,5 +49,30 @@ public  class TreePanel extends JPanel {
 				}
 			}
 		}
+	}
+
+
+	//	WINDOW LISTENER METHODS:
+	@Override
+	public void componentResized(ComponentEvent e) {
+		Root root = SwingTree.getRoot();
+		if (root != null) {
+			root.handleComponentResize(e);
+		}
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		System.out.println("componentMoved()");
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		System.out.println("componentShown()");
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		System.out.println("componentHidden()");
 	}
 }
