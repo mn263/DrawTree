@@ -67,7 +67,7 @@ public class SwingTree extends JFrame implements KeyListener {
 					SO object = sv.getSO();
 					Drawable drawable = (Drawable) object;
 					treePanel.addDrawable(drawable);
-					if (object.getClass().toString().equals("class com.company.draw.shapes.Root") && root == null) {
+					if (object instanceof Root && root == null) {
 						root = (Root) object;
 					}
 					swingTree.getContentPane().repaint();
