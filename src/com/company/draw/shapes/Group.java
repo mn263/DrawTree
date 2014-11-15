@@ -12,9 +12,6 @@ import java.util.*;
 import static com.company.draw.shapes.WidgetUtils.*;
 
 public class Group extends SOReflect implements Drawable, Selectable, Interactable, Layout {
-//TODO: draw background for my projects
-//	TODO: test projects on windows before submitting
-//	todo: don't forget to do the above
 	public SA contents;
 	public double sx;
 	public double sy;
