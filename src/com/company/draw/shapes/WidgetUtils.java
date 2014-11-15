@@ -61,6 +61,7 @@ public class WidgetUtils {
 	}
 
 	public static void updateModel(SA model, String value) {
+		if (model == null) return;
 		ArrayList<String> path = new ArrayList<>();
 		for (int i = 0; i < model.size(); i++) {
 			path.add(model.getString(i));

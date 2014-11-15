@@ -14,7 +14,7 @@ public class Select extends Group implements Selectable {
 
 	public Select(){super();}
 	public Select(Group group) {
-		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate, group.width, group.height);
+		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate);
 	}
 
 
@@ -40,9 +40,6 @@ public class Select extends Group implements Selectable {
 				if (selectable instanceof Group) {
 					Group group = (Group) selectable;
 					sv = group.contents.get(index);
-				} else if (selectable instanceof Path) {
-					Path path = (Path) selectable;
-					sv = path.contents.get(index);
 				}
 			}
 			SO so = sv.getSO();

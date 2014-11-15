@@ -2,7 +2,6 @@ package com.company.draw.shapes;
 
 import com.company.*;
 import com.company.Point;
-import com.company.draw.*;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
@@ -13,10 +12,10 @@ import java.util.*;
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
-public class ScrollH extends SOReflect implements ModelListener, Layout, Drawable, Interactable {
+public class ScrollH extends SOReflect implements ModelListener, Drawable, Interactable {
 
 	public String state;
-	public ArrayList<Drawable> contents = new ArrayList<>();
+	public SA contents;
 	public SO idle;
 	public SO hover;
 	public SO active;
@@ -27,13 +26,6 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	private Point sliderLast;
 	private Point range;
 	private double leftDifference;
-	public double columnSpan;
-
-	private Rect activeRect = null;
-	private Rect rangeRect = null;
-	private Polygon upPolygon = null;
-	private Polygon downPolygon = null;
-	private Rect slideRect = null;
 
 	private double rangeMax = -1;
 	private double rangeLeft;
@@ -43,7 +35,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		WidgetUtils.addListener(this);
 	}
 
-//	INTERACTABLE
+	//	INTERACTABLE
 	@Override
 	public Root getPanel() {
 		throw new NotImplementedException();
@@ -76,7 +68,6 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
-		if(rangeRect == null) return false;
 		if (sliderLast == null) sliderLast = new Point(fromWindowCoords(getSliderLeft()), 0);
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
@@ -95,38 +86,68 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	public void changeState(SO newState, double x, double y, AffineTransform myTransform, WidgetUtils.mouseType mouseType) {
-		//UPDATE THE COLOR
-		activeRect.setBackgroundColor(newState);
-		if (mouseType == UP) { //MOVE SCROLL BAR IF "RELEASED" IS PRESSED
-			if (upPolygon.select(x, y, 0, myTransform) != null) {
-				moveBar(-step);
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			Selectable selectable = (Selectable) so;
+			//UPDATE THE COLOR
+			if (so.get("class") != null && "\"active\"".equals(so.get("class").toString())) {
+				selectable.setBackgroundColor(newState);
 			}
-			// MOVE SCROLL BAR IF "DOWN" IS PRESSED
-			if (downPolygon.select(x, y, 0, myTransform) != null) {
-				moveBar(step);
+			if (mouseType == UP) { //MOVE SCROLL BAR IF "RELEASED" IS PRESSED
+				if (so.get("class") != null && "\"left\"".equals(so.get("class").toString())) {
+					if (selectable.select(x, y, 0, myTransform) != null) {
+						moveBar(-step);
+					}
+				} //MOVE SCROLL BAR IF "DOWN" IS PRESSED
+				if (so.get("class") != null && "\"right\"".equals(so.get("class").toString())) {
+					if (selectable.select(x, y, 0, myTransform) != null) {
+						moveBar(step);
+					}
+				}
 			}
-		}
-		if (mouseType == DOWN) { //MOVE SCROLL BAR IF "SLIDER" IS PRESSED
-			if (slideRect.select(x, y, 0, myTransform) != null) {
-				this.sliderLast = new Point(x, y);
-				WidgetUtils.setSliderBeingUsed(this);
+			if (mouseType == DOWN) {
+				//MOVE SCROLL BAR IF "SLIDER" IS PRESSED
+				if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+					if (selectable.select(x, y, 0, myTransform) != null) {
+						this.sliderLast = new Point(x, y);
+						WidgetUtils.setSliderBeingUsed(this);
+					}
+				}
 			}
 		}
 	}
 
 	// WIDGET METHODS
 	private void moveBar(double step) {
-		double newValue = sliderLast.getX() + step;
-		if (newValue < min) setSlider(slideRect, min);
-		else if (newValue > max) setSlider(slideRect, max);
-		else setSlider(slideRect, newValue);
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				Rect slide = (Rect) so;
+
+				double newValue = sliderLast.getX() + step;
+				if (newValue < min) {
+					setSlider(slide, min);
+				} else if (newValue > max) {
+					setSlider(slide, max);
+				} else {
+					setSlider(slide, newValue);
+				}
+			}
+		}
 	}
 
 	private void moveSlider(double x) {
 		if (x == sliderLast.getX()) return; //NO NEED TO UPDATE IF IT IS THE SAME
-		if (x < min) setSlider(slideRect, min);
-		else if (x > max) setSlider(slideRect, max);
-		else setSlider(slideRect, x);
+
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				Rect slide = (Rect) so;
+				if (x < min) setSlider(slide, min);
+				else if (x > max) setSlider(slide, max);
+				else setSlider(slide, x);
+			}
+		}
 	}
 
 	private void setSlider(Rect slide, double value) {
@@ -149,16 +170,33 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	private double getSliderLeft() {
-		if(slideRect == null) return 0;
-		return slideRect.left;
+		try {
+			for (int i = 0; i < contents.size(); i++) {
+				SO so = contents.get(i).getSO();
+				if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+					return so.get("left").getDouble();
+				}
+			}
+			throw new Exception("Slider not found");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	private void loadConversionDoubles() {
-		double rangeWidth;
-		double sliderWidth;
-		rangeLeft = rangeRect.left;
-		rangeWidth = rangeRect.width;
-		sliderWidth = slideRect.width;
+		double rangeWidth = 0;
+		double sliderWidth = 0;
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			if (so.get("class") != null && "\"range\"".equals(so.get("class").toString())) {
+				this.rangeLeft = so.get("left").getDouble();
+				rangeWidth= so.get("width").getDouble();
+			}
+			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
+				sliderWidth = so.get("width").getDouble();
+			}
+		}
 		rangeMax = rangeWidth - sliderWidth;
 		maxMinDiff = max - min;
 	}
@@ -166,10 +204,17 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	//	DRAWABLE
 	@Override
 	public void paint(Graphics g) {
+		int cSize = contents.size();
 		Graphics2D g2 = (Graphics2D) g;
-		for (Drawable drawable : contents) {
-			drawable.paint(g2);
+		for (int i = 0; i < cSize; i++) {
+			callPaintOnContents(contents.get(i), g2);
 		}
+	}
+
+	public void callPaintOnContents(SV sv, Graphics g) {
+		SO so = sv.getSO();
+		Drawable drawable = (Drawable) so;
+		drawable.paint(g);
 	}
 
 	//	MODEL LISTENER
@@ -185,140 +230,4 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
 		}
 	}
-
-
-	@Override
-	public double getColSpan() {
-		return columnSpan;
-	}
-
-
-//	LAYOUT
-
-	private SO getFill(double red, double green, double blue) {
-		SO fill = new SObj();
-		fill.set("r", new SV(red));
-		fill.set("g", new SV(green));
-		fill.set("b", new SV(blue));
-		return fill;
-	}
-
-	private SA getPoints(double x1, double y1, double x2, double y2, double x3, double y3) {
-		SO point1 = new SObj();
-		point1.set("x", x1);
-		point1.set("y", y1);
-		SO point2 = new SObj();
-		point2.set("x", x2);
-		point2.set("y", y2);
-		SO point3 = new SObj();
-		point3.set("x", x3);
-		point3.set("y", y3);
-
-		SA points = new SArray();
-		points.add(point1);
-		points.add(point2);
-		points.add(point3);
-		return points;
-	}
-
-	private void initializeContents() {
-		double left = 0;
-		double top = 0;
-		double width = 190;
-		double height = 20;
-		double thickness = 5;
-		activeRect = new Rect(left, top, width, height, thickness, getFill(10, 140, 100));
-		top = 32;
-		height = 136;
-		rangeRect = new Rect(left, top, width, height, thickness, getFill(200, 100, 100));
-		slideRect = new Rect(30, top, 30, height, thickness, getFill(30, 30, 30));
-		thickness = 2;
-		upPolygon = new Polygon(getPoints(4, 20, 12, 4, 20, 20), thickness, getFill(20, 20, 20));
-		downPolygon = new Polygon(getPoints(12, 170, 20, 198, 28, 170), thickness, getFill(0, 0, 0));
-		this.contents.add(activeRect);
-		this.contents.add(rangeRect);
-		this.contents.add(upPolygon);
-		this.contents.add(downPolygon);
-		this.contents.add(slideRect);
-
-		setHBounds(0, 100);
-		setVBounds(0, 10);
-	}
-
-	@Override
-	public double getMinWidth() {
-		return 30;
-	}
-
-	@Override
-	public double getDesiredWidth() {
-		return 200;
-	}
-
-	@Override
-	public double getMaxWidth() {
-		return 10000000;
-	}
-
-	@Override
-	public double getMinHeight() {
-		return 8;
-	}
-
-	@Override
-	public double getDesiredHeight() {
-		return 12;
-	}
-
-	@Override
-	public double getMaxHeight() {
-		return 18;
-	}
-
-	@Override
-	public void setVBounds(double top, double bottom) {
-		if (this.slideRect == null) initializeContents();
-		double newHeight = bottom - top;
-		if (getMinHeight() >= newHeight) newHeight = getMinHeight();
-		else if (newHeight >= getMaxHeight()) newHeight = getMaxHeight();
-		slideRect.top = activeRect.top;
-		activeRect.height = newHeight;
-		rangeRect.height = newHeight;
-		rangeRect.top = activeRect.top;
-		slideRect.height = newHeight;
-		setPolygonPoints(newHeight);
-	}
-
-	@Override
-	public void setHBounds(double left, double right) {
-		if (this.slideRect == null) initializeContents();
-		double oldLeft = rangeRect.left;
-		double oldWidth = activeRect.width;
-		double newWidth = right - left;
-		activeRect.left = left;
-		rangeRect.left = left + 12;
-
-		if (getMinHeight() >= newWidth) newWidth = getMinWidth();
-		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();
-
-		double widthRatio = newWidth / oldWidth;
-		this.rangeMax = -1; // this will cause the other methods to call a method to convert from screen to object.
-		slideRect.width = slideRect.width * widthRatio;
-		slideRect.left = ((slideRect.left - oldLeft) * widthRatio) + rangeRect.top;
-
-		activeRect.width = newWidth;
-		rangeRect.width = newWidth - 24;
-
-		setPolygonPoints(activeRect.height);
-	}
-	private void setPolygonPoints(double height) {
-		double scrollLength = activeRect.width;
-		double center = height / 2;
-		double left = activeRect.left;
-		double top = activeRect.top;
-		double bottom = activeRect.top + height;
-		upPolygon.points = getPoints(left, center, left + 9, top, left + 9, bottom);
-		downPolygon.points = getPoints(scrollLength, center, scrollLength - 9, top, scrollLength - 9, bottom);
-	}
-
 }
