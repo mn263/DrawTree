@@ -43,13 +43,14 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		int height = metrics.getHeight();
 		int width = metrics.stringWidth(text);
+		if (width == 0 && edit) width = 40;
 
 		Point2D ptSrc = new Point(mX, mY);
 		Point2D ptDst = transform.transform(ptSrc, null);
 
 		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + 3) && (ptDst.getY() > y - height);
 		if (isSelected) {
-			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(myIndex);
 			return arrayList;
 		} else return null;
@@ -57,6 +58,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	private void setCursor(double mX, double mY, AffineTransform transform) {
 		if(edit) {
+			if (text.isEmpty()) { //if there is no text, set a cursor so they can start typing
+				text = "|";
+				cursor = 0;
+				setRootFocus(this);
+				return;
+			}
 			Point2D ptSrc = new Point(mX, mY);
 			Point2D ptDst = transform.transform(ptSrc, null);
 			mX = ptDst.getX();
