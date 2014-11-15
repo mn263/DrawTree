@@ -1,6 +1,8 @@
 package com.company.draw.shapes;
 
 import com.company.*;
+import com.company.Point;
+import com.company.draw.*;
 import spark.data.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
@@ -8,17 +10,25 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import static com.company.draw.shapes.WidgetUtils.handleMouse;
-import static com.company.draw.shapes.WidgetUtils.mouseType.UP;
+import static com.company.draw.shapes.WidgetUtils.*;
+import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
-public class TextBox extends SOReflect implements ModelListener, Drawable, Interactable {
+public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
 
 	public String state;
-	public SA contents;
+	public ArrayList<Drawable> contents = new ArrayList<>();
+//	public SA contents;
 	public SO idle;
 	public SO hover;
 	public SO active;
 	public SA model;
+	public double columnSpan;
+
+
+	private Rect rect = null;
+	private Text text = null;
+	private final double BEVEL = 3;
+	private final Point MARGIN = new Point(3, 3);
 
 	private Text content = null;
 
@@ -74,41 +84,20 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 	}
 
 	private void loadContentText() {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Selectable selectable = (Selectable) so;
-			if (so.get("class") != null && "\"content\"".equals(so.get("class").toString())) {
-				if (selectable.getClass().toString().equals("class com.company.draw.shapes.Text")) {
-					this.content = (Text) selectable;
-				}
-			}
-		}
+		this.content = this.text;
 	}
 
 	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Selectable selectable = (Selectable) so;
-			if (so.get("class") != null && "\"active\"".equals(so.get("class").toString())) {
-				selectable.setBackgroundColor(newState);
-			}
-		}
+		if (this.rect == null) return;
+		this.rect.setBackgroundColor(newState);
 	}
 
 //	DRAWABLE
 	@Override
 	public void paint(Graphics g) {
-		int cSize = contents.size();
-		Graphics2D g2 = (Graphics2D) g;
-		for (int i = 0; i < cSize; i++) {
-			callPaintOnContents(contents.get(i), g2);
-		}
-	}
-
-	public void callPaintOnContents(SV sv, Graphics g) {
-		SO so = sv.getSO();
-		Drawable drawable = (Drawable) so;
-		drawable.paint(g);
+		if (rect == null || text == null) return;
+		rect.paint(g);
+		text.paint(g);
 	}
 
 
@@ -125,5 +114,91 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 			}
 			content.text = newValue;
 		}
+	}
+
+
+	//	LAYOUT
+//	This implements Layout and operates as before. Its contents are generated programmatically based on the
+// bounds settings. The width values should depend upon a string of "W" characters that as the length of desiredChars.
+// To this you add any of the other text box borders etc. The height values should be based on standard font ranges.
+// Once the bounds are set, then adjust everything to fit as you did with the Button.
+
+	private void initializeContents() {
+		this.text = new Text("", 0, 20, "sans-serif", 36, true, -1);
+		Graphics g = WidgetUtils.graphics;
+		this.text.setFontMetrics(g);
+		this.text.adjustFontWidth("", 0, 20);
+		this.text.adjustFontHeight(0, 20);
+		this.rect = new Rect(0, 0, 20, 20, 4, getFill(100, 100, 0));
+		this.rect.setBackgroundColor(this.idle);
+		this.contents.add(rect);
+		this.contents.add(text);
+	}
+
+	private SO getFill(double red, double green, double blue) {
+		SO fill = new SObj();
+		fill.set("r", new SV(red));
+		fill.set("g", new SV(green));
+		fill.set("b", new SV(blue));
+		return fill;
+	}
+
+
+	@Override
+	public double getColSpan() {
+		return columnSpan;
+	}
+
+	@Override
+	public double getMinWidth() {
+		return (BEVEL*2) + (getText().getTextWidth());
+	}
+
+	@Override
+	public double getMinHeight() {
+		return (BEVEL*2) + (getText().getFontMetrics().getHeight());
+	}
+
+	@Override
+	public double getDesiredWidth() {
+		return (BEVEL*2) + (MARGIN.getWidth()*2) + (getText().getTextWidth());
+	}
+
+	@Override
+	public double getDesiredHeight() {
+		return (BEVEL*2) + (MARGIN.getHeight()*2) + (getText().getFontMetrics().getHeight());
+	}
+
+	@Override
+	public double getMaxWidth() {
+		return getDesiredWidth();
+	}
+
+	@Override
+	public double getMaxHeight() {
+		return getDesiredHeight();
+	}
+
+	@Override
+	public void setHBounds(double left, double right) {
+		if(this.text == null) initializeContents();
+		rect.left = left;
+		rect.width = right - left;
+		rect.setBackgroundColor(this.idle);
+		text.adjustFontWidth("", left, rect.width);
+	}
+
+	@Override
+	public void setVBounds(double top, double bottom) {
+		if(this.text == null) initializeContents();
+		rect.top = top;
+		rect.height = bottom - top;
+		rect.setBackgroundColor(this.idle);
+		text.adjustFontHeight(top, rect.height);
+	}
+
+	private Text getText() {
+		if(this.text == null) initializeContents();
+		return text;
 	}
 }

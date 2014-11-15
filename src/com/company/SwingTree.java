@@ -32,7 +32,7 @@ public class SwingTree extends JFrame implements KeyListener {
 //		Set Container
 		Container container = this.getContentPane();
 		container.setBackground(Color.white);
-		container.setPreferredSize(new Dimension(800, 800));
+		container.setPreferredSize(new Dimension(600, 600));
 
 		this.setJMenuBar(mb);
 		this.add(treePanel);
@@ -67,7 +67,7 @@ public class SwingTree extends JFrame implements KeyListener {
 					SO object = sv.getSO();
 					Drawable drawable = (Drawable) object;
 					treePanel.addDrawable(drawable);
-					if (object.getClass().toString().equals("class com.company.draw.shapes.Root") && root == null) {
+					if (object instanceof Root && root == null) {
 						root = (Root) object;
 					}
 					swingTree.getContentPane().repaint();
@@ -114,6 +114,7 @@ public class SwingTree extends JFrame implements KeyListener {
 
 	public static void mouseReleased(MouseEvent e) {
 		root.mouseUp(e.getX(), e.getY(), new AffineTransform());
+		treePanel.checkMouseEvent(e);
 		WidgetUtils.repaintAll();
 	}
 
