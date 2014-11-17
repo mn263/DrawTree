@@ -57,6 +57,8 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		int height = (metrics.getHeight() / 2) + ((int) buttonHeight / 2);
 		int width = metrics.stringWidth(text);
+		if (width == 0) width = 60;
+
 		Point2D ptSrc = new Point(mX, mY);
 		Point2D ptDst = transform.transform(ptSrc, null);
 
@@ -70,6 +72,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	private void setCursor(double mX, double mY, AffineTransform transform) {
 		if(edit) {
+			if (text.isEmpty()) { //if there is no text, set a cursor so they can start typing
+				text = "|";
+				cursor = 0;
+				setRootFocus(this);
+				return;
+			}
 			Point2D ptSrc = new Point(mX, mY);
 			Point2D ptDst = transform.transform(ptSrc, null);
 			mX = ptDst.getX();

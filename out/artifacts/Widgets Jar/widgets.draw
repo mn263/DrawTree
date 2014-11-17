@@ -1,0 +1,118 @@
+Root{
+	contents:[
+		Button{
+			label:"Bri", 
+			contents:[
+				Ellipse{ class:"active", left:100, top:200, width:100, height:50 },
+				Ellipse{ left:110, top:210, width:80, height:30, fill:{r:100, g:100, b:100 } },
+				Text{ class:"label", text: "the text???", x:120, y:230, font:"sans-serif", size:15}
+			],
+			model: ["spouse","name"],
+			value: "Briette",
+			state:"idle",
+			idle:{r:0,g:0,b:0},
+			hover:{r:100,g:100,b:100},
+			active:{r:255,g:255,b:0}
+		},
+		Button{
+			label:"Matt", 
+			contents:[
+				Ellipse{ class:"active", left:100, top:300, width:100, height:50 },
+				Ellipse{ left:110, top:310, width:80, height:30, fill:{r:100, g:100, b:100 } },
+				Text{ class:"label", text: "the text???", x:120, y:330, font:"sans-serif", size:15}
+			],
+			model: ["name"],
+			value: "Matthew",
+			state:"idle",
+			idle:{r:0,g:0,b:0},
+			hover:{r:100,g:100,b:100},
+			active:{r:255,g:255,b:0}
+		},
+		Button{
+			label:"50 Age", 
+			contents:[
+				Ellipse{ class:"active", left:200, top:200, width:100, height:50 },
+				Ellipse{ left:210, top:210, width:80, height:30, fill:{r:100, g:100, b:100 } },
+				Text{ class:"label", text: "the text???", x:220, y:230, font:"sans-serif", size:15}
+			],
+			model: ["age"],
+			value: "50",
+			state:"idle",
+			idle:{r:0,g:0,b:0},
+			hover:{r:100,g:100,b:100},
+			active:{r:255,g:255,b:0}
+		},
+		Button{
+			label:"8 Kids", 
+			contents:[
+				Ellipse{ class:"active", left:300, top:200, width:100, height:50 },
+				Ellipse{ left:310, top:210, width:80, height:30, fill:{r:100, g:100, b:100 } },
+				Text{ class:"label", text: "the text???", x:320, y:230, font:"sans-serif", size:15}
+			],
+			model: ["kids"],
+			value: "8",
+			state:"idle",
+			idle:{r:0,g:0,b:0},
+			hover:{r:100,g:100,b:100},
+			active:{r:255,g:255,b:0}
+		},
+		ScrollV{ state:"idle", idle:{r:0,g:0,b:0}, hover:{r:100,g:100,b:100}, 
+			active:{r:255,g:255,b:0}, model:["kids"], 
+			max:20, min:0, step:1,
+			contents:[
+					Rect{ class:"active", left:10,top:210, width:20, height:190, fill:{r:255,g:255,b:255}},
+					Rect{ class:"range", left:10, top:232, width:20, height:136,
+						fill:{r:200,g:200,b:200} },
+					Polygon{ class:"up", points:[{x:12,y:230},{x:20,y:212},{x:28,y:230}],
+						fill:{r:0,g:0,b:0} },
+					Polygon{ class:"down", points:[{x:12,y:370},{x:20,y:398},{x:28,y:370}],
+						fill:{r:0,g:0,b:0} },
+					Rect{ class:"slide", left:10, top:250, width:26, height:30,fill:{r:24,g:24,b:24} }
+				]
+			},
+		ScrollV{ state:"idle", idle:{r:0,g:0,b:0}, hover:{r:100,g:100,b:100}, 
+			active:{r:255,g:255,b:0}, model:["age"], 
+			max:100, min:0, step:5,
+			contents:[
+					Rect{ class:"active", left:10,top:10, width:20, height:190, fill:{r:255,g:255,b:255}},
+					Rect{ class:"range", left:10, top:32, width:20, height:136,
+						fill:{r:200,g:200,b:200} },
+					Polygon{ class:"up", points:[{x:12,y:30},{x:20,y:12},{x:28,y:30}],
+						fill:{r:0,g:0,b:0} },
+					Polygon{ class:"down", points:[{x:12,y:170},{x:20,y:198},{x:28,y:170}],
+						fill:{r:0,g:0,b:0} },
+					Rect{ class:"slide", left:10, top:50, width:26, height:30,fill:{r:24,g:24,b:24} }
+				]
+			},
+		ScrollH{ state:"idle", idle:{r:0,g:0,b:0}, hover:{r:100,g:100,b:100}, 
+			active:{r:255,g:255,b:0}, model:["age"], 
+			max:100, min:0, step:5,
+			contents:[
+					Rect{ class:"active", left:200,top:10, width:190, height:20, fill:{r:255,g:255,b:255}},
+					Rect{ class:"range", left:227, top:10, width:136, height:20,
+						fill:{r:200,g:200,b:200} },
+					Polygon{ class:"left", points:[{x:202,y:20},{x:220,y:12},{x:220,y:28}],
+						fill:{r:0,g:0,b:0} },
+					Polygon{ class:"right", points:[{x:365,y:12},{x:388,y:20},{x:365,y:28}],
+						fill:{r:0,g:0,b:0} },
+					Rect{ class:"slide", left:230, top:10, width:30, height:26,fill:{r:24,g:24,b:24} }
+				]
+			},
+		TextBox{ state:"idle", idle:{r:0,g:255,b:100}, hover:{r:100,g:100,b:100}, 
+			active:{r:255,g:0,b:0}, model:["name"], edit:true, cursor:-1,
+			contents: [
+					Rect{ class:"active", left:410, top:300, width:200, height:30, fill:{r:0,g:100,b:100}},
+					Text{ class:"content", x:420,y:320,font:"serif", size:15, edit:true, cursor:-1 }
+				]
+			},
+		TextBox{ state:"idle", idle:{r:0,g:255,b:100}, hover:{r:100,g:100,b:100}, 
+			active:{r:255,g:0,b:0}, model:["spouse","name"], edit:true, cursor:-1,
+			contents: [
+					Rect{ class:"active", left:410, top:350, width:200, height:30, fill:{r:0,g:100,b:100}},
+					Text{ class:"content", x:420,y:370,font:"serif", size:15, edit:true, cursor:-1 }
+				]
+			}
+	],
+	sx:1.0, sy:1.0, tx:100, ty:100, rotate:0,
+	model: { name:"George", address:"1414 Mockingbird Lane", age:42, kids: 12, spouse:{name:"Sarah"} }
+}

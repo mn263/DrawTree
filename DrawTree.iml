@@ -18,6 +18,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="EJML-core-0.26-sources" level="project" />
   </component>
 </module>
 

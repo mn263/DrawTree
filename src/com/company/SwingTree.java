@@ -31,7 +31,7 @@ public class SwingTree extends JFrame implements KeyListener {
 		mb.add(menu); // Add Menu to MenuBar
 //		Set Container
 		Container container = this.getContentPane();
-		container.setBackground(Color.white);
+		container.setBackground(Color.black);
 		container.setPreferredSize(new Dimension(600, 600));
 
 		this.setJMenuBar(mb);
