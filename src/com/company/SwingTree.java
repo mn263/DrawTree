@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.io.*;
+import java.util.*;
 
 public class SwingTree extends JFrame implements KeyListener {
 
@@ -55,6 +56,10 @@ public class SwingTree extends JFrame implements KeyListener {
 				chooser.setFileFilter(drawFilter);
 				int option = chooser.showOpenDialog(SwingTree.this);
 				if (option == JFileChooser.APPROVE_OPTION) {
+					SwingTree.root = null;
+//					SwingTree.treePanel.removeAll();
+					SwingTree.treePanel.drawables = new ArrayList<>();
+					SwingTree.treePanel.paintComponent(getGraphics());
 					File sf = chooser.getSelectedFile();
 					String filePath = sf.getAbsolutePath();
 					String fileContents = readFile(filePath);
