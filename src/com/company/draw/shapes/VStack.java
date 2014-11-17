@@ -5,8 +5,11 @@ import com.company.draw.*;
 import spark.data.*;
 
 import java.awt.*;
+import java.awt.geom.*;
 
-public class VStack extends SOReflect implements Layout, Drawable {
+import static com.company.draw.shapes.WidgetUtils.handleMouse;
+
+public class VStack extends SOReflect implements Layout, Drawable, Interactable {
 
 	public SA contents;
 	public double columnSpan;
@@ -26,6 +29,32 @@ public class VStack extends SOReflect implements Layout, Drawable {
 			Drawable drawable = (Drawable) so;
 			drawable.paint(g2);
 		}
+	}
+
+	// INTERACTABLE
+	@Override
+	public Root getPanel() {
+		return null;
+	}
+
+	@Override
+	public boolean key(char key) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseDown(double x, double y, AffineTransform transform) {
+		return handleMouse(contents, x, y, transform, WidgetUtils.mouseType.DOWN);
+	}
+
+	@Override
+	public boolean mouseMove(double x, double y, AffineTransform transform) {
+		return handleMouse(contents, x, y, transform, WidgetUtils.mouseType.MOVE);
+	}
+
+	@Override
+	public boolean mouseUp(double x, double y, AffineTransform transform) {
+		return handleMouse(contents, x, y, transform, WidgetUtils.mouseType.UP);
 	}
 
 	//	LAYOUT
