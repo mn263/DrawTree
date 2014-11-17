@@ -19,7 +19,7 @@ public  class TreePanel extends JPanel implements ComponentListener {
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
 		this.addComponentListener(this);
-		this.setBackground(Color.black);
+		this.setBackground(Color.lightGray);
 		setSize(600,600);
 	}
 
@@ -29,6 +29,7 @@ public  class TreePanel extends JPanel implements ComponentListener {
 
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		for (Drawable drawable : drawables) {
 			drawable.paint(g);
 		}
@@ -74,5 +75,9 @@ public  class TreePanel extends JPanel implements ComponentListener {
 	@Override
 	public void componentHidden(ComponentEvent e) {
 		System.out.println("componentHidden()");
+	}
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 	}
 }
