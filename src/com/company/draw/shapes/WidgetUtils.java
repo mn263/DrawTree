@@ -11,7 +11,7 @@ public class WidgetUtils {
 
 	private static SwingTree swingTree;
 	private static ModelListener sliderBeingUsed;
-	private static ArrayList<ModelListener> modelListeners = new ArrayList<ModelListener>();
+	private static ArrayList<ModelListener> modelListeners = new ArrayList<>();
 	public static Graphics graphics;
 
 	public enum MouseStatus {RELEASED, PRESSED}
