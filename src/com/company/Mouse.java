@@ -26,10 +26,8 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (SwingTree.getRoot() != null) {
-			WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.RELEASED);
-			SwingTree.mouseReleased(e);
-		}
+		if (SwingTree.getRoot() != null) WidgetUtils.setMouseStatus(WidgetUtils.MouseStatus.RELEASED);
+		SwingTree.mouseReleased(e);
 	}
 
 	@Override
