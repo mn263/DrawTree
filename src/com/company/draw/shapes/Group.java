@@ -40,19 +40,13 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 //		Perform Transformations
-		if (sx != 0 && sy != 0) g2.scale(sx, sy);
-		g2.rotate(-Math.toRadians(rotate));
-		g2.translate((int) tx, (int) ty);
-
+		AffineTransform transform = g2.getTransform();
+		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
 //		Call Draw on all contained objects
 		for (int i = 0; i < cSize; i++) {
 			callPaintOnContents(contents.get(i), g2);
 		}
-
-//		Revert Transformations
-		g2.translate((int) -tx, (int) -ty);
-		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) g2.scale(1 / sx, 1 / sy);
+		g2.setTransform(transform);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -64,17 +58,14 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform oldTrans) {
-		AffineTransform transform = new AffineTransform();
-		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
+		AffineTransform transform = WidgetUtils.getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
 		for (int i = contents.size() - 1; i >= 0; i--) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
-			if(!(so instanceof Selectable)) continue;
+			if (!(so instanceof Selectable)) continue;
 			Selectable selectable = (Selectable) so;
 			ArrayList<Integer> path = selectable.select(x, y, i, transform);
 			if (path != null) {
