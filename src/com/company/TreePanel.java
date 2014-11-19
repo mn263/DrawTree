@@ -18,7 +18,7 @@ public  class TreePanel extends JPanel {
 		this.mouseListener = mouseListener;
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
-		this.setBackground(Color.black);
+		this.setBackground(Color.lightGray);
 		setSize(600,600);
 	}
 
@@ -28,6 +28,7 @@ public  class TreePanel extends JPanel {
 
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		for (Drawable drawable : drawables) {
 			drawable.paint(g);
 		}
