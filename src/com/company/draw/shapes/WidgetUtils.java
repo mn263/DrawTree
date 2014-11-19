@@ -84,10 +84,22 @@ public class WidgetUtils {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
 		transform.rotate(Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) {
-			transform.scale(1 / sx, 1 / sy);
-		}
+		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
 		return transform;
+	}
+
+	public static AffineTransform getBackwardsTransform(double tx, double ty, double sx, double sy, double rotate) {
+		AffineTransform transform = new AffineTransform();
+		if (sx != 0 && sy != 0) transform.scale(sx, sy);
+		transform.rotate(-Math.toRadians(rotate));
+		transform.translate((int) tx, (int) ty);
+		return transform;
+	}
+
+	public static void transformGraphics(Graphics2D g2, double tx, double ty, double sx, double sy, double rotate) {
+		g2.translate((int) tx, (int) ty);
+		g2.rotate(-Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) g2.scale(sx, sy);
 	}
 
 	public static boolean handleMouse(SA contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
