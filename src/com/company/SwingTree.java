@@ -32,7 +32,7 @@ public class SwingTree extends JFrame implements KeyListener {
 //		Set Container
 		Container container = this.getContentPane();
 		container.setBackground(Color.white);
-		container.setPreferredSize(new Dimension(600, 600));
+		container.setPreferredSize(new Dimension(900, 600));
 
 		this.setJMenuBar(mb);
 		this.add(treePanel);
