@@ -21,6 +21,7 @@ public  class TreePanel extends JPanel implements ComponentListener {
 		this.addMouseMotionListener(mouseListener);
 		this.addComponentListener(this);
 		this.setBackground(Color.black);
+		this.setBackground(Color.lightGray);
 		setSize(600,600);
 	}
 
@@ -30,18 +31,19 @@ public  class TreePanel extends JPanel implements ComponentListener {
 
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		for (Drawable drawable : drawables) {
 			drawable.paint(g);
 		}
 		if (this.selected != null) {
-			this.selected.paint(g);
+			this.selected.paintSelected(g);
 		}
 	}
 
 	public void checkMouseEvent(MouseEvent e) {
 		for(int i = 0; i < drawables.size(); i++) {
 			Drawable drawable = drawables.get(i);
-			if("class com.company.draw.shapes.Group".equals(drawable.getClass().toString())) {
+			if(drawable instanceof Group) {
 				Group group = (Group) drawable;
 				this.selected = new Select(group);
 				ArrayList<Integer> path = selected.select(e.getX(), e.getY(), i, new AffineTransform());
