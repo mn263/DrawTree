@@ -81,17 +81,17 @@ public class WidgetUtils {
 // WIDGET BUTTON UTILS
 	public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
-		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(Math.toRadians(rotate));
 		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
+		transform.rotate(Math.toRadians(rotate));
+		transform.translate((int) -tx, (int) -ty);
 		return transform;
 	}
 
 	public static AffineTransform getBackwardsTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
-		if (sx != 0 && sy != 0) transform.scale(sx, sy);
-		transform.rotate(-Math.toRadians(rotate));
 		transform.translate((int) tx, (int) ty);
+		transform.rotate(-Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) transform.scale(sx, sy);
 		return transform;
 	}
 

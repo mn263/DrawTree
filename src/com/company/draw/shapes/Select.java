@@ -54,7 +54,7 @@ public class Select extends Group implements Selectable {
 				revertTransform.preConcatenate(temp);
 			}
 		}
-		assert sv != null;
+		if (sv == null) return;
 		SO so = sv.getSO();
 		Selectable selectable = (Selectable) so;
 		Point2D[] controlPoints = selectable.controls();
@@ -63,7 +63,7 @@ public class Select extends Group implements Selectable {
 		g2.setColor(Color.darkGray);
 		g2.transform(forwardTransform);
 		for (Point2D point : controlPoints) {
-			g2.drawRect((int) point.getX(), (int) point.getY(), 2, 2);
+			g2.fillRect((int) point.getX(), (int) point.getY(), 2, 2);
 		}
 		g2.transform(revertTransform);
 	}
