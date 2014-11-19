@@ -54,30 +54,20 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 			Double blue = fill.get("b").getDouble();
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
+	//		Draw fill
+			g2.fillRect((int) left, (int) top, (int) width, (int) height);
 		}
-//		Draw fill
-		g2.drawRect((int) left, (int) top, (int) width, (int) height);
-
 		if (border != null) {
 			Double red = border.get("r").getDouble();
 			Double green = border.get("g").getDouble();
 			Double blue = border.get("b").getDouble();
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
+	//		Draw border
+			g2.drawRect((int) left, (int) top, (int) width, (int) height);
 		}
-//		Draw border
-		g2.fillRect((int) left, (int) top, (int) width, (int) height);
 	}
 
-	/**
-	 * takes a point and if the object or its contents are selected then it returns a path to the selected object, not in the transformed coordinates
-	 *
-	 * @param x         in the coordinates of your panel
-	 * @param y         in the coordinates of your panel
-	 * @param myIndex
-	 * @param transform - the full transform from current contents coordinates to the coordinates of your panel
-	 * @return - If the object or its contents are not selected, then NULL is returned
-	 */
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
 
@@ -94,10 +84,10 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 	@Override
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(this.left, this.top);
-		retArray[1] = new Point(this.left + this.width, this.top);
-		retArray[2] = new Point(this.left, this.top + this.height);
-		retArray[3] = new Point(this.left + this.width, this.top + this.height);
+		retArray[0] = new Point(this.left - 3, this.top - 2);
+		retArray[1] = new Point(this.left + this.width + 1, this.top - 2);
+		retArray[2] = new Point(this.left - 3, this.top + this.height);
+		retArray[3] = new Point(this.left + this.width + 1, this.top + this.height);
 		return retArray;
 	}
 
