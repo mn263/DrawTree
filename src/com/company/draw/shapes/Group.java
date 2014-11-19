@@ -23,7 +23,6 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public double height;
 	public double columnSpan;
 
-
 	public Group(){}
 	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate, double width, double height) {
 		this.contents = contents;
@@ -42,10 +41,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 //		Perform Transformations
-		if (sx != 0) g2.scale(sx, sy);
-		g2.rotate(-Math.toRadians(rotate));
-		g2.translate((int) tx, (int) ty);
-
+		AffineTransform transform = g2.getTransform();
+		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
 //		Call Draw on all contained objects
 		for (int i = 0; i < cSize; i++) {
 			callPaintOnContents(contents.get(i), g2);
@@ -54,7 +51,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 //		Revert Transformations
 		g2.translate((int) -tx, (int) -ty);
 		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0) g2.scale(1 / sx, 1 / sy);
+		if (sx != 0 && sy != 0) g2.scale(1 / sx, 1 / sy);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -68,15 +65,15 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform oldTrans) {
 		AffineTransform transform = new AffineTransform();
 		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(-Math.toRadians(rotate));
-		transform.scale(1 / sx, 1 / sy);
+		transform.rotate(Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
-			if(!(so instanceof Selectable)) continue;
+			if (!(so instanceof Selectable)) continue;
 			Selectable selectable = (Selectable) so;
 			ArrayList<Integer> path = selectable.select(x, y, i, transform);
 			if (path != null) {
@@ -89,7 +86,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public Point2D[] controls() {
-		throw new UnsupportedOperationException("This method is not implemented");
+		return new Point2D[0];
 	}
 
 	@Override
@@ -126,7 +123,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		newTransform.concatenate(oldTrans);
-		return handleMouse(contents, x, y, newTransform, mouseType);
+		return handleMouse(contents, x, y, oldTrans, mouseType);		
+//		return handleMouse(contents, x, y, newTransform, mouseType);
 	}
 
 
