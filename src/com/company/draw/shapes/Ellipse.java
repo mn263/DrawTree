@@ -49,9 +49,9 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 			Double blue = fill.get("b").getDouble();
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
+	//		Draw fill
+			g2.fillOval((int) left, (int) top, (int) width, (int) height);
 		}
-//		Draw fill
-		g2.fillOval((int) left, (int) top, (int) width, (int) height);
 
 		if (border != null) {
 			Double red = border.get("r").getDouble();
@@ -59,9 +59,9 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 			Double blue = border.get("b").getDouble();
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
+	//		Draw border
+			g2.drawOval((int) left, (int) top, (int) width, (int) height);
 		}
-//		Draw border
-		g2.drawOval((int) left, (int) top, (int) width, (int) height);
 	}
 
 	@Override
