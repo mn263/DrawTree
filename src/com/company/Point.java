@@ -43,6 +43,10 @@ public class Point extends Point2D {
 		//To change body of implemented methods use File | Settings | File Templates.
 	}
 
+	@Override
+	public String toString() {
+		return "(" + this.x + ", " + this.y + ")";
+	}
 	public void setY(double y) {
 		this.y = y;
 	}
