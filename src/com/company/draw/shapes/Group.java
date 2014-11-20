@@ -71,7 +71,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
-		for (int i = 0; i < contents.size(); i++) {
+		for (int i = contents.size() - 1; i >= 0; i--) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if(!(so instanceof Selectable)) continue;
