@@ -18,7 +18,7 @@ public class WidgetUtils {
 	public static enum mouseType { UP, DOWN, MOVE }
 	private static MouseStatus mouseStatus = MouseStatus.RELEASED;
 
-// MOUSE
+	// MOUSE
 	public static MouseStatus getMouseStatus() {
 		return mouseStatus;
 	}
@@ -32,7 +32,7 @@ public class WidgetUtils {
 		}
 	}
 
-//	WIDGET
+	//	WIDGET
 	public static boolean sliderBeingUsed(ModelListener scroll) {
 		return sliderBeingUsed == scroll;
 	}
@@ -49,7 +49,7 @@ public class WidgetUtils {
 		}
 	}
 
-// LISTENER
+	// LISTENER
 	public static void addListener(ModelListener listener) {
 		modelListeners.add(listener);
 	}
@@ -69,7 +69,7 @@ public class WidgetUtils {
 		SwingTree.getRoot().updateModel(path, value);
 	}
 
-// SWING TREE
+	// SWING TREE
 	public static void setSwingTree(SwingTree swingTree) {
 		WidgetUtils.swingTree = swingTree;
 	}
@@ -79,21 +79,27 @@ public class WidgetUtils {
 		swingTree.getContentPane().repaint();
 	}
 
-// WIDGET BUTTON UTILS
-public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
-	AffineTransform transform = new AffineTransform();
-	if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
-	transform.rotate(Math.toRadians(rotate));
-	transform.translate((int) -tx, (int) -ty);
-	return transform;
-}
+	// WIDGET BUTTON UTILS
+	public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
+		AffineTransform transform = new AffineTransform();
+		transform.translate((int) -tx, (int) -ty);
+		transform.rotate(Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
+		return transform;
+	}
 
 	public static AffineTransform getBackwardsTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
-		transform.translate((int) tx, (int) ty);
-		transform.rotate(-Math.toRadians(rotate));
 		if (sx != 0 && sy != 0) transform.scale(sx, sy);
+		transform.rotate(-Math.toRadians(rotate));
+		transform.translate((int) tx, (int) ty);
 		return transform;
+	}
+
+	public static void transformGraphics(Graphics2D g2, double tx, double ty, double sx, double sy, double rotate) {
+		g2.translate((int) tx, (int) ty);
+		g2.rotate(-Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) g2.scale(sx, sy);
 	}
 
 	public static boolean handleMouse(SA contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
