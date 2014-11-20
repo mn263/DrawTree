@@ -18,18 +18,10 @@ public class Select extends Group implements Selectable {
 	}
 
 
-//	@Override
 	public void paintSelected(Graphics g) {
 		if (selected.size() <= 0) return;
 		SV sv = null;
-		AffineTransform forwardTransform = new AffineTransform();
-		if (sx != 0 && sy != 0) forwardTransform.scale(sx, sy);
-		forwardTransform.rotate(-Math.toRadians(rotate));
-		forwardTransform.translate(tx, ty);
-		AffineTransform revertTransform	= new AffineTransform();
-		revertTransform.translate(-tx, -ty);
-		revertTransform.rotate(Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) revertTransform.scale(1/sx, 1/sy);
+		AffineTransform forwardTransform = WidgetUtils.getBackwardsTransform(tx, ty, sx, sy, rotate);
 		for (int i = selected.size() - 2; i >= 0; i--) {
 			int index = selected.get(i);
 			if (sv == null) {
@@ -46,17 +38,8 @@ public class Select extends Group implements Selectable {
 			Selectable selectable = (Selectable) so;
 			if (selectable instanceof Group) {
 				Group group = (Group) selectable;
-				AffineTransform temp = new AffineTransform();
-				if (sx != 0 && sy != 0) temp.scale(group.sx, group.sy);
-				temp.rotate(-Math.toRadians(group.rotate));
-				temp.translate(group.tx, group.ty);
+				AffineTransform temp = WidgetUtils.getBackwardsTransform(group.tx, group.ty, group.sx, group.sy, group.rotate);
 				forwardTransform.concatenate(temp);
-
-				temp = new AffineTransform();
-				temp.translate(-group.tx, -group.ty);
-				temp.rotate(Math.toRadians(group.rotate));
-				if (sx != 0 && sy != 0) temp.scale(1 / group.sx, 1 / group.sy);
-				revertTransform.preConcatenate(temp);
 			}
 		}
 		if (sv == null) return;
@@ -66,25 +49,24 @@ public class Select extends Group implements Selectable {
 
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.darkGray);
-		g2.transform(forwardTransform);
+		AffineTransform gTrans = g2.getTransform();
+		gTrans.concatenate(forwardTransform);
+
+		double offY = g2.getTransform().getTranslateY();
 		for (Point2D point : controlPoints) {
-			g2.fillRect((int) point.getX(), (int) point.getY(), 2, 2);
+			Point2D ptDst = gTrans.transform(point, null);
+			g2.fillRect((int) ptDst.getX(), (int) (ptDst.getY() - offY), 4, 4);
 		}
-		g2.transform(revertTransform);
 	}
 
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
 		ArrayList<Integer> path = super.select(x, y, myIndex, transform);
 		if (path != null) {
-			updateSelected(path);
+			this.selected = path;
+			SwingTree.treePanel.repaint();
 		}
 		return path;
-	}
-
-	private void updateSelected(ArrayList<Integer> path) {
-		this.selected = path;
-		SwingTree.treePanel.repaint();
 	}
 
 	@Override
