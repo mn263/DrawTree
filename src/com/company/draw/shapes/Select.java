@@ -22,8 +22,6 @@ public class Select extends Group implements Selectable {
 		if (selected.size() <= 0) return;
 		SV sv = null;
 		AffineTransform forwardTransform = WidgetUtils.getBackwardsTransform(tx, ty, sx, sy, rotate);
-		AffineTransform revertTransform	= WidgetUtils.getTransform(tx, ty, sx, sy, rotate);
-
 		for (int i = selected.size() - 2; i >= 0; i--) {
 			int index = selected.get(i);
 			if (sv == null) {
@@ -40,11 +38,8 @@ public class Select extends Group implements Selectable {
 			Selectable selectable = (Selectable) so;
 			if (selectable instanceof Group) {
 				Group group = (Group) selectable;
-				AffineTransform temp = WidgetUtils.getTransform(group.tx, group.ty, group.sx, group.sy, group.rotate);
+				AffineTransform temp = WidgetUtils.getBackwardsTransform(group.tx, group.ty, group.sx, group.sy, group.rotate);
 				forwardTransform.concatenate(temp);
-
-				temp = WidgetUtils.getBackwardsTransform(group.tx, group.ty, group.sx, group.sy, group.rotate);
-				revertTransform.preConcatenate(temp);
 			}
 		}
 		if (sv == null) return;
@@ -54,25 +49,24 @@ public class Select extends Group implements Selectable {
 
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.darkGray);
-		g2.transform(forwardTransform);
+		AffineTransform gTrans = g2.getTransform();
+		gTrans.concatenate(forwardTransform);
+
+		double offY = g2.getTransform().getTranslateY();
 		for (Point2D point : controlPoints) {
-			g2.fillRect((int) point.getX(), (int) point.getY(), 2, 2);
+			Point2D ptDst = gTrans.transform(point, null);
+			g2.fillRect((int) ptDst.getX(), (int) (ptDst.getY() - offY), 4, 4);
 		}
-		g2.transform(revertTransform);
 	}
 
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
 		ArrayList<Integer> path = super.select(x, y, myIndex, transform);
 		if (path != null) {
-			updateSelected(path);
+			this.selected = path;
+			SwingTree.treePanel.repaint();
 		}
 		return path;
-	}
-
-	private void updateSelected(ArrayList<Integer> path) {
-		this.selected = path;
-		SwingTree.treePanel.repaint();
 	}
 
 	@Override
