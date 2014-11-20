@@ -74,19 +74,13 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 //		Perform Transformations
-		if (sx != 0) g2.scale(sx, sy);
-		g2.rotate(-Math.toRadians(rotate));
-		g2.translate((int) tx, (int) ty);
-
+		AffineTransform transform = g2.getTransform();
+		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
 //		Call Draw on all contained objects
 		for (int i = 0; i < cSize; i++) {
 			callPaintOnContents(contents.get(i), g2);
 		}
-
-//		Revert Transformations
-		g2.translate((int) -tx, (int) -ty);
-		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0) g2.scale(1 / sx, 1 / sy);
+		g2.setTransform(transform);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
