@@ -115,7 +115,6 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		newTransform.concatenate(oldTrans);
-//		return handleMouse(contents, x, y, oldTrans, mouseType);
 		return handleMouse(contents, x, y, newTransform, mouseType);
 	}
 
