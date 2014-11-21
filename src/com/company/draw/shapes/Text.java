@@ -45,7 +45,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		setFontMetrics(g);
 		if (text != null) {
 			g.setFont(gFont);
-			g.drawString(text, (int) x, (int) y);
+			g.drawString(text, (int) x, (int) y + (metrics.getHeight() / 2) + ((int) buttonHeight / 2));
 		}
 	}
 
@@ -54,14 +54,14 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		if (metrics == null) return null;
 		if (text == null) text = "";
 
-		int height = metrics.getHeight();
+		int height = (metrics.getHeight() / 2) + ((int) buttonHeight / 2);
 		int width = metrics.stringWidth(text);
 		if (width == 0 && edit) width = 40;
 
 		Point2D ptSrc = new Point(mX, mY);
 		Point2D ptDst = transform.transform(ptSrc, null);
 
-		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + 3) && (ptDst.getY() > y - height);
+		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + height + 3) && (ptDst.getY() > y);
 		if (isSelected) {
 			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(myIndex);
@@ -124,18 +124,19 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		this.removeCursor();
 	}
 
+
 	@Override
 	public Point2D[] controls() {
 		int width = metrics.stringWidth(text);
 		int height = metrics.getHeight() + (int) buttonHeight;
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(x - 3, y - height / 2);
-		retArray[1] = new Point(x + width + 1, y - height / 2);
-		retArray[2] = new Point(x - 3, y + height / 2 + 1);
-		retArray[3] = new Point(x + width + 1, y + height / 2 + 1);
+		retArray[0] = new Point(x - 3, y - height/2);
+		retArray[1] = new Point(x + width + 1, y - height/2);
+		retArray[2] = new Point(x - 3, y + height/2 + 1);
+		retArray[3] = new Point(x + width + 1, y + height/2 + 1);
 		return retArray;
 	}
-
+	
 	@Override
 	public void setBackgroundColor(SO newColor) {
 		throw new NotImplementedException();
@@ -178,7 +179,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		return false;
+		return (!edit);
 	}
 
 	public void setFontMetrics(Graphics g) {
