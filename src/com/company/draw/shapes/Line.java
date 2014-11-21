@@ -47,7 +47,7 @@ public class Line extends SOReflect implements Drawable, Selectable, Interactabl
 		double allowance = (thickness*transform.getScaleX())/4 + (thickness*transform.getScaleY())/4 + 3;
 
 		if (SelectUtils.checkIfInLine(x1, x2, y1, y2, ptDst.getX(), ptDst.getY(), allowance)) {
-			ArrayList<Integer> retVal = new ArrayList<Integer>();
+			ArrayList<Integer> retVal = new ArrayList<>();
 			retVal.add(myIndex);
 			return retVal;
 		}
@@ -57,8 +57,8 @@ public class Line extends SOReflect implements Drawable, Selectable, Interactabl
 	@Override
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[2];
-		retArray[0] = new Point(this.x1, this.y1);
-		retArray[1] = new Point(this.x2, this.y2);
+		retArray[0] = new Point(this.x1 - 2, this.y1 - 2);
+		retArray[1] = new Point(this.x2 - 2, this.y2 - 2);
 		return retArray;
 	}
 

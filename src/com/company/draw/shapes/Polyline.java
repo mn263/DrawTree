@@ -60,7 +60,7 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 			Point from = pointsList.get(i);
 			Point to = (i + 1 == pointsList.size()) ? pointsList.get(0) : pointsList.get(i + 1);
 			if (SelectUtils.checkIfInLine(from.getX(), to.getX(), from.getY(), to.getY(), click.getX(), click.getY(), allowance)) {
-				ArrayList<Integer> retVal = new ArrayList<Integer>();
+				ArrayList<Integer> retVal = new ArrayList<>();
 				retVal.add(myIndex);
 				return retVal;
 			}
@@ -69,7 +69,7 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 	}
 
 	private ArrayList<Point> getLinesInPolyline() {
-		ArrayList<Point> pointsList = new ArrayList<Point>();
+		ArrayList<Point> pointsList = new ArrayList<>();
 		for (int i = 0; i < points.size(); i++) {
 			SV xPoint = points.get(i).get("x");
 			SV yPoint = points.get(i).get("y");
@@ -82,8 +82,8 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[points.size()];
 		for (int i = 0; i < points.size(); i++) {
-			retArray[i] = new Point(points.get(i).get("x").getDouble(),
-									points.get(i).get("y").getDouble());
+			retArray[i] = new Point(points.get(i).get("x").getDouble() - 1,
+					points.get(i).get("y").getDouble() - 1);
 		}
 
 		return retArray;
