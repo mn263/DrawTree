@@ -52,8 +52,6 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	//		Draw fill
 			g2.fillOval((int) left, (int) top, (int) width, (int) height);
 		}
-//		Draw fill
-		g2.fillOval((int) left, (int) top, (int) width, (int) height);
 
 		if (border != null) {
 			Double red = border.get("r").getDouble();
@@ -64,8 +62,6 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	//		Draw border
 			g2.drawOval((int) left, (int) top, (int) width, (int) height);
 		}
-//		Draw border
-		g2.drawOval((int) left, (int) top, (int) width, (int) height);
 	}
 
 	@Override
