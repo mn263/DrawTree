@@ -24,7 +24,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	public SO idle;
 	public SO hover;
 	public SO active;
-	public String value;
+	private String value;
 	public double columnSpan;
 
 
@@ -101,8 +101,14 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	// DRAWABLE
+	private void loadValue() {
+		this.value = this.get("value").toString();
+		this.value = this.value.replaceAll("\"", "");
+	}
+
 	@Override
 	public void paint(Graphics g) {
+		if (this.value == null) loadValue();		
 		if (ellipse == null || text == null) return;
 		ellipse.paint(g);
 		text.paint(g);
