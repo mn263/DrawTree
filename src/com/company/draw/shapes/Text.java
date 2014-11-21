@@ -125,27 +125,18 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		this.removeCursor();
 	}
 
+
 	@Override
 	public Point2D[] controls() {
+		int width = metrics.stringWidth(text);
+		int height = metrics.getHeight() + (int) buttonHeight;
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(x, y - size);
-		retArray[1] = new Point(x + (size * text.length()), y - size);
-		retArray[2] = new Point(x, y);
-		retArray[3] = new Point(x + (size * text.length()), y);
+		retArray[0] = new Point(x - 3, y - height/2);
+		retArray[1] = new Point(x + width + 1, y - height/2);
+		retArray[2] = new Point(x - 3, y + height/2 + 1);
+		retArray[3] = new Point(x + width + 1, y + height/2 + 1);
 		return retArray;
 	}
-	
-//	@Override
-//	public Point2D[] controls() {
-//		int width = metrics.stringWidth(text);
-//		int height = metrics.getHeight() + (int) buttonHeight;
-//		Point2D[] retArray = new Point2D[4];
-//		retArray[0] = new Point(x - 3, y - height / 2);
-//		retArray[1] = new Point(x + width + 1, y - height / 2);
-//		retArray[2] = new Point(x - 3, y + height / 2 + 1);
-//		retArray[3] = new Point(x + width + 1, y + height / 2 + 1);
-//		return retArray;
-//	}
 	
 	@Override
 	public void setBackgroundColor(SO newColor) {
@@ -189,7 +180,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		return false;
+		return (!edit);
 	}
 
 	//	LAYOUT

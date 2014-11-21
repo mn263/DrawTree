@@ -116,8 +116,8 @@ public class SwingTree extends JFrame implements KeyListener {
 	}
 
 	public static void mouseReleased(MouseEvent e) {
+		TreePanel.selected = null;
 		if (root != null) root.mouseUp(e.getX(), e.getY(), new AffineTransform());
-		treePanel.checkMouseEvent(e);
 		WidgetUtils.repaintAll();
 	}
 
