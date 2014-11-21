@@ -70,7 +70,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		} else return null;
 	}
 
-	private void setCursor(double mX, double mY, AffineTransform transform) {
+	public void setCursor(double mX, double mY, AffineTransform transform) {
 		if (edit) {
 			if (text.isEmpty()) { //if there is no text, set a cursor so they can start typing
 				text = "|";
