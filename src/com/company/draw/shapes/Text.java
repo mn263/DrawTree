@@ -209,10 +209,6 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		return (size * (this.buttonWidth / textWidth));
 	}
 
-//	private double getMaxHeight() {
-//
-//	}
-
 	public void adjustFontHeight(double top, double availableHeight) {
 		buttonHeight = availableHeight;
 		this.y = top;
@@ -246,6 +242,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	public FontMetrics getFontMetrics() {
+		if(this.metrics == null) this.metrics = WidgetUtils.graphics.getFontMetrics();
 		return this.metrics;
 	}
 

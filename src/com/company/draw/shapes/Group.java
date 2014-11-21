@@ -47,11 +47,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		for (int i = 0; i < cSize; i++) {
 			callPaintOnContents(contents.get(i), g2);
 		}
-
-//		Revert Transformations
-		g2.translate((int) -tx, (int) -ty);
-		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) g2.scale(1 / sx, 1 / sy);
+		g2.setTransform(transform);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -60,13 +56,9 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		drawable.paint(g);
 	}
 
-
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform oldTrans) {
-		AffineTransform transform = new AffineTransform();
-		transform.translate((int) -tx, (int) -ty);
-		transform.rotate(Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
+		AffineTransform transform = WidgetUtils.getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
@@ -123,8 +115,8 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		AffineTransform newTransform = getTransform(tx, ty, sx, sy, rotate);
 		// Add on old transform
 		newTransform.concatenate(oldTrans);
-		return handleMouse(contents, x, y, oldTrans, mouseType);		
-//		return handleMouse(contents, x, y, newTransform, mouseType);
+//		return handleMouse(contents, x, y, oldTrans, mouseType);
+		return handleMouse(contents, x, y, newTransform, mouseType);
 	}
 
 

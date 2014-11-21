@@ -1,6 +1,5 @@
 package com.company;
 
-import com.company.draw.*;
 import com.company.draw.shapes.*;
 
 import javax.swing.*;
@@ -20,9 +19,8 @@ public  class TreePanel extends JPanel implements ComponentListener {
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
 		this.addComponentListener(this);
-		this.setBackground(Color.black);
 		this.setBackground(Color.lightGray);
-		setSize(600,600);
+		setSize(900,600);
 	}
 
 	public void addDrawable(Drawable drawable) {

@@ -86,7 +86,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private void loadContentText() {
-		this.content = this.text;
+		this.content = getText();
 	}
 
 	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
@@ -128,9 +128,9 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	private void initializeContents() {
 		this.text = new Text("", 0, 20, "sans-serif", 36, true, -1);
 		Graphics g = WidgetUtils.graphics;
-		this.text.setFontMetrics(g);
-		this.text.adjustFontWidth("", 0, 20);
-		this.text.adjustFontHeight(0, 20);
+//		this.text.setFontMetrics(g);
+//		this.text.adjustFontWidth("", 0, 20);
+//		this.text.adjustFontHeight(0, 20);
 		this.rect = new Rect(0, 0, 20, 20, 4, getFill(100, 100, 0));
 		this.rect.setBackgroundColor(this.idle);
 		this.contents.add(rect);
@@ -183,7 +183,6 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
-		if(this.text == null) initializeContents();
 		rect.left = left;
 		rect.width = right - left;
 		rect.setBackgroundColor(this.idle);
@@ -192,7 +191,6 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-		if(this.text == null) initializeContents();
 		rect.top = top;
 		rect.height = bottom - top;
 		rect.setBackgroundColor(this.idle);

@@ -177,6 +177,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	//	MODEL LISTENER
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
+		if (this.slideRect == null) initializeContents();
 		if (modelPath.size() == model.size()) {
 			for (int i = 0; i < model.size(); i++) {
 				if (!modelPath.get(i).equals(model.getString(i))) {
@@ -279,7 +280,6 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
-		if (this.slideRect == null) initializeContents();
 		double newWidth = right - left;
 		if (getMinWidth() >= newWidth) newWidth = getMinWidth();
 		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();
@@ -292,7 +292,6 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-		if (this.slideRect == null) initializeContents();
 		double oldTop = rangeRect.top;
 		double oldHeight = activeRect.height;
 		double newHeight = bottom - top;

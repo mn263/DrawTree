@@ -175,6 +175,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	//	MODEL LISTENER
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
+		if (this.slideRect == null) initializeContents();
 		if (modelPath.size() == model.size()) {
 			for (int i = 0; i < model.size(); i++) {
 				if(!modelPath.get(i).equals(model.getString(i))) {
@@ -277,7 +278,6 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-		if (this.slideRect == null) initializeContents();
 		double newHeight = bottom - top;
 		if (getMinHeight() >= newHeight) newHeight = getMinHeight();
 		else if (newHeight >= getMaxHeight()) newHeight = getMaxHeight();
@@ -291,7 +291,6 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
-		if (this.slideRect == null) initializeContents();
 		double oldLeft = rangeRect.left;
 		double oldWidth = activeRect.width;
 		double newWidth = right - left;
