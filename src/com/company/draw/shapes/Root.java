@@ -12,7 +12,6 @@ import static com.company.draw.shapes.WidgetUtils.*;
 public class Root extends SOReflect implements Interactable, Drawable {
 
 	public SV model;
-
 	public SA contents;
 	public double sx;
 	public double sy;
@@ -21,6 +20,8 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	public double ty;
 
 	public Interactable focus = null;
+
+	private boolean initUpdateComplete = false;
 
 	public void setKeyFocus(Interactable focus) {
 		this.focus = focus;
@@ -50,21 +51,35 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	}
 
 	public void updateModel(ArrayList<String> path, String value) {
-		ArrayList<String> copyPath = new ArrayList<String>(path);
+		ArrayList<String> copyPath = new ArrayList<>(path);
 		updateRoot(model.getSO(), copyPath, value);
 		WidgetUtils.updateModListeners(path, value);
 	}
 
+	private void doInitialModelUpdate(ArrayList<String> path, SV currModel) {
+		this.initUpdateComplete = true;
+		SO modelObjects = currModel.getSO();
+		String[] modelAttrs = modelObjects.attributes();
+		for (String attr : modelAttrs) {
+			path.add(attr);
+			if (!modelObjects.get(attr).typeName().equals("OBJECT")) {
+				String objValue = modelObjects.get(attr).toString();
+				objValue = objValue.replaceAll("\"", "");
+				updateModel(path, objValue);
+			} else {
+				doInitialModelUpdate(path, modelObjects.get(attr));
+			}
+			path.remove(path.size() -1);
+		}
+	}
+
 	@Override
 	public void paint(Graphics g) {
-		int cSize = contents.size();
-//		The original and next we transform and repaint
+		if (!initUpdateComplete) doInitialModelUpdate(new ArrayList<String>(), this.model);
 		Graphics2D g2 = (Graphics2D) g;
-//		Perform Transformations
 		AffineTransform transform = g2.getTransform();
 		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
-//		Call Draw on all contained objects
-		for (int i = 0; i < cSize; i++) {
+		for (int i = 0; i < contents.size(); i++) { // Call Draw on all contained objects
 			callPaintOnContents(contents.get(i), g2);
 		}
 		g2.setTransform(transform);
@@ -95,13 +110,11 @@ public class Root extends SOReflect implements Interactable, Drawable {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
-
 		SO modelObjects = this.model.getSO();
 		String[] modelAttrs = modelObjects.attributes();
 		for (String attr : modelAttrs) {
 			System.out.println(attr + " -> " + modelObjects.get(attr));
 		}
-
 		return handeled;
 	}
 
