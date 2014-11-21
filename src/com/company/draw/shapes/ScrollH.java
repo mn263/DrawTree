@@ -104,6 +104,16 @@ public class ScrollH extends SOReflect implements ModelListener, Drawable, Inter
 						moveBar(step);
 					}
 				}
+				if (so.get("class") != null && "\"up\"".equals(so.get("class").toString())) {
+					if (selectable.select(x, y, 0, myTransform) != null) {
+						moveBar(step);
+					}
+				} //MOVE SCROLL BAR IF "DOWN" IS PRESSED
+				if (so.get("class") != null && "\"down\"".equals(so.get("class").toString())) {
+					if (selectable.select(x, y, 0, myTransform) != null) {
+						moveBar(-step);
+					}
+				}
 			}
 			if (mouseType == DOWN) {
 				//MOVE SCROLL BAR IF "SLIDER" IS PRESSED
