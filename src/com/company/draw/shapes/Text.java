@@ -57,20 +57,27 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		int height = (metrics.getHeight() / 2) + ((int) buttonHeight / 2);
 		int width = metrics.stringWidth(text);
+		if (width == 0 && edit) width = 40;
 
 		Point2D ptSrc = new Point(mX, mY);
 		Point2D ptDst = transform.transform(ptSrc, null);
 
 		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + height + 3) && (ptDst.getY() > y);
 		if (isSelected) {
-			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(myIndex);
 			return arrayList;
 		} else return null;
 	}
 
 	private void setCursor(double mX, double mY, AffineTransform transform) {
-		if(edit) {
+		if (edit) {
+			if (text.isEmpty()) { //if there is no text, set a cursor so they can start typing
+				text = "|";
+				cursor = 0;
+				setRootFocus(this);
+				return;
+			}
 			Point2D ptSrc = new Point(mX, mY);
 			Point2D ptDst = transform.transform(ptSrc, null);
 			mX = ptDst.getX();
@@ -94,6 +101,11 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 				}
 			}
 			text = newText.toString();
+		}
+		if (!text.contains("|")) { //if there is no cursor, add it to the end of the text
+			cursor = text.length();
+			text += "|";
+			setRootFocus(this);
 		}
 	}
 
@@ -122,7 +134,19 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		retArray[3] = new Point(x + (size * text.length()), y);
 		return retArray;
 	}
-
+	
+//	@Override
+//	public Point2D[] controls() {
+//		int width = metrics.stringWidth(text);
+//		int height = metrics.getHeight() + (int) buttonHeight;
+//		Point2D[] retArray = new Point2D[4];
+//		retArray[0] = new Point(x - 3, y - height / 2);
+//		retArray[1] = new Point(x + width + 1, y - height / 2);
+//		retArray[2] = new Point(x - 3, y + height / 2 + 1);
+//		retArray[3] = new Point(x + width + 1, y + height / 2 + 1);
+//		return retArray;
+//	}
+	
 	@Override
 	public void setBackgroundColor(SO newColor) {
 		throw new NotImplementedException();
@@ -153,7 +177,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public boolean mouseDown(double mx, double my, AffineTransform myTransform) {
-		if(!edit) return false;
+		if (!edit) return false;
 		setCursor(mx, my, myTransform);
 		return true;
 	}
