@@ -64,6 +64,8 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 				changeState(this.active, mouseType);
 				if (content.select(x, y, 0, myTransform) != null) {
 					content.mouseDown(x, y, myTransform);
+				} else {
+					content.setCursor(x, y, myTransform);
 				}
 			} else {
 				this.state = "hover";
