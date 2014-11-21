@@ -4,8 +4,6 @@ import com.company.draw.shapes.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
 import java.util.*;
 
 public  class TreePanel extends JPanel {
