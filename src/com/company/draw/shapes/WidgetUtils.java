@@ -103,13 +103,14 @@ public class WidgetUtils {
 
 	public static boolean handleMouse(SA contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
 
-		for (int i = 0; i < contents.size(); i++) {
+//		for (int i = 0; i < contents.size(); i++) {
+		for (int i = contents.size() - 1; i >= 0; i--) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if (so instanceof Selectable && !(so instanceof Text) && !(so instanceof Group)) {
 				if(isSelectable(so, x, y, myTransform)) return true;
 			} else if (so instanceof Interactable) {
-				if (so instanceof Text && !isSelectable(so, x, y, myTransform)) return false;
+				if (so instanceof Text && !isSelectable(so, x, y, myTransform)) continue;
 
 				Interactable interactable = (Interactable) so;
 				boolean wasHandled = false;
