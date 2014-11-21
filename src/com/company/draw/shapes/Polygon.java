@@ -67,7 +67,7 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		int[] xArray = getPoints("X");
 		int[] yArray = getPoints("Y");
 
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<Point> points = new ArrayList<>();
 		for (int i = 0; i < xArray.length; i++) {
 			Point point = new Point(xArray[i], yArray[i]);
 			points.add(point);
@@ -100,15 +100,6 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		}
 	}
 
-	/**
-	 * takes a point and if the object or its contents are selected then it returns a path to the selected object, not in the transformed coordinates
-	 *
-	 * @param x         in the coordinates of your panel
-	 * @param y         in the coordinates of your panel
-	 * @param myIndex
-	 * @param transform - the full transform from current contents coordinates to the coordinates of your panel
-	 * @return - If the object or its contents are not selected, then NULL is returned
-	 */
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
 
@@ -120,7 +111,7 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 		int[] xArray = getPoints("X");
 		int[] yArray = getPoints("Y");
 		if (PolyContains.contains(x, y, xArray, yArray)) {
-			return new ArrayList<Integer>();
+			return new ArrayList<>();
 		} else {
 			return null;
 		}
@@ -128,8 +119,7 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 
 	@Override
 	public Point2D[] controls() {
-		throw new UnsupportedOperationException("This method is not implemented");
-//		return new Point2D[0];
+		return new Point2D[0];
 	}
 
 	@Override

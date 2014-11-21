@@ -47,7 +47,7 @@ public class Line extends SOReflect implements Drawable, Selectable, Interactabl
 		double allowance = (thickness*transform.getScaleX())/4 + (thickness*transform.getScaleY())/4 + 3;
 
 		if (SelectUtils.checkIfInLine(x1, x2, y1, y2, ptDst.getX(), ptDst.getY(), allowance)) {
-			ArrayList<Integer> retVal = new ArrayList<Integer>();
+			ArrayList<Integer> retVal = new ArrayList<>();
 			retVal.add(myIndex);
 			return retVal;
 		}

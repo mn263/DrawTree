@@ -82,8 +82,8 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 	public Point2D[] controls() {
 		Point2D[] retArray = new Point2D[points.size()];
 		for (int i = 0; i < points.size(); i++) {
-			retArray[i] = new Point(points.get(i).get("x").getDouble() - 2,
-									points.get(i).get("y").getDouble() - 1);
+			retArray[i] = new Point(points.get(i).get("x").getDouble() - 1,
+					points.get(i).get("y").getDouble() - 1);
 		}
 
 		return retArray;
