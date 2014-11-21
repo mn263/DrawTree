@@ -19,7 +19,7 @@ public class Button extends SOReflect implements Drawable, Interactable {
 	public SO idle;
 	public SO hover;
 	public SO active;
-	public String value;
+	private String value;
 
 	// INTERACTABLE
 	@Override
@@ -87,8 +87,14 @@ public class Button extends SOReflect implements Drawable, Interactable {
 	}
 
 	// DRAWABLE
+	private void loadValue() {
+		this.value = this.get("value").toString();
+		this.value = this.value.replaceAll("\"", "");
+	}
+
 	@Override
 	public void paint(Graphics g) {
+		if (this.value == null) loadValue();
 		updateButtonLabel();
 		int cSize = contents.size();
 		Graphics2D g2 = (Graphics2D) g;
