@@ -3,4 +3,4 @@
 *.html
 DrawTree.iml
 *.classout/artifacts/DrawTree_jar/DrawTree.jar
-out/production
+out/*
