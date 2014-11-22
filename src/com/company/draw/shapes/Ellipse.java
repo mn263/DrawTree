@@ -20,6 +20,8 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	public SO border;
 	public SO fill;
 
+	private Color buttonBorder = null;
+
 	public Ellipse(){}
 
 	public Ellipse(double left, double top, double width, double height) {
@@ -61,6 +63,9 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 			g2.setColor(lineColor);
 	//		Draw border
 			g2.drawOval((int) left, (int) top, (int) width, (int) height);
+		} else if (buttonBorder != null) {
+			g2.setColor(buttonBorder);
+			g2.drawOval((int) left, (int) top, (int) width, (int) height);
 		}
 	}
 
@@ -93,6 +98,10 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 	@Override
 	public void setBackgroundColor(SO newColor) {
 		this.fill = newColor;
+	}
+
+	public void setBtnBrder(Color color) {
+		this.buttonBorder = color;
 	}
 
 	@Override

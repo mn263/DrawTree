@@ -12,6 +12,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
+import static java.lang.StrictMath.max;
 
 public class Button extends SOReflect implements Layout, Drawable, Interactable {
 
@@ -111,6 +112,13 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		if (this.value == null) loadValue();		
 		if (ellipse == null || text == null) return;
 		ellipse.paint(g);
+
+		int textWidth = text.getTextWidth();
+		text.x = this.ellipse.left + (ellipse.width/2) - (textWidth/2);
+
+		int textHeight = text.getFontMetrics().getHeight();
+		text.y = 0 - (textHeight/4);
+
 		text.paint(g);
 	}
 
@@ -118,12 +126,13 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	private void initializeContents() {
 		int ellipseWidth = 40;
 		int ellipseHeight = 40;
-		this.text = new Text(this.label, 0, ellipseHeight / 2, "sans-serif", 36, false, -1);
+		this.text = new Text(this.label, 0, 0, "sans-serif", false, -1);
 		Graphics g = WidgetUtils.graphics;
 		this.text.setFontMetrics(g);
-		this.text.adjustFontWidth(this.label, 0, ellipseWidth);
+		this.text.adjustFontWidth(this.label, ellipseWidth);
 		this.text.adjustFontHeight(0, ellipseHeight);
 		this.ellipse = new Ellipse(0, 0, ellipseWidth, ellipseHeight);
+		this.ellipse.setBtnBrder(Color.black);
 		this.ellipse.setBackgroundColor(this.idle);
 		this.contents.add(ellipse);
 		this.contents.add(text);
@@ -139,12 +148,12 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	// min size that will create a button of that size based on the contents of the label attribute
 	@Override
 	public double getMinWidth() {
-		return (BEVEL*2) + (getText().getTextWidth());
+		return (BEVEL*2) + (getText().getMinWidth());
 	}
 
 	@Override
 	public double getMinHeight() {
-		return (BEVEL*2) + (getText().getFontMetrics().getHeight());
+		return (BEVEL*2) + (getText().getMinHeight());
 	}
 
 	// desired size that will create a button of that size based on the contents of the label attribute
@@ -174,20 +183,24 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	@Override
 	public void setHBounds(double left, double right) {
 		if(this.text == null) initializeContents();
+		double minRight = this.getMinWidth() + left;
+		right = max(minRight, right);
+
 		ellipse.left = left;
 		ellipse.width = right - left;
-//		ellipse.width = min(getMaxWidth(), right - left);
 		ellipse.setBackgroundColor(this.idle);
-		text.adjustFontWidth(this.label, left, ellipse.width);
+		text.adjustFontWidth(this.label, ellipse.width);
 	}
 
 
 	@Override
 	public void setVBounds(double top, double bottom) {
 		if(this.text == null) initializeContents();
+		double minBottom = this.getMinHeight() + top;
+		bottom = max(minBottom, bottom);
+
 		ellipse.top = top;
 		ellipse.height = bottom - top;
-//		ellipse.height = min(getMaxHeight(), bottom - top);
 		ellipse.setBackgroundColor(this.idle);
 		text.adjustFontHeight(top, ellipse.height);
 	}

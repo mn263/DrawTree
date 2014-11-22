@@ -27,15 +27,17 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	private Font gFont = null;
 	private double buttonWidth = 0;
 	private double buttonHeight = 0;
+	private final double MIN_SIZE = 10;
+
 
 	public Text(){}
 
-	public Text(String text, double x, double y, String font, double size, boolean edit, double cursor) {
+	public Text(String text, double x, double y, String font, boolean edit, double cursor) {
 		this.text = text;
 		this.x = x;
 		this.y = y;
 		this.font = font;
-		this.size = size;
+		this.size = MIN_SIZE;
 		this.edit = edit;
 		this.cursor = cursor;
 	}
@@ -184,20 +186,36 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	//	LAYOUT
-	public void adjustFontWidth(String label, double left, double availableWidth) {
+	public void adjustFontWidth(String label, double availableWidth) {
 		if(!label.isEmpty()) this.text = label;
+//		TODO: look more at the "Type Here..."
 		if(this.text.isEmpty()) this.text = "Type Here...";
 
 		this.buttonWidth = availableWidth;
-		size = max(1, getMaxWidth() * 0.7);
+		size = max(MIN_SIZE, getMaxWidth() * 0.7);
 		setFontMetrics(WidgetUtils.graphics);
-		int textWidth = getFontMetrics().stringWidth(text);
-		centerWidth(left, availableWidth, textWidth);
 	}
 
 	private double getMaxWidth() {
 		int textWidth = getFontMetrics().stringWidth(text);
 		return (size * (this.buttonWidth / textWidth));
+	}
+
+	public double getMinWidth() {
+		gFont = new Font(this.font, Font.PLAIN, (int) MIN_SIZE);
+		FontMetrics minMetrics = WidgetUtils.graphics.getFontMetrics(gFont);
+		int minWidth = 0;
+		for (int i = 0; i < this.text.length(); i++) {
+			minWidth += minMetrics.charWidth(this.text.charAt(i));
+		}
+		return minWidth;
+	}
+
+	public double getMinHeight() {
+		gFont = new Font(this.font, Font.PLAIN, (int) MIN_SIZE);
+		FontMetrics minMetrics = WidgetUtils.graphics.getFontMetrics(gFont);
+		return minMetrics.getHeight();
+
 	}
 
 	public void adjustFontHeight(double top, double availableHeight) {
@@ -209,22 +227,8 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		double maxSizeHeightConstraint = size * (availableHeight / currentHeight);
 
 		this.size = min(maxSizeHeightConstraint * 0.8, maxSizeWidthConstraint * 0.7);
-		this.size = max(1, this.size);
+		this.size = max(MIN_SIZE, this.size);
 		setFontMetrics(WidgetUtils.graphics);
-	}
-
-	private void centerWidth(double btnLeft, double btnWidth, double textWidth) {
-		double diff = btnWidth - textWidth;
-		if (diff < 0) {
-			System.out.println("Invalid width");
-			diff = 0;
-//			try {
-//				throw new Exception("Invalid width");
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-		}
-		this.x = btnLeft + diff/2;
 	}
 
 	public void setFontMetrics(Graphics g) {

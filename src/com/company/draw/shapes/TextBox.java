@@ -17,7 +17,6 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	public String state;
 	public ArrayList<Drawable> contents = new ArrayList<>();
-//	public SA contents;
 	public SO idle;
 	public SO hover;
 	public SO active;
@@ -67,11 +66,11 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
-			changeState(this.idle, mouseType);
+			changeState(this.idle);
 		} else {
 			if (WidgetUtils.getMouseStatus() == WidgetUtils.MouseStatus.PRESSED) {
 				this.state = "active";
-				changeState(this.active, mouseType);
+				changeState(this.active);
 				if (content.select(x, y, 0, myTransform) != null) {
 					content.mouseDown(x, y, myTransform);
 				} else {
@@ -79,7 +78,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 				}
 			} else {
 				this.state = "hover";
-				changeState(this.hover, mouseType);
+				changeState(this.hover);
 			}
 		}
 		return isHandled;
@@ -89,7 +88,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		this.content = getText();
 	}
 
-	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
+	public void changeState(SO newState) {
 		if (this.rect == null) return;
 		this.rect.setBackgroundColor(newState);
 	}
@@ -126,11 +125,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 // Once the bounds are set, then adjust everything to fit as you did with the Button.
 
 	private void initializeContents() {
-		this.text = new Text("", 0, 20, "sans-serif", 36, true, -1);
-		Graphics g = WidgetUtils.graphics;
-//		this.text.setFontMetrics(g);
-//		this.text.adjustFontWidth("", 0, 20);
-//		this.text.adjustFontHeight(0, 20);
+		this.text = new Text("", 0, 20, "sans-serif", true, -1);
 		this.rect = new Rect(0, 0, 20, 20, 4, getFill(100, 100, 0));
 		this.rect.setBackgroundColor(this.idle);
 		this.contents.add(rect);
@@ -186,7 +181,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		rect.left = left;
 		rect.width = right - left;
 		rect.setBackgroundColor(this.idle);
-		text.adjustFontWidth("", left, rect.width);
+		text.adjustFontWidth("", rect.width);
 	}
 
 	@Override
