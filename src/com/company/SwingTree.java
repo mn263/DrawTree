@@ -57,6 +57,7 @@ public class SwingTree extends JFrame implements KeyListener {
 				int option = chooser.showOpenDialog(SwingTree.this);
 				if (option == JFileChooser.APPROVE_OPTION) {
 					SwingTree.root = null;
+					treePanel.selected = null;
 					SwingTree.treePanel.drawables = new ArrayList<>();
 					File sf = chooser.getSelectedFile();
 					String filePath = sf.getAbsolutePath();
