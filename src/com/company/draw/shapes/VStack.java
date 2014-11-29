@@ -105,22 +105,21 @@ public class VStack extends SOReflect implements Layout, Drawable {
 	@Override
 	public void setVBounds(double top, double bottom) {
 		double min = getMinHeight();
-		double max = getMaxHeight();
 		double desired = getDesiredHeight();
 		double height = bottom - top;
 
-		if (min >= height) {
+		if (min >= height) { //give all children their minimum and let them be clipped
 			double childTop = top;
 			for (int i = 0; i < contents.size(); i++) {
 				SV sv = contents.get(i);
 				Layout child = (Layout) sv.getSO();
 				double childHeight = child.getMinHeight();
 				child.setVBounds(childTop, childTop + childHeight);
-				childTop += childHeight;
+				childTop += childHeight + 1;
 			}
-		} else if (desired >= height) {
+		} else if (desired >= height) { //give min to all and proportional for what's left
 			double desiredMargin = (desired - min);
-			if(desiredMargin == 0) desiredMargin = 1;
+			if(desiredMargin <= 0) desiredMargin = 1;
 			double fraction = (height - min) / desiredMargin;
 			double childTop = top;
 			for (int i = 0; i < contents.size(); i++) {
@@ -132,16 +131,13 @@ public class VStack extends SOReflect implements Layout, Drawable {
 				child.setVBounds(childTop, childTop + childHeight);
 				childTop += childHeight;
 			}
-		} else {
-			double maxMargin = (max - desired) == 0 ? 1 : (max - desired);
-			double fraction = (height - desired) / maxMargin;
+		} else { //allocate what remains based on maximum widths
+			double difference = height - desired;
 			double childTop = top;
 			for (int i = 0; i < contents.size(); i++) {
 				SV sv = contents.get(i);
 				Layout child = (Layout) sv.getSO();
-				double childDesiredHeight = child.getDesiredHeight();
-				double childMaxHeight = child.getMaxHeight();
-				double childHeight = childDesiredHeight + (childMaxHeight - childDesiredHeight) * fraction;
+				double childHeight = child.getDesiredHeight() + (child.getDesiredHeight() / desired) * difference;
 				child.setVBounds(childTop, childTop + childHeight);
 				childTop += childHeight;
 			}
