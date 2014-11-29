@@ -21,6 +21,8 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	public SO hover;
 	public SO active;
 	public SA model;
+	public double desiredChars;
+
 	public double columnSpan;
 
 
@@ -148,22 +150,21 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public double getMinWidth() {
-		return (BEVEL*2) + (getText().getTextWidth());
-	}
-
-	@Override
-	public double getMinHeight() {
-		return (BEVEL*2) + (getText().getFontMetrics().getHeight());
+		String wString = "";
+		for (int i = 0; i < desiredChars; i++) {
+			wString += "W";
+		}
+		return getText().getMinWidth(wString);
 	}
 
 	@Override
 	public double getDesiredWidth() {
-		return (BEVEL*2) + (MARGIN.getWidth()*2) + (getText().getTextWidth());
-	}
-
-	@Override
-	public double getDesiredHeight() {
-		return (BEVEL*2) + (MARGIN.getHeight()*2) + (getText().getFontMetrics().getHeight());
+		String wString = "";
+		for(int i = 0; i < desiredChars; i++){
+			wString += "W";
+		}
+		int stringWidth = text.getFontMetrics().stringWidth(wString);
+		return stringWidth+10*2;
 	}
 
 	@Override
@@ -172,15 +173,27 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	@Override
+	public double getMinHeight() {
+		return (BEVEL*2) + (getText().getMinHeight());
+	}
+
+	@Override
+	public double getDesiredHeight() {
+		return (BEVEL*2) + (MARGIN.getHeight()*2) + (getText().getFontMetrics().getHeight());
+	}
+
+	@Override
 	public double getMaxHeight() {
 		return getDesiredHeight();
 	}
+
 
 	@Override
 	public void setHBounds(double left, double right) {
 		rect.left = left;
 		rect.width = right - left;
 		rect.setBackgroundColor(this.idle);
+		text.x = left;
 		text.adjustFontWidth("", rect.width);
 	}
 

@@ -202,11 +202,15 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	public double getMinWidth() {
+		return getMinWidth(this.text);
+	}
+
+	public double getMinWidth(String string) {
 		gFont = new Font(this.font, Font.PLAIN, (int) MIN_SIZE);
 		FontMetrics minMetrics = WidgetUtils.graphics.getFontMetrics(gFont);
 		int minWidth = 0;
-		for (int i = 0; i < this.text.length(); i++) {
-			minWidth += minMetrics.charWidth(this.text.charAt(i));
+		for (int i = 0; i < string.length(); i++) {
+			minWidth += minMetrics.charWidth(string.charAt(i));
 		}
 		return minWidth;
 	}
