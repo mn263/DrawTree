@@ -116,10 +116,12 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		int textWidth = text.getTextWidth();
 		text.x = this.ellipse.left + (ellipse.width/2) - (textWidth/2);
 
+		double oldY = text.y;
 		int textHeight = text.getFontMetrics().getHeight();
-		text.y = 0 - (textHeight/4);
+		text.y -= (textHeight/4);
 
 		text.paint(g);
+		text.y = oldY;
 	}
 
 	//	LAYOUT
@@ -189,6 +191,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		ellipse.left = left;
 		ellipse.width = right - left;
 		ellipse.setBackgroundColor(this.idle);
+		text.x = left;
 		text.adjustFontWidth(this.label, ellipse.width);
 	}
 
@@ -202,6 +205,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 		ellipse.top = top;
 		ellipse.height = bottom - top;
 		ellipse.setBackgroundColor(this.idle);
+		text.y = top;
 		text.adjustFontHeight(top, ellipse.height);
 	}
 
