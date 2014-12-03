@@ -14,6 +14,7 @@ import static com.company.draw.shapes.WidgetUtils.*;
 public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	public SV model;
+
 	public SA contents;
 	public double sx;
 	public double sy;
@@ -62,6 +63,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	private void doInitialModelUpdate(ArrayList<String> path, SV currModel) {
+//		TODO: is this doing what I want it to do?
 		this.initUpdateComplete = true;
 		SO modelObjects = currModel.getSO();
 		String[] modelAttrs = modelObjects.attributes();
@@ -83,6 +85,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		if (!initUpdateComplete) doInitialModelUpdate(new ArrayList<String>(), this.model);
 		if (width == -1) { //because contents aren't initialized yet
 			WidgetUtils.graphics = g;
+//			TODO: this is initially wrong I believe
 			setHBounds(tx, 900 - tx);
 			setVBounds(ty, 600 - ty);
 			width = (int) (900 - tx);
@@ -92,12 +95,20 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		int cSize = contents.size();
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
-		AffineTransform transform = g2.getTransform();
-		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
-		for (int i = 0; i < contents.size(); i++) { // Call Draw on all contained objects
+//		Perform Transformations
+		if (sx != 0) g2.scale(sx, sy);
+		g2.rotate(-Math.toRadians(rotate));
+		g2.translate((int) tx, (int) ty);
+
+//		Call Draw on all contained objects
+		for (int i = 0; i < cSize; i++) {
 			callPaintOnContents(contents.get(i), g2);
 		}
-		g2.setTransform(transform);
+
+//		Revert Transformations
+		g2.translate((int) -tx, (int) -ty);
+		g2.rotate(Math.toRadians(rotate));
+		if (sx != 0) g2.scale(1 / sx, 1 / sy);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -125,11 +136,13 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
-		SO modelObjects = this.model.getSO();
-		String[] modelAttrs = modelObjects.attributes();
-		for (String attr : modelAttrs) {
-			System.out.println(attr + " -> " + modelObjects.get(attr));
-		}
+
+//		SO modelObjects = this.model.getSO();
+//		String[] modelAttrs = modelObjects.attributes();
+//		for (String attr : modelAttrs) {
+//			System.out.println(attr + " -> " + modelObjects.get(attr));
+//		}
+
 		return handeled;
 	}
 

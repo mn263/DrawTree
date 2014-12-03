@@ -66,7 +66,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + height + 3) && (ptDst.getY() > y);
 		if (isSelected) {
-			ArrayList<Integer> arrayList = new ArrayList<>();
+			ArrayList<Integer> arrayList = new ArrayList<Integer>();
 			arrayList.add(myIndex);
 			return arrayList;
 		} else return null;
