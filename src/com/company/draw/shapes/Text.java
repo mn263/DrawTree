@@ -66,7 +66,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 		boolean isSelected = (ptDst.getX() < x + width + 5) && (ptDst.getX() > x - 3) && (ptDst.getY() < y + height + 3) && (ptDst.getY() > y);
 		if (isSelected) {
-			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(myIndex);
 			return arrayList;
 		} else return null;
@@ -139,7 +139,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		retArray[3] = new Point(x + width + 1, y + height/2 + 1);
 		return retArray;
 	}
-	
+
 	@Override
 	public void setBackgroundColor(SO newColor) {
 		throw new NotImplementedException();

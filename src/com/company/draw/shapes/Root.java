@@ -14,7 +14,6 @@ import static com.company.draw.shapes.WidgetUtils.*;
 public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	public SV model;
-
 	public SA contents;
 	public double sx;
 	public double sy;
@@ -92,23 +91,14 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 //			return;
 		}
 
-		int cSize = contents.size();
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
-//		Perform Transformations
-		if (sx != 0) g2.scale(sx, sy);
-		g2.rotate(-Math.toRadians(rotate));
-		g2.translate((int) tx, (int) ty);
-
-//		Call Draw on all contained objects
-		for (int i = 0; i < cSize; i++) {
+		AffineTransform transform = g2.getTransform();
+		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
+		for (int i = 0; i < contents.size(); i++) { // Call Draw on all contained objects
 			callPaintOnContents(contents.get(i), g2);
 		}
-
-//		Revert Transformations
-		g2.translate((int) -tx, (int) -ty);
-		g2.rotate(Math.toRadians(rotate));
-		if (sx != 0) g2.scale(1 / sx, 1 / sy);
+		g2.setTransform(transform);
 	}
 
 	public void callPaintOnContents(SV sv, Graphics g) {
@@ -136,13 +126,11 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
-
-//		SO modelObjects = this.model.getSO();
-//		String[] modelAttrs = modelObjects.attributes();
-//		for (String attr : modelAttrs) {
-//			System.out.println(attr + " -> " + modelObjects.get(attr));
-//		}
-
+		SO modelObjects = this.model.getSO();
+		String[] modelAttrs = modelObjects.attributes();
+		for (String attr : modelAttrs) {
+			System.out.println(attr + " -> " + modelObjects.get(attr));
+		}
 		return handeled;
 	}
 
