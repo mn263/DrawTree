@@ -13,8 +13,7 @@ public class HStack extends SOReflect implements Layout, Drawable {
 
 	private enum sizeType { MIN, DESIRED, MAX }
 
-	public HStack() { }
-
+	double left;
 
 	//	DRAWABLE
 	@Override
@@ -65,41 +64,41 @@ public class HStack extends SOReflect implements Layout, Drawable {
 		return runningTotal;
 	}
 
-	private double getChildHeight(sizeType size) {
-		double widestChild = 0;
+	private double getTallestChild(sizeType size) {
+		double tallestChild = 0;
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			Layout layout = (Layout) sv.getSO();
 			if (size == sizeType.MIN) {
-				if (widestChild < layout.getMinHeight()) {
-					widestChild = layout.getMinHeight();
+				if (tallestChild < layout.getMinHeight()) {
+					tallestChild = layout.getMinHeight();
 				}
 			} else if (size == sizeType.DESIRED) {
-				if (widestChild < layout.getDesiredHeight()) {
-					widestChild = layout.getDesiredHeight();
+				if (tallestChild < layout.getDesiredHeight()) {
+					tallestChild = layout.getDesiredHeight();
 				}
 			} else if (size == sizeType.MAX) {
-				if (widestChild < layout.getMaxHeight()) {
-					widestChild = layout.getMaxHeight();
+				if (tallestChild < layout.getMaxHeight()) {
+					tallestChild = layout.getMaxHeight();
 				}
 			}
 		}
-		return widestChild;
+		return tallestChild;
 	}
 
 	@Override
 	public double getMinHeight() {
-		return getChildHeight(sizeType.MIN);
+		return getTallestChild(sizeType.MIN);
 	}
 
 	@Override
 	public double getDesiredHeight() {
-		return getChildHeight(sizeType.DESIRED);
+		return getTallestChild(sizeType.DESIRED);
 	}
 
 	@Override
 	public double getMaxHeight() {
-		return getChildHeight(sizeType.MAX);
+		return getTallestChild(sizeType.MAX);
 	}
 
 
@@ -114,44 +113,40 @@ public class HStack extends SOReflect implements Layout, Drawable {
 
 	@Override
 	public void setHBounds(double left, double right) {
-		double min = getMinHeight();
-		double max = getMaxHeight();
-		double desired = getDesiredHeight();
-		double height = right - left;
+		double min = getMinWidth();
+		double desired = getDesiredWidth();
+		double width = right - left;
 
-		if (min >= height) {
+		if (min >= width) {
 			double childLeft = left;
 			for (int i = 0; i < contents.size(); i++) {
 				SV sv = contents.get(i);
 				Layout child = (Layout) sv.getSO();
-				double childWidth = child.getMinHeight();
+				double childWidth = child.getMinWidth();
 				child.setHBounds(childLeft, childLeft + childWidth);
 				childLeft += childWidth;
 			}
-		} else if (desired >= height) {
+		} else if (desired >= width) {
 			double desiredMargin = (desired - min);
-			if(desiredMargin == 0) desiredMargin = 1;
-			double fraction = (height - min) / desiredMargin;
+			if(desiredMargin <= 0) desiredMargin = 1;
+			double fraction = (width - min) / desiredMargin;
 			double childLeft = left;
 			for (int i = 0; i < contents.size(); i++) {
 				SV sv = contents.get(i);
 				Layout child = (Layout) sv.getSO();
-				double childMinHeight = child.getMinHeight();
-				double childDesiredHeight = child.getDesiredHeight();
-				double childWidth = childMinHeight + (childDesiredHeight - childMinHeight) * fraction;
+				double childMinWidth = child.getMinWidth();
+				double childDesiredWidth = child.getDesiredWidth();
+				double childWidth = childMinWidth + (childDesiredWidth - childMinWidth) * fraction;
 				child.setHBounds(childLeft, childLeft + childWidth);
 				childLeft += childWidth;
 			}
 		} else {
-			double maxMargin = (max - desired) == 0 ? 1 : (max - desired);
-			double fraction = (height - desired) / maxMargin;
+			double difference = width - desired;
 			double childLeft = left;
 			for (int i = 0; i < contents.size(); i++) {
 				SV sv = contents.get(i);
 				Layout child = (Layout) sv.getSO();
-				double childDesiredHeight = child.getDesiredHeight();
-				double childMaxHeight = child.getMaxHeight();
-				double childWidth = childDesiredHeight + (childMaxHeight - childDesiredHeight) * fraction;
+				double childWidth = child.getDesiredWidth() + (child.getDesiredWidth() / desired) * difference;
 				child.setHBounds(childLeft, childLeft + childWidth);
 				childLeft += childWidth;
 			}
