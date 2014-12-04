@@ -25,10 +25,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	public SO slider;
 	public double sliderVal;
 
-	private Point mouseDownPoint;
-
 	private ArrayList<Point> pointsList = null;
-	private ArrayList<Point> pathPoints = null;
 	private int pointCount = 1;
 	private double originalWidth = -1;
 	private double originalHeight = -1;
@@ -37,7 +34,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	private SimpleMatrix pts;
 	private SimpleMatrix t;
 	private int currsliderSegment = 0;
-	private ArrayList<ArrayList<Point>> segments;
 
 	public Path() {
 		WidgetUtils.addListener(this);
@@ -54,20 +50,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			drawable.paint(g2);
 		}
 
-		g.setColor(Color.black);
-		for (Point catmullPoint : pointsList) {
-			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
-		}
-		g.setColor(Color.darkGray);
-		if(pathPoints == null) generatePathPoints();
-//		for (Point catmullPoint : pathPoints) {
-//		for (int i = 0; i < pathPoints.size(); i++) {
-//			if (i == 10) g.setColor(Color.blue);
-//			if (i == 20) g.setColor(Color.orange);
-//			if (i == 30) g.setColor(Color.green);
-//			Point catmullPoint = pathPoints.get(i);
-//			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
-//		}
 		setSliderPoint();
 		getSliderGroup().paint(g);
 	}
@@ -162,17 +144,11 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	//	MODEL LISTENER
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
-		if (modelPath.size() == model.size()) {
-			for (int i = 0; i < model.size(); i++) {
-				if (!modelPath.get(i).equals(model.getString(i))) {
-					return; //IT WASN'T A MATCH
-				}
-			}
-			if (slider == null) return;
-//			TODO: finish this method
-//			Point newGroupLocation = getWindowCoordsFromSlideVal(Double.valueOf(newValue));
-//			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
-		}
+		if (slider == null || modelPath.size() != model.size()) return;
+
+		for (int i = 0; i < model.size(); i++) // Verify that it matches
+			if (!modelPath.get(i).equals(model.getString(i))) return; //IT WASN'T A MATCH
+		getWindowCoordsFromSlideVal(Double.valueOf(newValue));
 	}
 
 	@Override
@@ -337,6 +313,22 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		WidgetUtils.updateModel(model, String.valueOf(modelValue));
 	}
 
+	private void getWindowCoordsFromSlideVal(Double modelValue) {
+		if (this.pointCount <= 1) {
+			this.pointsList = getPoints();
+			this.pointCount = this.pointsList.size();
+		} else if (sliderVal == ((this.pointCount - 1) * modelValue) - this.currsliderSegment) return;
+
+		this.currsliderSegment = (int) Math.ceil(modelValue * (this.pointCount - 1)) - 1;
+		if (this.currsliderSegment < 0) this.currsliderSegment = 0;
+
+		sliderVal = ((this.pointCount - 1) * modelValue) - this.currsliderSegment;
+		this.pts = updatePointsMatrix(currsliderSegment);
+		this.t = updateMatrixT(this.sliderVal);
+		setSliderPoint();
+	}
+
+
 	public Group getSliderGroup() {
 		return (Group) slider;
 	}
@@ -358,34 +350,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		SimpleMatrix newPoint = pointsWithCatmull.mult(tVals);
 		return new Point(newPoint.get(0),newPoint.get(1));
 	}
-
-	private Point getWindowCoordsFromSlideVal(Double modelValue) {
-//		TODO: finish method
-		SimpleMatrix crInv = cr.invert();
-		SimpleMatrix ptsInv = pts.invert();
-		return null;
-
-	}
-
-	private void generatePathPoints() {
-		this.pathPoints = new ArrayList<>();
-		double realSlideVal = this.sliderVal;
-		int realcurrsliderSegment = this.currsliderSegment;
-		this.pointCount = getPoints("X").length;
-		for (int index = 0; index < pointCount - 1; index++) {
-			this.currsliderSegment = index;
-			for (double i = 0.1; i < 1; i = i + 0.1) {
-				this.pts = updatePointsMatrix(currsliderSegment);
-				this.t = updateMatrixT(this.sliderVal);
-				this.sliderVal = i;
-				setSliderPoint();
-				pathPoints.add(new Point(getSliderGroup().tx, getSliderGroup().ty));
-			}
-		}
-		this.sliderVal = realSlideVal;
-		this.currsliderSegment = realcurrsliderSegment;
-	}
-
 
 	private static class tuple {
 		public double sliderValue;
