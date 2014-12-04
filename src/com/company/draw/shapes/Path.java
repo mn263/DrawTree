@@ -81,6 +81,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			Point2D ptSrc = new Point(x, y);
 			Point2D ptDst = myTransform.transform(ptSrc, null);
 			Point nearestPoint = findNearestPoint(new Point(ptDst.getX(), ptDst.getY()));
+
 //			TODO: set tx&ty = 0, rotate to match slope, then set tx&ty
 			this.getSliderGroup().tx = nearestPoint.getX();
 			this.getSliderGroup().ty = nearestPoint.getY();
@@ -314,6 +315,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	}
 
 	private void getWindowCoordsFromSlideVal(Double modelValue) {
+//		TODO: we may need to normalize the modelValue to be b/w 0-1.
 		if (this.pointCount <= 1) {
 			this.pointsList = getPoints();
 			this.pointCount = this.pointsList.size();
