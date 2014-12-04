@@ -29,6 +29,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 
 	private ArrayList<Point> pointsList = null;
 	private ArrayList<Point> pathPoints = null;
+	private int pointCount = 1;
 	private double originalWidth = -1;
 	private double originalHeight = -1;
 
@@ -54,12 +55,18 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		}
 
 //		TODO: remove the path points when this is working
-		g.setColor(Color.darkGray);
+		g.setColor(Color.black);
 		for (Point catmullPoint : pointsList) {
 			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
 		}
+		g.setColor(Color.darkGray);
 		if(pathPoints == null) generatePathPoints();
-		for (Point catmullPoint : pathPoints) {
+//		for (Point catmullPoint : pathPoints) {
+		for (int i = 0; i < pathPoints.size(); i++) {
+			if (i == 10) g.setColor(Color.blue);
+			if (i == 20) g.setColor(Color.orange);
+			if (i == 30) g.setColor(Color.green);
+			Point catmullPoint = pathPoints.get(i);
 			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
 		}
 
@@ -93,8 +100,8 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		if (WidgetUtils.sliderBeingUsed(this)) {
 			Point2D ptSrc = new Point(x, y);
 			Point2D ptDst = myTransform.transform(ptSrc, null);
-			Point convertedPoint = new Point(ptDst.getX(), ptDst.getY());
-			Point nearestPoint = findNearestPoint(convertedPoint);
+//			Point convertedPoint = new Point(ptDst.getX(), ptDst.getY());
+			Point nearestPoint = findNearestPoint(new Point(ptDst.getX(), ptDst.getY()));
 //			TODO: set tx&ty = 0, rotate to match slope, then set tx&ty
 			this.getSliderGroup().tx = nearestPoint.getX();
 			this.getSliderGroup().ty = nearestPoint.getY();
@@ -365,8 +372,8 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		this.pathPoints = new ArrayList<>();
 		double realSlideVal = this.sliderVal;
 		int realcurrsliderSegment = this.currsliderSegment;
-		int pointCount = getPoints("X").length;
-		for (int index = 0; index < pointCount; index++) {
+		this.pointCount = getPoints("X").length;
+		for (int index = 0; index < pointCount - 1; index++) {
 			this.currsliderSegment = index;
 			for (double i = 0.1; i < 1; i = i + 0.1) {
 				this.pts = updatePointsMatrix(currsliderSegment);
@@ -394,7 +401,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		double dist = Double.MAX_VALUE;
 		Point returnPoint = null;
 		double bestSliderVal = 0;
-		for (int i = 0; i < this.pointsList.size(); i++) {
+		for (int i = 0; i < this.pointCount - 1; i++) {
 			tuple bestTuple = getClosestPointInSegment(i, convertedPoint, 0, 1);
 			Point closestInSegment = bestTuple.closestPoint;
 			double closestInSegDist = getDistance(convertedPoint, closestInSegment);
