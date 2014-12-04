@@ -56,14 +56,14 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		if(slideRect == null) return false;
+		if (slideRect == null) return false;
 		this.downDifference = y - getSliderTop();
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		if(slideRect == null) return false;
+		if (slideRect == null) return false;
 		if (WidgetUtils.sliderBeingUsed(this)) {
 			moveSlider(fromWindowCoords(y - downDifference));
 			return true;
@@ -151,7 +151,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private double getSliderTop() {
-		if(slideRect == null) return 0;
+		if (slideRect == null) return 0;
 		return slideRect.top;
 	}
 

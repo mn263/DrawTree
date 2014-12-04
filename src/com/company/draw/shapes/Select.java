@@ -16,7 +16,10 @@ public class Select extends Group implements Selectable {
 	private AffineTransform totalTransform = null;
 	public double columnSpan;
 
-	public Select(){super();}
+	public Select() {
+		super();
+	}
+
 	public Select(Group group) {
 		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate, group.width, group.height);
 	}

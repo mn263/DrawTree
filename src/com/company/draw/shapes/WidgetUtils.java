@@ -15,10 +15,12 @@ public class WidgetUtils {
 	public static Graphics graphics;
 
 	public enum MouseStatus {RELEASED, PRESSED}
-	public static enum mouseType { UP, DOWN, MOVE }
+
+	public static enum mouseType {UP, DOWN, MOVE}
+
 	private static MouseStatus mouseStatus = MouseStatus.RELEASED;
 
-// MOUSE
+	// MOUSE
 	public static MouseStatus getMouseStatus() {
 		return mouseStatus;
 	}
@@ -32,7 +34,7 @@ public class WidgetUtils {
 		}
 	}
 
-//	WIDGET
+	//	WIDGET
 	public static boolean sliderBeingUsed(ModelListener scroll) {
 		return sliderBeingUsed == scroll;
 	}
@@ -49,7 +51,7 @@ public class WidgetUtils {
 		}
 	}
 
-// LISTENER
+	// LISTENER
 	public static void addListener(ModelListener listener) {
 		modelListeners.add(listener);
 	}
@@ -68,7 +70,7 @@ public class WidgetUtils {
 		SwingTree.getRoot().updateModel(path, value);
 	}
 
-// SWING TREE
+	// SWING TREE
 	public static void setSwingTree(SwingTree swingTree) {
 		WidgetUtils.swingTree = swingTree;
 	}
@@ -78,7 +80,7 @@ public class WidgetUtils {
 		swingTree.getContentPane().repaint();
 	}
 
-// WIDGET BUTTON UTILS
+	// WIDGET BUTTON UTILS
 	public static AffineTransform getTransform(double tx, double ty, double sx, double sy, double rotate) {
 		AffineTransform transform = new AffineTransform();
 		if (sx != 0 && sy != 0) transform.scale(1 / sx, 1 / sy);
@@ -108,7 +110,7 @@ public class WidgetUtils {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if (so instanceof Selectable && !(so instanceof Text) && !(so instanceof Group)) {
-				if(isSelectable(so, x, y, myTransform)) return true;
+				if (isSelectable(so, x, y, myTransform)) return true;
 			} else if (so instanceof Interactable) {
 				if (so instanceof Text && !isSelectable(so, x, y, myTransform)) continue;
 
@@ -138,7 +140,7 @@ public class WidgetUtils {
 	public static boolean handleMouse(ArrayList<Drawable> contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
 		for (Drawable drawable : contents) {
 			if (drawable instanceof Selectable && !(drawable instanceof Text) && !(drawable instanceof Group)) {
-				if(isSelectable(drawable, x, y, myTransform)) return true;
+				if (isSelectable(drawable, x, y, myTransform)) return true;
 			} else if (drawable instanceof Interactable) {
 				if (drawable instanceof Text && !isSelectable(drawable, x, y, myTransform)) return false;
 

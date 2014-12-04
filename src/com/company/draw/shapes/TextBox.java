@@ -37,7 +37,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		WidgetUtils.addListener(this);
 	}
 
-//	INTERACTABLE
+	//	INTERACTABLE
 	@Override
 	public Root getPanel() {
 		throw new NotImplementedException();
@@ -95,7 +95,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		this.rect.setBackgroundColor(newState);
 	}
 
-//	DRAWABLE
+	//	DRAWABLE
 	@Override
 	public void paint(Graphics g) {
 		if (rect == null || text == null) return;
@@ -107,7 +107,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	// MODEL LISTENER
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
-		if(content == null) loadContentText();
+		if (content == null) loadContentText();
 
 		if (modelPath.size() == model.size()) {
 			for (int i = 0; i < model.size(); i++) {
@@ -160,11 +160,11 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	@Override
 	public double getDesiredWidth() {
 		String wString = "";
-		for(int i = 0; i < desiredChars; i++){
+		for (int i = 0; i < desiredChars; i++) {
 			wString += "W";
 		}
 		int stringWidth = text.getFontMetrics().stringWidth(wString);
-		return stringWidth+10*2;
+		return stringWidth + 10 * 2;
 	}
 
 	@Override
@@ -174,12 +174,12 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public double getMinHeight() {
-		return (BEVEL*2) + (getText().getMinHeight());
+		return (BEVEL * 2) + (getText().getMinHeight());
 	}
 
 	@Override
 	public double getDesiredHeight() {
-		return (BEVEL*2) + (MARGIN.getHeight()*2) + (getText().getFontMetrics().getHeight());
+		return (BEVEL * 2) + (MARGIN.getHeight() * 2) + (getText().getFontMetrics().getHeight());
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private Text getText() {
-		if(this.text == null) initializeContents();
+		if (this.text == null) initializeContents();
 		return text;
 	}
 }

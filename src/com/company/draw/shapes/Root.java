@@ -73,7 +73,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			} else {
 				doInitialModelUpdate(path, modelObjects.get(attr));
 			}
-			path.remove(path.size() -1);
+			path.remove(path.size() - 1);
 		}
 	}
 

@@ -53,7 +53,7 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 	@Override
 	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
 		Point2D click = transform.transform(new Point(x, y), null);
-		double allowance = (thickness*transform.getScaleX())/4 + (thickness*transform.getScaleY())/4 + 3;
+		double allowance = (thickness * transform.getScaleX()) / 4 + (thickness * transform.getScaleY()) / 4 + 3;
 		ArrayList<Point> pointsList = getLinesInPolyline();
 
 		for (int i = 0; i < pointsList.size(); i++) {

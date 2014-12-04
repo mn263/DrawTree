@@ -43,7 +43,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		WidgetUtils.addListener(this);
 	}
 
-//	INTERACTABLE
+	//	INTERACTABLE
 	@Override
 	public Root getPanel() {
 		throw new NotImplementedException();
@@ -76,7 +76,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
-		if(rangeRect == null) return false;
+		if (rangeRect == null) return false;
 		if (sliderLast == null) sliderLast = new Point(fromWindowCoords(getSliderLeft()), 0);
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
@@ -149,7 +149,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	private double getSliderLeft() {
-		if(slideRect == null) return 0;
+		if (slideRect == null) return 0;
 		return slideRect.left;
 	}
 
@@ -178,7 +178,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		if (this.slideRect == null) initializeContents();
 		if (modelPath.size() == model.size()) {
 			for (int i = 0; i < model.size(); i++) {
-				if(!modelPath.get(i).equals(model.getString(i))) {
+				if (!modelPath.get(i).equals(model.getString(i))) {
 					return; //IT WASN'T A MATCH
 				}
 			}
@@ -310,6 +310,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 		setPolygonPoints(activeRect.height);
 	}
+
 	private void setPolygonPoints(double height) {
 		double scrollLength = activeRect.width;
 		double center = height / 2;

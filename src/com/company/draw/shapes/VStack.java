@@ -14,9 +14,10 @@ public class VStack extends SOReflect implements Layout, Drawable, Interactable 
 	public SA contents;
 	public double columnSpan;
 
-	private enum sizeType { MIN, DESIRED, MAX }
+	private enum sizeType {MIN, DESIRED, MAX}
 
-	public VStack() { }
+	public VStack() {
+	}
 
 
 	//	DRAWABLE
@@ -100,6 +101,7 @@ public class VStack extends SOReflect implements Layout, Drawable, Interactable 
 		}
 		return widestChild;
 	}
+
 	private double getTotalChildHeight(sizeType size) {
 		double runningTotal = 0;
 		for (int i = 0; i < contents.size(); i++) {
@@ -149,7 +151,7 @@ public class VStack extends SOReflect implements Layout, Drawable, Interactable 
 			}
 		} else if (desired >= height) { //give min to all and proportional for what's left
 			double desiredMargin = (desired - min);
-			if(desiredMargin <= 0) desiredMargin = 1;
+			if (desiredMargin <= 0) desiredMargin = 1;
 			double fraction = (height - min) / desiredMargin;
 			double childTop = top;
 			for (int i = 0; i < contents.size(); i++) {

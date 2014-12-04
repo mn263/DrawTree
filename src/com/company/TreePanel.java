@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public  class TreePanel extends JPanel implements ComponentListener {
+public class TreePanel extends JPanel implements ComponentListener {
 
 	public java.util.List<Drawable> drawables = new ArrayList<>();
 	public Mouse mouseListener;

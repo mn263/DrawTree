@@ -30,7 +30,8 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	private final double MIN_SIZE = 10;
 
 
-	public Text(){}
+	public Text() {
+	}
 
 	public Text(String text, double x, double y, String font, boolean edit, double cursor) {
 		this.text = text;
@@ -133,10 +134,10 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		int width = metrics.stringWidth(text);
 		int height = metrics.getHeight() + (int) buttonHeight;
 		Point2D[] retArray = new Point2D[4];
-		retArray[0] = new Point(x - 3, y - height/2);
-		retArray[1] = new Point(x + width + 1, y - height/2);
-		retArray[2] = new Point(x - 3, y + height/2 + 1);
-		retArray[3] = new Point(x + width + 1, y + height/2 + 1);
+		retArray[0] = new Point(x - 3, y - height / 2);
+		retArray[1] = new Point(x + width + 1, y - height / 2);
+		retArray[2] = new Point(x - 3, y + height / 2 + 1);
+		retArray[3] = new Point(x + width + 1, y + height / 2 + 1);
 		return retArray;
 	}
 
@@ -187,10 +188,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	//	LAYOUT
 	public void adjustFontWidth(String label, double availableWidth) {
-		if(!label.isEmpty()) this.text = label;
-//		TODO: look more at the "Type Here..."
-		if(this.text.isEmpty()) this.text = "Type Here...";
-
+		if (!label.isEmpty()) this.text = label;
 		this.buttonWidth = availableWidth;
 		size = max(MIN_SIZE, getMaxWidth() * 0.7);
 		setFontMetrics(WidgetUtils.graphics);
@@ -241,12 +239,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	public FontMetrics getFontMetrics() {
-		if(this.metrics == null) this.metrics = WidgetUtils.graphics.getFontMetrics();
+		if (this.metrics == null) this.metrics = WidgetUtils.graphics.getFontMetrics();
 		return this.metrics;
 	}
 
 	public int getTextWidth() {
-		if(this.metrics == null) return 0;
+		if (this.metrics == null) return 0;
 
 		int width = 0;
 		for (int i = 0; i < this.text.length(); i++) {
