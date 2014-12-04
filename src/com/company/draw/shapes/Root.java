@@ -26,7 +26,6 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	private boolean initUpdateComplete = false;
 
-	private int width = -1;
 
 	public void setKeyFocus(Interactable focus) {
 		this.focus = focus;
@@ -62,7 +61,6 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	private void doInitialModelUpdate(ArrayList<String> path, SV currModel) {
-//		TODO: is this doing what I want it to do?
 		this.initUpdateComplete = true;
 		SO modelObjects = currModel.getSO();
 		String[] modelAttrs = modelObjects.attributes();
@@ -81,30 +79,23 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	@Override
 	public void paint(Graphics g) {
-		if (!initUpdateComplete) doInitialModelUpdate(new ArrayList<String>(), this.model);
-		if (width == -1) { //because contents aren't initialized yet
+		if (!initUpdateComplete) { //because contents aren't initialized yet
+			doInitialModelUpdate(new ArrayList<String>(), this.model);
 			WidgetUtils.graphics = g;
-//			TODO: this is initially wrong I believe
-			setHBounds(tx, 900 - tx);
-			setVBounds(ty, 600 - ty);
-			width = (int) (900 - tx);
-//			return;
+			setHBounds(tx, TreePanel.width - tx);
+			setVBounds(ty, TreePanel.height - ty);
+			setHBounds(tx, TreePanel.width - tx);
+			setVBounds(ty, TreePanel.height - ty);
 		}
+
 
 //		The original and next we transform and repaint
 		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform transform = g2.getTransform();
 		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
-		for (int i = 0; i < contents.size(); i++) { // Call Draw on all contained objects
-			callPaintOnContents(contents.get(i), g2);
-		}
+		Drawable child = (Drawable) getOnlyChild();
+		child.paint(g2);
 		g2.setTransform(transform);
-	}
-
-	public void callPaintOnContents(SV sv, Graphics g) {
-		SO so = sv.getSO();
-		Drawable drawable = (Drawable) so;
-		drawable.paint(g);
 	}
 
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
@@ -204,9 +195,9 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	public void handleComponentResize(ComponentEvent e) {
-		width = e.getComponent().getWidth();
-		int height = e.getComponent().getHeight();
-		setHBounds(tx, width - tx);
-		setVBounds(ty, height - ty);
+		TreePanel.width = e.getComponent().getWidth();
+		TreePanel.height = e.getComponent().getHeight();
+		setHBounds(tx, TreePanel.width - tx);
+		setVBounds(ty, TreePanel.height - ty);
 	}
 }

@@ -12,6 +12,8 @@ public  class TreePanel extends JPanel implements ComponentListener {
 	public java.util.List<Drawable> drawables = new ArrayList<>();
 	public Mouse mouseListener;
 	public static Select selected;
+	public static int width = 900;
+	public static int height = 600;
 
 	public TreePanel(Mouse mouseListener) {
 		this.mouseListener = mouseListener;
@@ -19,7 +21,7 @@ public  class TreePanel extends JPanel implements ComponentListener {
 		this.addMouseMotionListener(mouseListener);
 		this.addComponentListener(this);
 		this.setBackground(Color.lightGray);
-		setSize(900,600);
+		setSize(width, height);
 	}
 
 	public void addDrawable(Drawable drawable) {
