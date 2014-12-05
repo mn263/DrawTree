@@ -336,7 +336,8 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		Point updatedSlideLocation = getNewSlideLoc();
 		getSliderGroup().tx = updatedSlideLocation.getX();
 		getSliderGroup().ty = updatedSlideLocation.getY() - 2;
-		WidgetUtils.updateModel(model, String.valueOf(sliderVal));
+		double modelValue = (sliderVal + this.currsliderSegment) / (this.pointCount - 1);
+		WidgetUtils.updateModel(model, String.valueOf(modelValue));
 	}
 
 	public Group getSliderGroup() {
