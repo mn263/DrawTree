@@ -117,22 +117,22 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	// WIDGET METHODS
 	private void moveBar(double step) {
 		double newValue = sliderLast.getX() + step;
-		if (newValue < min) setSlider(slideRect, min);
-		else if (newValue > max) setSlider(slideRect, max);
-		else setSlider(slideRect, newValue);
+		if (newValue < min) setSlider(min);
+		else if (newValue > max) setSlider(max);
+		else setSlider(newValue);
 	}
 
 	private void moveSlider(double x) {
 		if (x == sliderLast.getX()) return; //NO NEED TO UPDATE IF IT IS THE SAME
-		if (x < min) setSlider(slideRect, min);
-		else if (x > max) setSlider(slideRect, max);
-		else setSlider(slideRect, x);
+		if (x < min) setSlider(min);
+		else if (x > max) setSlider(max);
+		else setSlider(x);
 	}
 
-	private void setSlider(Rect slide, double value) {
+	private void setSlider(double value) {
 		sliderLast = new Point(value, 0);
 		double slideCoords = toSliderCoords(value);
-		slide.setLeft(slideCoords);
+		slideRect.setLeft(slideCoords);
 		WidgetUtils.updateModel(model, String.valueOf(value));
 	}
 
@@ -278,6 +278,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
+		if (this.slideRect == null) initializeContents();
 		double newHeight = bottom - top;
 		if (getMinHeight() >= newHeight) newHeight = getMinHeight();
 		else if (newHeight >= getMaxHeight()) newHeight = getMaxHeight();
@@ -291,6 +292,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
+		if (this.slideRect == null) initializeContents();
 		double oldLeft = rangeRect.left;
 		double oldWidth = activeRect.width;
 		double newWidth = right - left;
@@ -303,7 +305,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		double widthRatio = newWidth / oldWidth;
 		this.rangeMax = -1; // this will cause the other methods to call a method to convert from screen to object.
 		slideRect.width = slideRect.width * widthRatio;
-		slideRect.left = ((slideRect.left - oldLeft) * widthRatio) + rangeRect.top;
+		slideRect.left = ((slideRect.left - oldLeft) * widthRatio) + rangeRect.left;
 
 		activeRect.width = newWidth;
 		rangeRect.width = newWidth - 24;
@@ -316,8 +318,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		double left = activeRect.left;
 		double top = activeRect.top;
 		double bottom = activeRect.top + height;
-		upPolygon.points = getPoints(left, center, left + 9, top, left + 9, bottom);
-		downPolygon.points = getPoints(scrollLength, center, scrollLength - 9, top, scrollLength - 9, bottom);
+		upPolygon.points = getPoints(left + 1, center, left + 9, top + 2, left + 9, bottom - 2);
+		downPolygon.points = getPoints(left + scrollLength - 2, center, left + scrollLength - 10, top + 2, left + scrollLength - 10, bottom - 2);
 	}
-
 }

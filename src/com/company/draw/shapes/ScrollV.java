@@ -314,13 +314,13 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	private void setPolygonPoints(double width) {
 		double scrollLength = activeRect.height;
-		double left = 0;
+		double left = 2;
 		double center = width / 2;
 		double top = activeRect.top;
 		double bottom_of_up = activeRect.top + 9;
 		double top_of_down = activeRect.top + scrollLength - 9;
 		double bottom = activeRect.top + scrollLength;
-		upPolygon.points = getPoints(left, bottom_of_up, center, top, width, bottom_of_up);
-		downPolygon.points = getPoints(left, top_of_down, center, bottom, width, top_of_down);
+		upPolygon.points = getPoints(left, bottom_of_up, center, top + 2, width - 2, bottom_of_up);
+		downPolygon.points = getPoints(left, top_of_down, center, bottom - 2, width - 2, top_of_down);
 	}
 }
