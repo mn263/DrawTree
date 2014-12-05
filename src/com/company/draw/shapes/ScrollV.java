@@ -56,14 +56,14 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		if (slideRect == null) return false;
+		if(slideRect == null) return false;
 		this.downDifference = y - getSliderTop();
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}
 
 	@Override
 	public boolean mouseMove(double x, double y, AffineTransform myTransform) {
-		if (slideRect == null) return false;
+		if(slideRect == null) return false;
 		if (WidgetUtils.sliderBeingUsed(this)) {
 			moveSlider(fromWindowCoords(y - downDifference));
 			return true;
@@ -151,7 +151,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private double getSliderTop() {
-		if (slideRect == null) return 0;
+		if(slideRect == null) return 0;
 		return slideRect.top;
 	}
 
@@ -283,11 +283,14 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		double newWidth = right - left;
 		if (getMinWidth() >= newWidth) newWidth = getMinWidth();
 		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();
-		slideRect.left = activeRect.left;
+		slideRect.left = left;
+		activeRect.left = left;
+		rangeRect.left = left;
+
 		activeRect.width = newWidth;
 		rangeRect.width = newWidth;
 		slideRect.width = newWidth;
-		setPolygonPoints(newWidth);
+		setPolygonPoints(left, newWidth);
 	}
 
 	@Override
@@ -309,18 +312,17 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		activeRect.height = newHeight;
 		rangeRect.height = newHeight - 24;
 
-		setPolygonPoints(activeRect.width);
+		setPolygonPoints(activeRect.left, activeRect.width);
 	}
 
-	private void setPolygonPoints(double width) {
+	private void setPolygonPoints(double left, double width) {
 		double scrollLength = activeRect.height;
-		double left = 0;
-		double center = width / 2;
+		double center = left + width / 2;
 		double top = activeRect.top;
 		double bottom_of_up = activeRect.top + 9;
 		double top_of_down = activeRect.top + scrollLength - 9;
 		double bottom = activeRect.top + scrollLength;
-		upPolygon.points = getPoints(left, bottom_of_up, center, top, width, bottom_of_up);
-		downPolygon.points = getPoints(left, top_of_down, center, bottom, width, top_of_down);
+		upPolygon.points = getPoints(left + 2, bottom_of_up, center, top + 2, left + width - 2, bottom_of_up);
+		downPolygon.points = getPoints(left + 2, top_of_down, center, bottom - 2, left + width - 2, top_of_down);
 	}
 }
