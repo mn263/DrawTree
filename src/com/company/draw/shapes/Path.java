@@ -54,7 +54,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			drawable.paint(g2);
 		}
 
-//		TODO: remove the path points when this is working
 		g.setColor(Color.black);
 		for (Point catmullPoint : pointsList) {
 			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
@@ -62,14 +61,13 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		g.setColor(Color.darkGray);
 		if(pathPoints == null) generatePathPoints();
 //		for (Point catmullPoint : pathPoints) {
-		for (int i = 0; i < pathPoints.size(); i++) {
-			if (i == 10) g.setColor(Color.blue);
-			if (i == 20) g.setColor(Color.orange);
-			if (i == 30) g.setColor(Color.green);
-			Point catmullPoint = pathPoints.get(i);
-			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
-		}
-
+//		for (int i = 0; i < pathPoints.size(); i++) {
+//			if (i == 10) g.setColor(Color.blue);
+//			if (i == 20) g.setColor(Color.orange);
+//			if (i == 30) g.setColor(Color.green);
+//			Point catmullPoint = pathPoints.get(i);
+//			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
+//		}
 		setSliderPoint();
 		getSliderGroup().paint(g);
 	}
@@ -100,7 +98,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		if (WidgetUtils.sliderBeingUsed(this)) {
 			Point2D ptSrc = new Point(x, y);
 			Point2D ptDst = myTransform.transform(ptSrc, null);
-//			Point convertedPoint = new Point(ptDst.getX(), ptDst.getY());
 			Point nearestPoint = findNearestPoint(new Point(ptDst.getX(), ptDst.getY()));
 //			TODO: set tx&ty = 0, rotate to match slope, then set tx&ty
 			this.getSliderGroup().tx = nearestPoint.getX();
@@ -354,6 +351,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		if (cr == null) createMatrices();
 		return getNewSlideLoc(this.pts, this.t);
 	}
+
 	public Point getNewSlideLoc(SimpleMatrix points, SimpleMatrix tVals) {
 		if (cr == null) createMatrices();
 		SimpleMatrix pointsWithCatmull = points.mult(cr);
