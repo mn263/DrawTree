@@ -282,12 +282,15 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		double newHeight = bottom - top;
 		if (getMinHeight() >= newHeight) newHeight = getMinHeight();
 		else if (newHeight >= getMaxHeight()) newHeight = getMaxHeight();
-		slideRect.top = activeRect.top;
+		slideRect.top = top;
+		activeRect.top = top;
+		rangeRect.top = top;
+
 		activeRect.height = newHeight;
 		rangeRect.height = newHeight;
 		rangeRect.top = activeRect.top;
 		slideRect.height = newHeight;
-		setPolygonPoints(newHeight);
+		setPolygonPoints(top, newHeight);
 	}
 
 	@Override
@@ -310,15 +313,20 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		activeRect.width = newWidth;
 		rangeRect.width = newWidth - 24;
 
-		setPolygonPoints(activeRect.height);
+		setPolygonPoints(activeRect.top, activeRect.height);
 	}
-	private void setPolygonPoints(double height) {
+	private void setPolygonPoints(double top, double height) {
 		double scrollLength = activeRect.width;
-		double center = height / 2;
+		double center = top + height / 2;
 		double left = activeRect.left;
-		double top = activeRect.top;
 		double bottom = activeRect.top + height;
-		upPolygon.points = getPoints(left + 1, center, left + 9, top + 2, left + 9, bottom - 2);
-		downPolygon.points = getPoints(left + scrollLength - 2, center, left + scrollLength - 10, top + 2, left + scrollLength - 10, bottom - 2);
+		upPolygon.points = getPoints(
+				left + 1, center,
+				left + 9, top + 2,
+				left + 9, bottom - 2);
+		downPolygon.points = getPoints(
+				left + scrollLength - 2, center,
+				left + scrollLength - 10, top + 2,
+				left + scrollLength - 10, bottom - 2);
 	}
 }
