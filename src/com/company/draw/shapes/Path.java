@@ -355,8 +355,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	private double rotateSlider() {
 		SimpleMatrix derivT = getDerivativeOfT();
 		Point point = getNewSlideLoc(this.pts, derivT);
-		double rotation = Math.atan2(point.getY(), point.getX());
-		return rotation;
+		return Math.atan2(point.getY(), point.getX());
 	}
 
 	private void setSliderPoint() {
