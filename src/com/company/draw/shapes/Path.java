@@ -34,6 +34,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	private SimpleMatrix pts;
 	private SimpleMatrix t;
 	private int currsliderSegment = 0;
+	private ArrayList<ArrayList<Point>> segments;
 
 	public Path() {
 		WidgetUtils.addListener(this);
@@ -49,10 +50,48 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			Drawable drawable = (Drawable) so;
 			drawable.paint(g2);
 		}
-
 		setSliderPoint();
+		double rotation = rotateSlider();
+		double oldRotation = getSliderGroup().rotate;
+		getSliderGroup().rotate -= Math.toDegrees(rotation);
 		getSliderGroup().paint(g);
+		getSliderGroup().rotate = oldRotation;
+
+//		g.setColor(Color.black);
+//		for (Point catmullPoint : pointsList) {
+//			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
+//		}
+//		g.setColor(Color.darkGray);
+//		ArrayList<Point> pathPoints = generatePathPoints();
+//		for (int i = 0; i < pathPoints.size(); i++) {
+//			if (i == 10) g.setColor(Color.blue);
+//			if (i == 20) g.setColor(Color.orange);
+//			if (i == 30) g.setColor(Color.green);
+//			Point catmullPoint = pathPoints.get(i);
+//			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
+//		}
+//	}
+//	private ArrayList<Point> generatePathPoints() {
+//		ArrayList<Point> pathPoints = new ArrayList<>();
+//		double realSlideVal = this.sliderVal;
+//		int realcurrsliderSegment = this.currsliderSegment;
+//		this.pointCount = getPoints("X").length;
+//		for (int index = 0; index < pointCount - 1; index++) {
+//			this.currsliderSegment = index;
+//			for (double i = 0.1; i < 1; i = i + 0.1) {
+//				this.pts = updatePointsMatrix(currsliderSegment);
+//				this.t = updateMatrixT(this.sliderVal);
+//				this.sliderVal = i;
+//				setSliderPoint();
+//				pathPoints.add(new Point(getSliderGroup().tx, getSliderGroup().ty));
+//			}
+//		}
+//		this.sliderVal = realSlideVal;
+//		this.currsliderSegment = realcurrsliderSegment;
+//		return pathPoints;
 	}
+
+
 
 	//	INTERACTABLE
 	@Override
@@ -81,8 +120,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			Point2D ptSrc = new Point(x, y);
 			Point2D ptDst = myTransform.transform(ptSrc, null);
 			Point nearestPoint = findNearestPoint(new Point(ptDst.getX(), ptDst.getY()));
-
-//			TODO: set tx&ty = 0, rotate to match slope, then set tx&ty
 			this.getSliderGroup().tx = nearestPoint.getX();
 			this.getSliderGroup().ty = nearestPoint.getY();
 			return true;
@@ -255,6 +292,16 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		return newT;
 	}
 
+	private SimpleMatrix getDerivativeOfT() {
+		double slideVal = sliderVal;
+		SimpleMatrix newT = new SimpleMatrix(4, 1);
+		newT.set(0, 0, 3 * pow(slideVal, 2));
+		newT.set(1, 0, 2 * slideVal);
+		newT.set(2, 0, 1);
+		newT.set(3, 0, 0);
+		return newT;
+	}
+
 	private void recalibratePoints() {
 		ArrayList<Point> originalPoints = getPoints();
 		double vertDiffRatio = 1 + ((this.height - this.originalHeight) / this.originalHeight);
@@ -303,6 +350,14 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		} else {
 			return yArray;
 		}
+	}
+
+	private double rotateSlider() {
+		SimpleMatrix derivT = getDerivativeOfT();
+		Point point = getNewSlideLoc(this.pts, derivT);
+		double rotation = Math.atan2(point.getY(), point.getX());
+		System.out.println(Math.toDegrees(rotation));
+		return rotation;
 	}
 
 	private void setSliderPoint() {
