@@ -356,7 +356,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		SimpleMatrix derivT = getDerivativeOfT();
 		Point point = getNewSlideLoc(this.pts, derivT);
 		double rotation = Math.atan2(point.getY(), point.getX());
-		System.out.println(Math.toDegrees(rotation));
 		return rotation;
 	}
 
