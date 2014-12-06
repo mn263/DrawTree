@@ -173,17 +173,13 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 		y = ptDst.getY();
 
 		if (isClosed()) {
-//			TODO: test this
 			if (PolyContains.contains(x, y, xArray, yArray)) return new ArrayList<>();
 		} else {
-			for (int i = 0; i < xArray.length; i++) {
-//				TODO: test this
-				Point currPoint = new Point(xArray[i], yArray[i]);
+			for (Point currPoint : pointsList) {
 				double xSqr = pow(currPoint.getX() - ptDst.getX(), 2);
 				double ySqr = pow(currPoint.getY() - ptDst.getY(), 2);
 				double distance = pow(xSqr + ySqr, 0.5);
-				if (distance <= 3) {
-					System.out.println("Selected");
+				if (distance <= 6) {
 					return new ArrayList<>();
 				}
 			}
