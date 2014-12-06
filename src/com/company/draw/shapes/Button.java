@@ -104,8 +104,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 			this.value = this.get("value").toString();
 			this.value = this.value.replaceAll("\"", "");
 		} catch (Exception e) {
-//			e.printStackTrace();
-			System.out.println("Button is missing a value attribute");
+//			System.out.println("Button is missing a value attribute");
 		}
 	}
 
