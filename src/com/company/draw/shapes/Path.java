@@ -15,7 +15,7 @@ import static com.company.draw.shapes.WidgetUtils.*;
 import static java.lang.Math.*;
 
 public class Path extends SOReflect implements Drawable, Interactable, Layout, ModelListener {
-//	TODO: implement translation for grid, in case the top/left change
+
 	public SA contents;
 	public SA path;
 	public SA model;
@@ -57,39 +57,11 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		getSliderGroup().rotate = oldRotation;
 
 //		g.setColor(Color.black);
-//		for (Point catmullPoint : pointsList) {
-//			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
+//		ArrayList<Point> points = getPoints();
+//		for (Point point : points) {
+//			g2.drawRect((int) point.getX(), (int) point.getY(), 8, 8);
 //		}
-//		g.setColor(Color.darkGray);
-//		ArrayList<Point> pathPoints = generatePathPoints();
-//		for (int i = 0; i < pathPoints.size(); i++) {
-//			if (i == 10) g.setColor(Color.blue);
-//			if (i == 20) g.setColor(Color.orange);
-//			if (i == 30) g.setColor(Color.green);
-//			Point catmullPoint = pathPoints.get(i);
-//			g2.drawRect((int) catmullPoint.getX() - 2, (int) catmullPoint.getY() - 2, 4, 4);
-//		}
-//	}
-//	private ArrayList<Point> generatePathPoints() {
-//		ArrayList<Point> pathPoints = new ArrayList<>();
-//		double realSlideVal = this.sliderVal;
-//		int realcurrsliderSegment = this.currsliderSegment;
-//		this.pointCount = getPoints("X").length;
-//		for (int index = 0; index < pointCount - 1; index++) {
-//			this.currsliderSegment = index;
-//			for (double i = 0.1; i < 1; i = i + 0.1) {
-//				this.pts = updatePointsMatrix(currsliderSegment);
-//				this.t = updateMatrixT(this.sliderVal);
-//				this.sliderVal = i;
-//				setSliderPoint();
-//				pathPoints.add(new Point(getSliderGroup().tx, getSliderGroup().ty));
-//			}
-//		}
-//		this.sliderVal = realSlideVal;
-//		this.currsliderSegment = realcurrsliderSegment;
-//		return pathPoints;
 	}
-
 
 
 	//	INTERACTABLE
@@ -202,8 +174,9 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			}
 		}
 		getSliderGroup().setHBounds(left, right);
-		if (originalWidth == -1) originalWidth = this.width;
 		this.width = right - left;
+		if (originalWidth == -1) originalWidth = this.width;
+		recalibratePoints();
 	}
 
 	@Override
@@ -217,8 +190,8 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 			}
 		}
 		getSliderGroup().setVBounds(top, bottom);
-		if(originalHeight == -1) originalHeight = this.height;
 		this.height = bottom - top;
+		if(originalHeight == -1) originalHeight = this.height;
 		recalibratePoints();
 	}
 
@@ -370,7 +343,7 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	}
 
 	private void getWindowCoordsFromSlideVal(Double modelValue) {
-//		TODO: we may need to normalize the modelValue to be b/w 0-1.
+//		TODO: ask teacher if this needs to be normalized
 		if (this.pointCount <= 1) {
 			this.pointsList = getPoints();
 			this.pointCount = this.pointsList.size();
@@ -384,7 +357,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		this.t = updateMatrixT(this.sliderVal);
 		setSliderPoint();
 	}
-
 
 	public Group getSliderGroup() {
 		return (Group) slider;
