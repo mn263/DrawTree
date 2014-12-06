@@ -70,10 +70,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
-		if (this.state.equals("active")) {
-			WidgetUtils.updateModel(this.model, this.value);
-		}
-
+		if (this.state.equals("active") && this.model != null) WidgetUtils.updateModel(this.model, this.value);
 		return callHandleMouse(UP, x, y, myTransform);
 	}
 
@@ -103,8 +100,13 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 
 	// DRAWABLE
 	private void loadValue() {
-		this.value = this.get("value").toString();
-		this.value = this.value.replaceAll("\"", "");
+		try {
+			this.value = this.get("value").toString();
+			this.value = this.value.replaceAll("\"", "");
+		} catch (Exception e) {
+//			e.printStackTrace();
+			System.out.println("Button is missing a value attribute");
+		}
 	}
 
 	@Override

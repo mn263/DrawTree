@@ -102,8 +102,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		if (mouseType == UP) { //MOVE SCROLL BAR IF "RELEASED" IS PRESSED
 			if (upPolygon.select(x, y, 0, myTransform) != null) {
 				moveBar(-step);
-			}
-			// MOVE SCROLL BAR IF "DOWN" IS PRESSED
+			} // MOVE SCROLL BAR IF "DOWN" IS PRESSED
 			if (downPolygon.select(x, y, 0, myTransform) != null) {
 				moveBar(step);
 			}
@@ -118,6 +117,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	// CLASS METHODS
 	private void moveBar(double step) {
+		if(model == null) return;
 		double newValue = sliderLast.getY() + step;
 		if (newValue < min) setSlider(slideRect, min);
 		else if (newValue > max) setSlider(slideRect, max);
@@ -125,7 +125,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private void moveSlider(double y) {
-		if (y == sliderLast.getY()) return; //NO NEED TO UPDATE IF IT IS THE SAME
+		if (model == null || y == sliderLast.getY()) return; //NO NEED TO UPDATE IF IT IS THE SAME
 		if (y < min) setSlider(slideRect, min);
 		else if (y > max) setSlider(slideRect, max);
 		else setSlider(slideRect, y);
@@ -135,7 +135,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		sliderLast = new Point(0, value);
 		double slideCoords = toSliderCoords(value);
 		slide.setTop(slideCoords);
-		WidgetUtils.updateModel(model, String.valueOf(value));
+		if(model != null) WidgetUtils.updateModel(model, String.valueOf(value));
 	}
 
 	private double toSliderCoords(double value) {
@@ -178,7 +178,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
 		if (this.slideRect == null) initializeContents();
-		if (modelPath.size() == model.size()) {
+		if (model != null && modelPath.size() == model.size()) {
 			for (int i = 0; i < model.size(); i++) {
 				if (!modelPath.get(i).equals(model.getString(i))) {
 					return; //IT WASN'T A MATCH
@@ -280,6 +280,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
+		if(slideRect == null) initializeContents();
 		double newWidth = right - left;
 		if (getMinWidth() >= newWidth) newWidth = getMinWidth();
 		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();

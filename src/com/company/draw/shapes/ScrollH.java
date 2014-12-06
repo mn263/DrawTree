@@ -14,7 +14,7 @@ import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
 public class ScrollH extends SOReflect implements ModelListener, Layout, Drawable, Interactable {
-
+//	TODO: when loading layout2.draw it didn't initialize properly
 	public String state;
 	public ArrayList<Drawable> contents = new ArrayList<>();
 	public SO idle;
@@ -116,6 +116,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	// WIDGET METHODS
 	private void moveBar(double step) {
+		if(model == null) return;
 		double newValue = sliderLast.getX() + step;
 		if (newValue < min) setSlider(min);
 		else if (newValue > max) setSlider(max);
@@ -123,7 +124,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	private void moveSlider(double x) {
-		if (x == sliderLast.getX()) return; //NO NEED TO UPDATE IF IT IS THE SAME
+		if (model == null || x == sliderLast.getX()) return; //NO NEED TO UPDATE IF IT IS THE SAME
 		if (x < min) setSlider(min);
 		else if (x > max) setSlider(max);
 		else setSlider(x);
@@ -133,7 +134,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		sliderLast = new Point(value, 0);
 		double slideCoords = toSliderCoords(value);
 		slideRect.setLeft(slideCoords);
-		WidgetUtils.updateModel(model, String.valueOf(value));
+		if(model != null) WidgetUtils.updateModel(model, String.valueOf(value));
 	}
 
 	private double toSliderCoords(double value) {
@@ -176,7 +177,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	@Override
 	public void modelUpdated(ArrayList<String> modelPath, String newValue) {
 		if (this.slideRect == null) initializeContents();
-		if (modelPath.size() == model.size()) {
+		if (model != null && modelPath.size() == model.size()) {
 			for (int i = 0; i < model.size(); i++) {
 				if(!modelPath.get(i).equals(model.getString(i))) {
 					return; //IT WASN'T A MATCH
@@ -295,6 +296,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
+		if(slideRect == null) initializeContents();
 		if (this.slideRect == null) initializeContents();
 		double oldLeft = rangeRect.left;
 		double oldWidth = activeRect.width;
@@ -315,6 +317,7 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 		setPolygonPoints(activeRect.top, activeRect.height);
 	}
+
 	private void setPolygonPoints(double top, double height) {
 		double scrollLength = activeRect.width;
 		double center = top + height / 2;

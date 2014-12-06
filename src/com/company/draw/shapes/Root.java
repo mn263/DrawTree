@@ -12,7 +12,7 @@ import java.util.*;
 import static com.company.draw.shapes.WidgetUtils.*;
 
 public class Root extends SOReflect implements Layout, Interactable, Drawable {
-
+//	TODO: when the window is resized, update all of the objects
 	public SV model;
 	public SA contents;
 	public double sx;
@@ -62,6 +62,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	private void doInitialModelUpdate(ArrayList<String> path, SV currModel) {
 		this.initUpdateComplete = true;
+		if (model == null) return;
 		SO modelObjects = currModel.getSO();
 		String[] modelAttrs = modelObjects.attributes();
 		for (String attr : modelAttrs) {
@@ -117,10 +118,12 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	@Override
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
-		SO modelObjects = this.model.getSO();
-		String[] modelAttrs = modelObjects.attributes();
-		for (String attr : modelAttrs) {
-			System.out.println(attr + " -> " + modelObjects.get(attr));
+		if (this.model != null) {
+			SO modelObjects = this.model.getSO();
+			String[] modelAttrs = modelObjects.attributes();
+			for (String attr : modelAttrs) {
+				System.out.println(attr + " -> " + modelObjects.get(attr));
+			}
 		}
 		return handeled;
 	}
