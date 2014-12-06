@@ -56,8 +56,9 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 				Double blue = fill.get("b").getDouble();
 				Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 				g2.setColor(lineColor);
-			} // Draw fill
-			g2.fillPolygon(getCurvePoints("X"), getCurvePoints("Y"), points.size());
+				// Draw fill
+				g2.fillPolygon(getCurvePoints("X"), getCurvePoints("Y"), points.size());
+			}
 
 			if (border != null) {
 				Double red = border.get("r").getDouble();
@@ -65,8 +66,9 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 				Double blue = border.get("b").getDouble();
 				Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 				g2.setColor(lineColor);
-			} // Draw border
-			g2.drawPolygon(getCurvePoints("X"), getCurvePoints("Y"), points.size());
+				// Draw border
+				g2.drawPolygon(getCurvePoints("X"), getCurvePoints("Y"), points.size());
+			}
 		} else {
 			if (border != null) {
 				Double red = border.get("r").getDouble();
