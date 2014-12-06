@@ -124,22 +124,23 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	private void moveBar(double step) {
 		if(model == null) return;
 		double newValue = sliderLast.getY() + step;
-		if (newValue < min) setSlider(slideRect, min);
-		else if (newValue > max) setSlider(slideRect, max);
-		else setSlider(slideRect, newValue);
+		if (newValue < min) setSlider(min);
+		else if (newValue > max) setSlider(max);
+		else setSlider(newValue);
 	}
 
 	private void moveSlider(double y) {
-		if (model == null || y == sliderLast.getY()) return; //NO NEED TO UPDATE IF IT IS THE SAME
-		if (y < min) setSlider(slideRect, min);
-		else if (y > max) setSlider(slideRect, max);
-		else setSlider(slideRect, y);
+		double slideCoords = toSliderCoords(y);
+		if (model == null || (y == sliderLast.getY() && slideCoords == slideRect.top)) return; //NO NEED TO UPDATE IF IT IS THE SAME
+		if (y < min) setSlider(min);
+		else if (y > max) setSlider(max);
+		else setSlider(y);
 	}
 
-	private void setSlider(Rect slide, double value) {
+	private void setSlider(double value) {
 		sliderLast = new Point(0, value);
 		double slideCoords = toSliderCoords(value);
-		slide.setTop(slideCoords);
+		slideRect.setTop(slideCoords);
 		if(model != null) WidgetUtils.updateModel(model, String.valueOf(value));
 	}
 
@@ -247,11 +248,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		this.contents.add(upPolygon);
 		this.contents.add(downPolygon);
 		this.contents.add(slideRect);
-
-		setHBounds(0, 10);
-		setVBounds(0, 100);
 	}
-
 
 	@Override
 	public double getMinWidth() {
@@ -285,7 +282,6 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
-		if(slideRect == null) initializeContents();
 		double newWidth = right - left;
 		if (getMinWidth() >= newWidth) newWidth = getMinWidth();
 		else if (newWidth >= getMaxWidth()) newWidth = getMaxWidth();
@@ -301,6 +297,8 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
+		moveSlider(sliderLast.getY());
+
 		double oldTop = rangeRect.top;
 		double oldHeight = activeRect.height;
 		double newHeight = bottom - top;
