@@ -71,6 +71,7 @@ public class Root extends SOReflect implements Interactable, Drawable {
 			}
 			path.remove(path.size() -1);
 		}
+		mouseMove(0, 0, new AffineTransform());
 	}
 
 	@Override
