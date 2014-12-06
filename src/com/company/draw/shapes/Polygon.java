@@ -48,9 +48,9 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 			Double blue = fill.get("b").getDouble();
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
+	//		Draw fill
+			g2.fillPolygon(xArray, yArray, points.size());
 		}
-//		Draw fill
-		g2.drawPolygon(xArray, yArray, points.size());
 
 		if (border != null) {
 			Double red = border.get("r").getDouble();
@@ -58,9 +58,9 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 			Double blue = border.get("b").getDouble();
 			Color lineColor = new Color(red.intValue(), green.intValue(), blue.intValue());
 			g2.setColor(lineColor);
+	//		Draw border
+			g2.drawPolygon(xArray, yArray, points.size());
 		}
-//		Draw border
-		g2.fillPolygon(xArray, yArray, points.size());
 	}
 
 	private ArrayList<Point> getPoints() {
