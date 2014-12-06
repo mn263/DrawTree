@@ -78,9 +78,6 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 				g2.setColor(lineColor);
 			}
 
-//			for (Point pt : curvePoints) {
-//				g2.fillRect((int) pt.getX() - 2, (int) pt.getY() - 2, (int) thickness, (int) thickness);
-//			}
 			generatePathPoints();
 			for (int i = 0; i < pointsList.size() - 1; i++) {
 				Point start = pointsList.get(i);
@@ -93,7 +90,7 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 
 	private void generatePathPoints() {
 		this.pointsList = new ArrayList<>();
-		for (int index = 0; index < getPoints("X").length - 1; index++) {
+		for (int index = 0; index < getPoints().size() - 1; index++) {
 			double sliderVal = 0;
 			for (double i = 0.1; i < 1; i = i + 0.02) {
 				this.pts = updatePointsMatrix(index);
@@ -255,32 +252,15 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 
 	@Override
 	public void setHBounds(double left, double right) {
-//		for (int i = 0; i < contents.size(); i++) {
-//			SV sv = contents.get(i);
-//			SO so = sv.getSO();
-//			if (so instanceof Layout) {
-//				Layout layout = (Layout) so;
-//				layout.setHBounds(left, right);
-//			}
-//		}
-//		getSliderGroup().setHBounds(left, right);
-//		if (originalWidth == -1) originalWidth = this.width;
 		this.width = right - left;
+		if (originalWidth == -1) originalWidth = this.width;
+		recalibratePoints();
 	}
 
 	@Override
 	public void setVBounds(double top, double bottom) {
-//		for (int i = 0; i < contents.size(); i++) {
-//			SV sv = contents.get(i);
-//			SO so = sv.getSO();
-//			if (so instanceof Layout) {
-//				Layout layout = (Layout) so;
-//				layout.setVBounds(top, bottom);
-//			}
-//		}
-//		getSliderGroup().setVBounds(top, bottom);
-//		if(originalHeight == -1) originalHeight = this.height;
 		this.height = bottom - top;
+		if(originalHeight == -1) originalHeight = this.height;
 		recalibratePoints();
 	}
 
@@ -358,10 +338,12 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 		double vertDiffRatio = 1 + ((this.height - this.originalHeight) / this.originalHeight);
 		double horzDiffRatio = 1 + ((this.width - this.originalWidth) / this.originalWidth);
 		this.pointsList = new ArrayList<>();
+		this.curvePoints = new ArrayList<>();
 		for (Point point : originalPoints) {
 			point.setX(point.getX() * horzDiffRatio);
 			point.setY(point.getY() * vertDiffRatio);
 			pointsList.add(point);
+			curvePoints.add(point);
 		}
 	}
 
@@ -382,38 +364,4 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 		SimpleMatrix newPoint = pointsWithCatmull.mult(tVals);
 		return new Point(newPoint.get(0),newPoint.get(1));
 	}
-
-//	private static class tuple {
-//		public double sliderValue;
-//		public Point closestPoint;
-//		public tuple(double sliderValue, Point closestPoint) {
-//			this.sliderValue = sliderValue;
-//			this.closestPoint = closestPoint;
-//		}
-//	}
-
-//	private tuple getClosestPointInSegment(int segmentNum, Point clickPoint, double low, double high) {
-//		SimpleMatrix points = updatePointsMatrix(segmentNum);
-//		SimpleMatrix lowTVals = updateMatrixT(low);
-//		Point lowPoint = getNewSlideLoc(points, lowTVals);
-//		double lowDist = getDistance(clickPoint, lowPoint);
-//
-//		SimpleMatrix highTVals = updateMatrixT(high);
-//		Point highPoint = getNewSlideLoc(points, highTVals);
-//		double highDist = getDistance(clickPoint, highPoint);
-//
-//		double diff = high - low;
-//		if (diff < 0.05) {
-//			if (lowDist < highDist) return new tuple(low, lowPoint);
-//			else return new tuple(high, highPoint);
-//		} else if (lowDist < highDist) {
-//			return getClosestPointInSegment(segmentNum, clickPoint, low, (low + (diff / 2)));
-//		} else {
-//			return getClosestPointInSegment(segmentNum, clickPoint, (low + (diff / 2)), high);
-//		}
-//	}
-//
-//	private double getDistance(Point from, Point to) {
-//		return Math.sqrt((from.getX() - to.getX()) * (from.getX() - to.getX()) + (from.getY() - to.getY()) * (from.getY() - to.getY()));
-//	}
 }
