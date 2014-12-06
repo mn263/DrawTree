@@ -78,9 +78,15 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 				g2.setColor(lineColor);
 			}
 
+//			for (Point pt : curvePoints) {
+//				g2.fillRect((int) pt.getX() - 2, (int) pt.getY() - 2, (int) thickness, (int) thickness);
+//			}
 			generatePathPoints();
-			for (Point pt : pointsList) {
-				g2.fillRect((int) pt.getX() - 2, (int) pt.getY() - 2, (int) thickness, (int) thickness);
+			for (int i = 0; i < pointsList.size() - 1; i++) {
+				Point start = pointsList.get(i);
+				Point end = pointsList.get(i + 1);
+				g2.drawLine((int) start.getX(), (int) start.getY(),
+						(int) end.getX(), (int) end.getY());
 			}
 		}
 	}
@@ -186,27 +192,6 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 			}
 		}
 		return null;
-
-
-//		double dist = Double.MAX_VALUE;
-//		Point returnPoint = null;
-//		double bestSliderVal = 0;
-//		for (int i = 0; i < this.pointCount - 1; i++) {
-//			tuple bestTuple = getClosestPointInSegment(i, convertedPoint, 0, 1);
-//			Point closestInSegment = bestTuple.closestPoint;
-//			double closestInSegDist = getDistance(convertedPoint, closestInSegment);
-//			if (closestInSegDist < dist) {
-////				this.currsliderSegment = i;
-//				bestSliderVal = bestTuple.sliderValue;
-//				dist = closestInSegDist;
-//				returnPoint = closestInSegment;
-//			}
-//		}
-////		this.t = updateMatrixT(bestSliderVal);
-////		this.pts = updatePointsMatrix(this.currsliderSegment);
-////		this.sliderVal = bestSliderVal;
-//
-//		return returnPoint;
 	}
 
 	@Override
