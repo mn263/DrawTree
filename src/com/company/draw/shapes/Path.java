@@ -15,7 +15,7 @@ import static com.company.draw.shapes.WidgetUtils.*;
 import static java.lang.Math.*;
 
 public class Path extends SOReflect implements Drawable, Interactable, Layout, ModelListener {
-
+//	TODO: implement translation for grid, in case the top/left change
 	public SA contents;
 	public SA path;
 	public SA model;
@@ -34,7 +34,6 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	private SimpleMatrix pts;
 	private SimpleMatrix t;
 	private int currsliderSegment = 0;
-	private ArrayList<ArrayList<Point>> segments;
 
 	public Path() {
 		WidgetUtils.addListener(this);
