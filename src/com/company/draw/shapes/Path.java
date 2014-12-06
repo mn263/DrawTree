@@ -104,6 +104,9 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	}
 
 	@Override
+	public void makeIdle() {}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		if (mouseIsOnSlider(WidgetUtils.mouseType.DOWN, x, y, myTransform)) {
 			WidgetUtils.setSliderBeingUsed(this);

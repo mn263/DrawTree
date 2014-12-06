@@ -37,23 +37,18 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 
 	@Override
 	public void paint(Graphics g) {
-		int cSize = contents.size();
-//		The original and next we transform and repaint
-		Graphics2D g2 = (Graphics2D) g;
-//		Perform Transformations
-		AffineTransform transform = g2.getTransform();
+		Graphics2D g2 = (Graphics2D) g; // The original and next we transform and repaint
+		AffineTransform transform = g2.getTransform(); // Perform Transformations
 		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
-//		Call Draw on all contained objects
-		for (int i = 0; i < cSize; i++) {
-			callPaintOnContents(contents.get(i), g2);
+		for (int i = 0; i < contents.size(); i++) { // Call Draw on all contained objects
+			Drawable drawable = (Drawable) contents.get(i).getSO();
+			drawable.paint(g);
 		}
+//		for (int i = cSize - 1; i >= 0; i--) {
+//			Drawable drawable = (Drawable) contents.get(i).getSO();
+//			drawable.paint(g);
+//		}
 		g2.setTransform(transform);
-	}
-
-	public void callPaintOnContents(SV sv, Graphics g) {
-		SO so = sv.getSO();
-		Drawable drawable = (Drawable) so;
-		drawable.paint(g);
 	}
 
 	@Override
@@ -95,6 +90,9 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public boolean key(char key) {
 		return false;
 	}
+
+	@Override
+	public void makeIdle() { }
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {

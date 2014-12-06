@@ -44,6 +44,9 @@ public class VStack extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	@Override
+	public void makeIdle() { }
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform transform) {
 		return handleMouse(contents, x, y, transform, WidgetUtils.mouseType.DOWN);
 	}

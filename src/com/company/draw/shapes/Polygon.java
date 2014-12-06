@@ -138,6 +138,9 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 	}
 
 	@Override
+	public void makeIdle() {}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		return false;
 	}

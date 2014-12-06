@@ -55,6 +55,11 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 	}
 
 	@Override
+	public void makeIdle() {
+		activeRect.setBackgroundColor(this.idle);
+	}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		this.leftDifference = x - getSliderLeft();
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);

@@ -55,6 +55,11 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	@Override
+	public void makeIdle() {
+		activeRect.setBackgroundColor(this.idle);
+	}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		if(slideRect == null) return false;
 		this.downDifference = y - getSliderTop();

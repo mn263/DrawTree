@@ -170,6 +170,9 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	@Override
+	public void makeIdle() { }
+
+	@Override
 	public boolean mouseDown(double mx, double my, AffineTransform myTransform) {
 		if (!edit) return false;
 		setCursor(mx, my, myTransform);

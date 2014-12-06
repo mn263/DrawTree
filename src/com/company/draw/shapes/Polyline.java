@@ -105,6 +105,9 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 	}
 
 	@Override
+	public void makeIdle() {}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		return false;
 	}

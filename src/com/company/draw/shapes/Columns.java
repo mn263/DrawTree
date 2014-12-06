@@ -69,6 +69,9 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 	}
 
 	@Override
+	public void makeIdle() {}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
 	}

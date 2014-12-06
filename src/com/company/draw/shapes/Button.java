@@ -59,6 +59,11 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	@Override
+	public void makeIdle() {
+		this.ellipse.setBackgroundColor(this.idle);
+	}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
 		return callHandleMouse(mouseType.DOWN, x, y, myTransform);
 	}
@@ -110,7 +115,7 @@ public class Button extends SOReflect implements Layout, Drawable, Interactable 
 
 	@Override
 	public void paint(Graphics g) {
-		if (this.value == null) loadValue();		
+		if (this.value == null) loadValue();
 		if (ellipse == null || text == null) return;
 		ellipse.paint(g);
 

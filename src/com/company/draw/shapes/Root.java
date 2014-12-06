@@ -133,6 +133,10 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		return this.focus != null && this.focus.key(key);
 	}
 
+
+	@Override
+	public void makeIdle() {}
+
 	@Override
 	public Root getPanel() {
 		return this;

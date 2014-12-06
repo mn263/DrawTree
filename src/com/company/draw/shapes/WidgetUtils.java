@@ -89,13 +89,13 @@ public class WidgetUtils {
 		return transform;
 	}
 
-	public static AffineTransform getBackwardsTransform(double tx, double ty, double sx, double sy, double rotate) {
-		AffineTransform transform = new AffineTransform();
-		transform.translate((int) tx, (int) ty);
-		transform.rotate(-Math.toRadians(rotate));
-		if (sx != 0 && sy != 0) transform.scale(sx, sy);
-		return transform;
-	}
+//	public static AffineTransform getBackwardsTransform(double tx, double ty, double sx, double sy, double rotate) {
+//		AffineTransform transform = new AffineTransform();
+//		transform.translate((int) tx, (int) ty);
+//		transform.rotate(-Math.toRadians(rotate));
+//		if (sx != 0 && sy != 0) transform.scale(sx, sy);
+//		return transform;
+//	}
 
 	public static void transformGraphics(Graphics2D g2, double tx, double ty, double sx, double sy, double rotate) {
 		g2.translate((int) tx, (int) ty);
@@ -105,8 +105,8 @@ public class WidgetUtils {
 
 	public static boolean handleMouse(SA contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
 
-//		for (int i = 0; i < contents.size(); i++) {
-		for (int i = contents.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < contents.size(); i++) {
+//		for (int i = contents.size() - 1; i >= 0; i--) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if (so instanceof Selectable && !(so instanceof Text) && !(so instanceof Group)) {
@@ -130,6 +130,14 @@ public class WidgetUtils {
 					}
 				}
 				if (wasHandled) {
+					for (int j = i + 1; j < contents.size(); j++) {
+						sv = contents.get(j);
+						so = sv.getSO();
+						if (so instanceof Interactable) {
+							interactable = (Interactable) so;
+							interactable.makeIdle();
+						}
+					}
 					return true;
 				}
 			}

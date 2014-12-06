@@ -42,6 +42,9 @@ public class HStack extends SOReflect implements Layout, Interactable, Drawable 
 	}
 
 	@Override
+	public void makeIdle() {}
+
+	@Override
 	public boolean mouseDown(double x, double y, AffineTransform transform) {
 		return handleMouse(contents, x, y, transform, WidgetUtils.mouseType.DOWN);
 	}
