@@ -20,4 +20,6 @@ public interface Interactable {
 
 	//This is called whenever a mouse up event is received. It returns true if the object handled this event, false otherwise.
 	boolean mouseUp( double x, double y, AffineTransform myTransform);
+
+	void makeIdle();
 }

@@ -120,4 +120,7 @@ public class Rect extends SOReflect implements Drawable, Selectable, Interactabl
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		return false;
 	}
+
+	@Override
+	public void makeIdle() { }
 }

@@ -52,16 +52,21 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 		return callHandleMouse(UP, x, y, myTransform);
 	}
 
+	@Override
+	public void makeIdle() {
+		changeState(this.idle);
+	}
+
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		if (content == null) loadContentText();
 		boolean isHandled = handleMouse(contents, x, y, myTransform, mouseType);
 		if (!isHandled) {
 			this.state = "idle";
-			changeState(this.idle, mouseType);
+			changeState(this.idle);
 		} else {
 			if (WidgetUtils.getMouseStatus() == WidgetUtils.MouseStatus.PRESSED) {
 				this.state = "active";
-				changeState(this.active, mouseType);
+				changeState(this.active);
 				if (content.select(x, y, 0, myTransform) != null) {
 					content.mouseDown(x, y, myTransform);
 				} else {
@@ -69,7 +74,7 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 				}
 			} else {
 				this.state = "hover";
-				changeState(this.hover, mouseType);
+				changeState(this.hover);
 			}
 		}
 		return isHandled;
@@ -87,7 +92,7 @@ public class TextBox extends SOReflect implements ModelListener, Drawable, Inter
 		}
 	}
 
-	public void changeState(SO newState, WidgetUtils.mouseType mouseType) {
+	public void changeState(SO newState) {
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			Selectable selectable = (Selectable) so;

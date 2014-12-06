@@ -81,4 +81,7 @@ public class Select extends Group implements Selectable {
 		return handled;
 	}
 
+	@Override
+	public void makeIdle() { }
+
 }

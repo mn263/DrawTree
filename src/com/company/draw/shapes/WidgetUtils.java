@@ -103,8 +103,7 @@ public class WidgetUtils {
 	}
 
 	public static boolean handleMouse(SA contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
-
-		for (int i = contents.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if (so instanceof Selectable && !(so instanceof Text)) {
@@ -130,6 +129,14 @@ public class WidgetUtils {
 					}
 				}
 				if (wasHandled) {
+					for (int j = i + 1; j < contents.size(); j++) {
+						sv = contents.get(j);
+						so = sv.getSO();
+						if (so instanceof Interactable) {
+							interactable = (Interactable) so;
+							interactable.makeIdle();
+						}
+					}
 					return true;
 				}
 			}
@@ -160,6 +167,14 @@ public class WidgetUtils {
 					}
 				}
 				if (wasHandled) {
+//					for (int j = i; j < contents.size(); j++) {
+//						sv = contents.get(j);
+//						so = sv.getSO();
+//						if (so instanceof Interactable) {
+//							interactable = (Interactable) so;
+//							interactable.makeIdle();
+//						}
+//					}
 					return true;
 				}
 			}

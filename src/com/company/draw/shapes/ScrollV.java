@@ -66,6 +66,18 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 		return callHandleMouse(UP, x, y, myTransform);
 	}
 
+	@Override
+	public void makeIdle() {
+		for (int i = 0; i < contents.size(); i++) {
+			SO so = contents.get(i).getSO();
+			Selectable selectable = (Selectable) so;
+			if (so.get("class") != null && "\"active\"".equals(so.get("class").toString())) {
+				selectable.setBackgroundColor(this.idle);
+			}
+		}
+	}
+
+
 	private boolean callHandleMouse(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform myTransform) {
 		if (sliderLast == null) sliderLast = new Point(0, fromWindowCoords(getSliderTop()));
 

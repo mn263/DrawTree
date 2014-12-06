@@ -92,4 +92,7 @@ public class Line extends SOReflect implements Drawable, Selectable, Interactabl
 		return false;
 	}
 
+	@Override
+	public void makeIdle() { }
+
 }

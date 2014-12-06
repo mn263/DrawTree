@@ -182,6 +182,9 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 		return (!edit);
 	}
 
+	@Override
+	public void makeIdle() { }
+
 	public void setFontMetrics(Graphics g) {
 		gFont = new Font(this.font, Font.PLAIN, (int) this.size);
 		this.metrics = g.getFontMetrics(gFont);
