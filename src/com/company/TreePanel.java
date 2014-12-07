@@ -5,6 +5,7 @@ import com.company.draw.shapes.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.*;
 import java.util.*;
 
 public class TreePanel extends JPanel implements ComponentListener {
@@ -61,5 +62,19 @@ public class TreePanel extends JPanel implements ComponentListener {
 	@Override
 	public void componentHidden(ComponentEvent e) {
 		System.out.println("componentHidden()");
+	}
+
+	public void checkMouseEvent(MouseEvent e) {
+		for(int i = 0; i < drawables.size(); i++) {
+			Drawable drawable = drawables.get(i);
+			if(drawable instanceof Group) {
+				Group group = (Group) drawable;
+				TreePanel.selected = new Select(group);
+				ArrayList<Integer> path = selected.select(e.getX(), e.getY(), i, new AffineTransform());
+				if (path != null) {
+					return;
+				}
+			}
+		}
 	}
 }
