@@ -66,7 +66,7 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		g2.translate((int) tx, (int) ty);
 
 //		Call Draw on all contained objects
-		for (int i = 0; i < cSize; i++) {
+		for (int i = contents.size(); i >= 0; i--) {
 			callPaintOnContents(contents.get(i), g2);
 		}
 
