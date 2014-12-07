@@ -53,13 +53,21 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			Drawable drawable = (Drawable) so;
-			drawable.paint(g2);
+			if (drawable instanceof Curve) {
+				g2.translate((int) currLeft, (int) currTop);
+				drawable.paint(g2);
+				g2.translate((int) -currLeft, (int) -currTop);
+			} else {
+				drawable.paint(g2);
+			}
 		}
 		setSliderPoint();
 		double rotation = getSliderRotation();
 		double oldRotation = getSliderGroup().rotate;
 		getSliderGroup().rotate -= Math.toDegrees(rotation);
-		getSliderGroup().paint(g);
+		g2.translate((int) currLeft, (int) currTop);
+		getSliderGroup().paint(g2);
+		g2.translate((int) -currLeft, (int) -currTop);
 		getSliderGroup().rotate = oldRotation;
 
 //		g.setColor(Color.black);
@@ -191,6 +199,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public void setHBounds(double left, double right) {
+		this.currLeft = left;
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
@@ -201,7 +210,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		}
 		getSliderGroup().setHBounds(left, right);
 		this.width = right - left;
-		if (originalWidth == -1) {
+		if (originalWidth == -1) { //I don't think this ever occurs here
 			originalWidth = this.width;
 		}
 		recalibratePoints();
@@ -209,6 +218,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public void setVBounds(double top, double bottom) {
+		this.currTop = top;
 		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
@@ -219,7 +229,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		}
 		getSliderGroup().setVBounds(top, bottom);
 		this.height = bottom - top;
-		if(originalHeight == -1) {
+		if(originalHeight == -1) { //I don't think this ever occurs here
 			originalHeight = this.height;
 		}
 		recalibratePoints();
