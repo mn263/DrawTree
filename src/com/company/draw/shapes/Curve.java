@@ -29,6 +29,9 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 	private double originalWidth = -1;
 	private double originalHeight = -1;
 
+	private double currTop = 0;
+	private double currLeft = 0;
+
 	private ArrayList<Point> pointsList = null;
 	private SimpleMatrix cr;
 	private SimpleMatrix pts;
@@ -189,8 +192,11 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 
 	@Override
 	public Point2D[] controls() {
-//		TODO: implement this
-		throw new UnsupportedOperationException("This method is not implemented");
+		Point2D[] controlPoints = new Point2D[curvePoints.size()];
+		for (int i = 0; i < curvePoints.size(); i++) {
+			controlPoints[i] = curvePoints.get(i);
+		}
+		return controlPoints;
 	}
 
 	@Override
@@ -206,12 +212,16 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 }
 
 	private double getOriginalWidth(){
-		if(this.originalWidth == -1) this.originalWidth = this.width;
+		if(this.originalWidth == -1) {
+			this.originalWidth = this.width;
+		}
 		return originalWidth;
 	}
 
 	private double getOriginalHeight(){
-		if(this.originalHeight == -1) this.originalHeight = this.height;
+		if(this.originalHeight == -1) {
+			this.originalHeight = this.height;
+		}
 		return originalHeight;
 	}
 
@@ -249,14 +259,18 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 	@Override
 	public void setHBounds(double left, double right) {
 		this.width = right - left;
-		if (originalWidth == -1) originalWidth = this.width;
+		if (originalWidth == -1) {
+			originalWidth = this.width;
+		}
 		recalibratePoints();
 	}
 
 	@Override
 	public void setVBounds(double top, double bottom) {
 		this.height = bottom - top;
-		if(originalHeight == -1) originalHeight = this.height;
+		if(originalHeight == -1) {
+			originalHeight = this.height;
+		}
 		recalibratePoints();
 	}
 

@@ -32,6 +32,10 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 	private double originalWidth = -1;
 	private double originalHeight = -1;
 
+	private double currTop = 0;
+	private double currLeft = 0;
+
+
 	private SimpleMatrix cr;
 	private SimpleMatrix pts;
 	private SimpleMatrix t;
@@ -52,7 +56,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 			drawable.paint(g2);
 		}
 		setSliderPoint();
-		double rotation = rotateSlider();
+		double rotation = getSliderRotation();
 		double oldRotation = getSliderGroup().rotate;
 		getSliderGroup().rotate -= Math.toDegrees(rotation);
 		getSliderGroup().paint(g);
@@ -115,12 +119,32 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	private double getOriginalWidth(){
-		if(this.originalWidth == -1) this.originalWidth = this.width;
+		if(this.originalWidth == -1) {
+			this.originalWidth = this.width;
+			for (int i = 0; i < contents.size(); i++) {
+				SV sv = contents.get(i);
+				SO so = sv.getSO();
+				if (so instanceof Layout) {
+					Layout layout = (Layout) so;
+					layout.setHBounds(0, this.width);
+				}
+			}
+		}
 		return originalWidth;
 	}
 
 	private double getOriginalHeight(){
-		if(this.originalHeight == -1) this.originalHeight = this.height;
+		if(this.originalHeight == -1) {
+			this.originalHeight = this.height;
+			for (int i = 0; i < contents.size(); i++) {
+				SV sv = contents.get(i);
+				SO so = sv.getSO();
+				if (so instanceof Layout) {
+					Layout layout = (Layout) so;
+					layout.setVBounds(0, this.height);
+				}
+			}
+		}
 		return originalHeight;
 	}
 
@@ -177,7 +201,9 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		}
 		getSliderGroup().setHBounds(left, right);
 		this.width = right - left;
-		if (originalWidth == -1) originalWidth = this.width;
+		if (originalWidth == -1) {
+			originalWidth = this.width;
+		}
 		recalibratePoints();
 	}
 
@@ -193,7 +219,9 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		}
 		getSliderGroup().setVBounds(top, bottom);
 		this.height = bottom - top;
-		if(originalHeight == -1) originalHeight = this.height;
+		if(originalHeight == -1) {
+			originalHeight = this.height;
+		}
 		recalibratePoints();
 	}
 
@@ -329,7 +357,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		}
 	}
 
-	private double rotateSlider() {
+	private double getSliderRotation() {
 		SimpleMatrix derivT = getDerivativeOfT();
 		Point point = getNewSlideLoc(this.pts, derivT);
 		return Math.atan2(point.getY(), point.getX());
@@ -365,9 +393,17 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	private boolean mouseIsOnSlider(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform oldTrans) {
+		double rotation = getSliderRotation();
+		double oldRotation = getSliderGroup().rotate;
+		getSliderGroup().rotate -= Math.toDegrees(rotation);
+//		Get the slider now that it's rotated
 		ArrayList<Drawable> drawables = new ArrayList<>();
 		drawables.add(getSliderGroup());
-		return handleMouse(drawables, x, y, oldTrans, mouseType);
+		boolean result = handleMouse(drawables, x, y, oldTrans, mouseType);
+
+//		Remove the rotation that was added and return
+		getSliderGroup().rotate = oldRotation;
+		return result;
 	}
 
 	public Point getNewSlideLoc() {
