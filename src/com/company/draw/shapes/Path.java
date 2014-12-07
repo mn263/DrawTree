@@ -14,7 +14,7 @@ import java.util.*;
 import static com.company.draw.shapes.WidgetUtils.*;
 import static java.lang.Math.*;
 
-public class Path extends SOReflect implements Drawable, Interactable, Layout, ModelListener {
+public class Path extends SOReflect implements Drawable, Selectable, Interactable, Layout, ModelListener {
 
 	public SA contents;
 	public SA path;
@@ -24,6 +24,8 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 	public double columnSpan;
 	public SO slider;
 	public double sliderVal;
+
+	private Selectable selected = null;
 
 	private ArrayList<Point> pointsList = null;
 	private int pointCount = 1;
@@ -379,6 +381,32 @@ public class Path extends SOReflect implements Drawable, Interactable, Layout, M
 		SimpleMatrix newPoint = pointsWithCatmull.mult(tVals);
 		return new Point(newPoint.get(0),newPoint.get(1));
 	}
+
+	@Override
+	public ArrayList<Integer> select(double x, double y, int myIndex, AffineTransform transform) {
+		for (int i = contents.size() - 1; i >= 0; i--) {
+			SV sv = contents.get(i);
+			SO so = sv.getSO();
+			if (!(so instanceof Selectable)) continue;
+			Selectable selectable = (Selectable) so;
+			ArrayList<Integer> path = selectable.select(x, y, i, transform);
+			if (path != null) {
+				selected = selectable;
+				path.add(myIndex);
+				return path;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Point2D[] controls() {
+		if (selected != null) return selected.controls();
+		else return new Point2D[0];
+	}
+
+	@Override
+	public void setBackgroundColor(SO newColor) { }
 
 	private static class tuple {
 		public double sliderValue;

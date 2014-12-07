@@ -74,6 +74,13 @@ public class TreePanel extends JPanel implements ComponentListener {
 				if (path != null) {
 					return;
 				}
+			} else if(drawable instanceof Root) {
+				Root root = (Root) drawable;
+				TreePanel.selected = new Select(root);
+				ArrayList<Integer> path = selected.select(e.getX(), e.getY(), i, new AffineTransform());
+				if (path != null) {
+					return;
+				}
 			}
 		}
 	}

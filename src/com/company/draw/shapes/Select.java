@@ -24,6 +24,10 @@ public class Select extends Group implements Selectable {
 		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate, group.width, group.height);
 	}
 
+	public Select(Root root) {
+		super(root.contents, root.sx, root.sy, root.tx, root.ty, root.rotate, 0, 0);
+	}
+
 
 	public void paintSelected(Graphics g) {
 		if (selected == null || totalTransform == null) return;
