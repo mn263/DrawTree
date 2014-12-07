@@ -119,8 +119,12 @@ public class Polygon extends SOReflect implements Drawable, Selectable, Interact
 
 	@Override
 	public Point2D[] controls() {
-		return new Point2D[0];
-	}
+		ArrayList<Point> polygonPoints = getPoints();
+		Point2D[] controlPoints = new Point2D[polygonPoints.size()];
+		for (int i = 0; i < polygonPoints.size(); i++) {
+			controlPoints[i] = polygonPoints.get(i);
+		}
+		return controlPoints;	}
 
 	@Override
 	public void setBackgroundColor(SO newColor) {
