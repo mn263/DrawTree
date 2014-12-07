@@ -117,10 +117,21 @@ public class SwingTree extends JFrame implements KeyListener {
 	}
 
 	public static void mouseReleased(MouseEvent e) {
-		TreePanel.selected = null;
+//		TreePanel.selected = null;
 		if (root != null) root.mouseUp(e.getX(), e.getY(), new AffineTransform());
+		treePanel.checkMouseEvent(e);
+//		handleSelect();
 		WidgetUtils.repaintAll();
 	}
+
+//	private static void handleSelect() {
+//		for (Drawable drawable : treePanel.drawables) {
+//			if (drawable instanceof Group) {
+//				Group group = (Group) drawable;
+//				group.select()
+//			}
+//		}
+//	}
 
 	public static void mousePressed(MouseEvent e) {
 		root.mouseDown(e.getX(), e.getY(), new AffineTransform());

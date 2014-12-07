@@ -37,7 +37,6 @@ public class Select extends Group implements Selectable {
 		for (Point2D point : controlPoints) {
 			point = new Point(point.getX(), point.getY() - offY);
 			Point2D ptDst = gTrans.transform(point, null);
-//			g2.fillRect((int) ptDst.getX(), (int) (ptDst.getY() - offY), 4, 4);
 			g2.fillRect((int) ptDst.getX(), (int) (ptDst.getY()), 4, 4);
 		}
 	}
@@ -50,7 +49,7 @@ public class Select extends Group implements Selectable {
 		// Add on old transform
 		transform.concatenate(oldTrans);
 
-		for (int i = contents.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < contents.size(); i++) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if (!(so instanceof Selectable)) continue;
