@@ -118,8 +118,6 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	public boolean mouseUp(double x, double y, AffineTransform myTransform) {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
 		if (this.model != null) {
-			System.out.println("");
-			System.out.println("");
 			printModel(this.model);
 		}
 		return handeled;
