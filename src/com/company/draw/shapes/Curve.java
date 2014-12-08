@@ -13,7 +13,6 @@ import java.util.*;
 import static java.lang.Math.*;
 
 public class Curve extends SOReflect implements Drawable, Selectable, Layout {
-//	TODO: implement translation for grid, in case the top/left change
 
 	public SA points;
 	public double thickness;
@@ -29,8 +28,8 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 	private double originalWidth = -1;
 	private double originalHeight = -1;
 
-	private double currTop = 0;
-	private double currLeft = 0;
+	public double currTop = 0;
+	public double currLeft = 0;
 
 	private ArrayList<Point> pointsList = null;
 	private SimpleMatrix cr;
@@ -213,14 +212,36 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 
 	private double getOriginalWidth(){
 		if(this.originalWidth == -1) {
-			this.originalWidth = this.width;
+			if (this.width == -1) {
+				curvePoints = getPoints();
+				double minX = curvePoints.get(0).getX();
+				double maxX = curvePoints.get(0).getX();
+				for (Point point : curvePoints) {
+					if (point.getX() < minX) minX = point.getX();
+					if (point.getX() > maxX) maxX = point.getX();
+				}
+				this.originalWidth = maxX - minX + 20;
+			} else {
+				this.originalWidth = this.width;
+			}
 		}
 		return originalWidth;
 	}
 
 	private double getOriginalHeight(){
 		if(this.originalHeight == -1) {
-			this.originalHeight = this.height;
+			if(this.height == -1) {
+				curvePoints = getPoints();
+				double minY = curvePoints.get(0).getY();
+				double maxY = curvePoints.get(0).getX();
+				for (Point point : curvePoints) {
+					if(point.getY() < minY) minY = point.getY();
+					if(point.getY() > maxY) maxY = point.getY();
+				}
+				this.originalHeight = maxY - minY + 20;
+			} else {
+				this.originalHeight = this.height;
+			}
 		}
 		return originalHeight;
 	}
@@ -259,18 +280,16 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 	@Override
 	public void setHBounds(double left, double right) {
 		this.width = right - left;
-		if (originalWidth == -1) {
-			originalWidth = this.width;
-		}
+		if (originalWidth == -1) originalWidth = getOriginalWidth();
+		this.currLeft = left;
 		recalibratePoints();
 	}
 
 	@Override
 	public void setVBounds(double top, double bottom) {
 		this.height = bottom - top;
-		if(originalHeight == -1) {
-			originalHeight = this.height;
-		}
+		if(originalHeight == -1) originalHeight = getOriginalHeight();
+		currTop = top;
 		recalibratePoints();
 	}
 
@@ -350,8 +369,10 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 		this.pointsList = new ArrayList<>();
 		this.curvePoints = new ArrayList<>();
 		for (Point point : originalPoints) {
-			point.setX(point.getX() * horzDiffRatio);
-			point.setY(point.getY() * vertDiffRatio);
+			point.setX((point.getX() + currLeft) * horzDiffRatio);
+			point.setY((point.getY() + currTop) * vertDiffRatio);
+//			point.setX(point.getX() * horzDiffRatio);
+//			point.setY(point.getY() * vertDiffRatio);
 			pointsList.add(point);
 			curvePoints.add(point);
 		}

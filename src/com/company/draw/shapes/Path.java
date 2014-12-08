@@ -50,10 +50,16 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		double curveLeft = 0;
+		double curveTop = 0;
+
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			Drawable drawable = (Drawable) so;
 			if (drawable instanceof Curve) {
+				Curve curve = (Curve) drawable;
+				curveTop = curve.currTop;
+				curveLeft = curve.currLeft;
 				g2.translate((int) currLeft, (int) currTop);
 				drawable.paint(g2);
 				g2.translate((int) -currLeft, (int) -currTop);
@@ -65,9 +71,9 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		double rotation = getSliderRotation();
 		double oldRotation = getSliderGroup().rotate;
 		getSliderGroup().rotate -= Math.toDegrees(rotation);
-		g2.translate((int) currLeft, (int) currTop);
+		g2.translate((int) currLeft + curveLeft, (int) currTop + curveTop);
 		getSliderGroup().paint(g2);
-		g2.translate((int) -currLeft, (int) -currTop);
+		g2.translate((int) -(currLeft + curveLeft), (int) -(currTop + curveTop));
 		getSliderGroup().rotate = oldRotation;
 
 //		g.setColor(Color.black);

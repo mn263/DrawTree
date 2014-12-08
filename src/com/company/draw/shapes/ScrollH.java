@@ -244,9 +244,9 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 		downPolygon = new Polygon(getPoints(12, 170, 20, 198, 28, 170), thickness, getFill(0, 0, 0));
 		this.contents.add(activeRect);
 		this.contents.add(rangeRect);
+		this.contents.add(slideRect);
 		this.contents.add(upPolygon);
 		this.contents.add(downPolygon);
-		this.contents.add(slideRect);
 	}
 
 	@Override
@@ -297,6 +297,9 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 
 	@Override
 	public void setHBounds(double left, double right) {
+		if (this.slideRect == null) initializeContents();
+		if (sliderLast == null) sliderLast = new Point(fromWindowCoords(getSliderLeft()), 0);
+
 		double oldLeft = rangeRect.left;
 		double oldWidth = activeRect.width;
 		double newWidth = right - left;
