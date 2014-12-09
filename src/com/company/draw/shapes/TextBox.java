@@ -12,6 +12,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
+import static java.lang.StrictMath.max;
 
 public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
 
@@ -171,6 +172,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	@Override
 	public double getDesiredWidth() {
 		String wString = "";
+		if(desiredChars == 0) desiredChars = max(2, content.text.length());
 		for (int i = 0; i < desiredChars; i++) {
 			wString += "W";
 		}

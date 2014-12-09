@@ -344,9 +344,9 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 						oldValue = lastUndoObjects.get(attr).toString();
 						currValue = modelObjects.get(attr).toString();
 					}
-					System.out.println(undoAttr + " - " + attr);
-					System.out.println(oldValue + " - " + currValue);
-					System.out.println("");
+//					System.out.println(undoAttr + " - " + attr);
+//					System.out.println(oldValue + " - " + currValue);
+//					System.out.println("");
 					if (!undoAttr.equals(attr) || !(oldValue.equals(currValue))) {
 						return false;
 					}
