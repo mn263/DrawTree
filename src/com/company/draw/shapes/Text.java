@@ -28,6 +28,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 	private double buttonWidth = 0;
 	private double buttonHeight = 0;
 	private final double MIN_SIZE = 10;
+	public TextBox parent;
 
 
 	public Text() {
@@ -126,6 +127,9 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	public void releaseFocus() {
 		this.removeCursor();
+		if (parent != null) {
+			parent.updateModel();
+		}
 	}
 
 
@@ -165,6 +169,7 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 				cursor++;
 			}
 			text = stringBuilder.toString();
+			return true;
 		}
 		return false;
 	}

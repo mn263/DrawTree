@@ -14,7 +14,7 @@ import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
 public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
-// TODO: update the model when this changes.
+
 	public String state;
 	public ArrayList<Drawable> contents = new ArrayList<>();
 	public SO idle;
@@ -124,6 +124,10 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		}
 	}
 
+	public void updateModel() {
+		WidgetUtils.updateModel(this.model, content.text);
+	}
+
 
 	//	LAYOUT
 //	This implements Layout and operates as before. Its contents are generated programmatically based on the
@@ -133,6 +137,8 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	private void initializeContents() {
 		this.text = new Text("", 0, 20, "sans-serif", true, -1);
+		text.parent = this;
+
 		this.rect = new Rect(0, 0, 20, 20, 4, getFill(100, 100, 0));
 		this.rect.setBackgroundColor(this.idle);
 		this.contents.add(rect);
