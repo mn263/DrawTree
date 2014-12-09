@@ -55,6 +55,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		updateRoot(modelObjects, path, value);
 	}
 
+	
 	public void updateModel(ArrayList<String> path, String value) {
 		addToUndo();
 		setModel(path, value);
