@@ -22,6 +22,7 @@ public class SwingTree extends JFrame implements KeyListener {
 	public SwingTree() {
 //		Make Menu and MenuBar
 		JMenu menu = new JMenu("Menu");
+		JMenu menuEdit = new JMenu("Edit");
 
 		setFocusable(true);
 		addKeyListener(this);
@@ -30,6 +31,12 @@ public class SwingTree extends JFrame implements KeyListener {
 		menu.setMnemonic(KeyEvent.VK_M);
 		menu.add(getOpenOption(this)); // Add Option
 		mb.add(menu); // Add Menu to MenuBar
+
+		menuEdit.setMnemonic(KeyEvent.VK_E);
+		menuEdit.add(getUndoOption()); // Add Option
+		menuEdit.add(getRedoOption()); // Add Option
+		mb.add(menuEdit); // Add Menu to MenuBar
+
 //		Set Container
 		Container container = this.getContentPane();
 		container.setBackground(Color.white);
@@ -78,6 +85,32 @@ public class SwingTree extends JFrame implements KeyListener {
 			}
 		});
 		return menuOpen;
+	}
+
+	public JMenuItem getRedoOption() {
+		JMenuItem menuRedo = new JMenuItem("Redo");
+
+		menuRedo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if (root != null) {
+					root.redo();
+				}
+			}
+		});
+		return menuRedo;
+	}
+
+	public JMenuItem getUndoOption() {
+		JMenuItem menuUndo = new JMenuItem("Undo");
+
+		menuUndo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if (root != null) {
+					root.undo();
+				}
+			}
+		});
+		return menuUndo;
 	}
 
 	private String readFile(String filePath) {
