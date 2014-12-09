@@ -43,7 +43,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 		AffineTransform transform = g2.getTransform();
 		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
 //		Call Draw on all contained objects
-		for (int i = cSize - 1; i >= 0; i--) {
+		for (int i = 0; i < cSize; i++) {
 			Drawable drawable = (Drawable) contents.get(i).getSO();
 			drawable.paint(g);
 		}

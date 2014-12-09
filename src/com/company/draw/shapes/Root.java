@@ -80,7 +80,7 @@ public class Root extends SOReflect implements Interactable, Drawable {
 		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform transform = g2.getTransform();
 		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
-		for (int i = contents.size() - 1; i >= 0; i--) { // Call Draw on all contained objects
+		for (int i = 0; i < contents.size(); i++) { // Call Draw on all contained objects
 			callPaintOnContents(contents.get(i), g2);
 		}
 		g2.setTransform(transform);
