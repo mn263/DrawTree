@@ -98,7 +98,7 @@ public class WidgetUtils {
 
 	public static boolean handleMouse(SA contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
 
-		for (int i = 0; i < contents.size(); i++) {
+		for (int i = contents.size() - 1; i >= 0; i--) {
 			SV sv = contents.get(i);
 			SO so = sv.getSO();
 			if (so instanceof Selectable && !(so instanceof Text) && !(so instanceof Group) && !(so instanceof Path)) {
@@ -122,7 +122,7 @@ public class WidgetUtils {
 					}
 				}
 				if (wasHandled) {
-					for (int j = i + 1; j < contents.size(); j++) {
+					for (int j = i - 1; j >= 0; j--) {
 						sv = contents.get(j);
 						so = sv.getSO();
 						if (so instanceof Interactable) {
@@ -138,7 +138,9 @@ public class WidgetUtils {
 	}
 
 	public static boolean handleMouse(ArrayList<Drawable> contents, double x, double y, AffineTransform myTransform, mouseType mouseType) {
-		for (Drawable drawable : contents) {
+//		for (Drawable drawable : contents) {
+		for (int i = contents.size() - 1; i >= 0; i--) {
+			Drawable drawable = contents.get(i);
 			if (drawable instanceof Selectable && !(drawable instanceof Text) && !(drawable instanceof Group) && !(drawable instanceof Path)) {
 				if (isSelectable(drawable, x, y, myTransform)) return true;
 			} else if (drawable instanceof Interactable) {
@@ -160,7 +162,15 @@ public class WidgetUtils {
 					}
 				}
 				if (wasHandled) {
-					return true;				}
+					for (int j = i - 1; j >= 0; j--) {
+						drawable = contents.get(j);
+						if (drawable instanceof Interactable) {
+							interactable = (Interactable) drawable;
+							interactable.makeIdle();
+						}
+					}
+					return true;
+				}
 			}
 		}
 		return false;
