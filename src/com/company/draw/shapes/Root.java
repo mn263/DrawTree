@@ -182,7 +182,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		SO modelObjects = modelObject.getSO();
 		String[] modelAttrs = modelObjects.attributes();
 		for (String attr : modelAttrs) {
-//			System.out.println(attr + " -> " + modelObjects.get(attr));
+			System.out.println(attr + " -> " + modelObjects.get(attr));
 			if(modelObjects.get(attr).toString().equals("{SO }")) {
 				printModel(modelObjects.get(attr));
 			}
