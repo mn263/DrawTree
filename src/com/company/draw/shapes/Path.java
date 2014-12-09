@@ -389,7 +389,6 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	private void getWindowCoordsFromSlideVal(Double modelValue) {
-//		TODO: ask teacher if this needs to be normalized
 		if (this.pointCount <= 1) {
 			this.pointsList = getPoints();
 			this.pointCount = this.pointsList.size();
