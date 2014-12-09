@@ -27,6 +27,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	private ArrayList<Command> undo = new ArrayList<>();
 	private ArrayList<Command> redo = new ArrayList<>();
+	private Command currCommand = null;
 
 	public void setKeyFocus(Interactable focus) {
 		this.focus = focus;
@@ -55,9 +56,8 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		updateRoot(modelObjects, path, value);
 	}
 
-	
+
 	public void updateModel(ArrayList<String> path, String value) {
-		addToUndo();
 		setModel(path, value);
 	}
 
@@ -68,15 +68,15 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 	}
 
 	private void addToUndo() {
-		if (undo.isEmpty()) {
-			undo.add(new Command(this.model));
-			return;
+		if (currCommand == null) {
+			currCommand = new Command(this.model);
+			return; //we need to keep the stack clear
+		} else if (currCommand.equals(new Command(this.model))) {
+			return; // because it hasn't updated (it's still the same
 		}
-		Command lastUndo = undo.get(undo.size() - 1);
-		Command newUndo = new Command(this.model);
-		if (!lastUndo.equals(newUndo)) {
-			undo.add(newUndo);
-		}
+
+		undo.add(currCommand);
+		currCommand = new Command(this.model);
 		redo.clear();
 	}
 
@@ -87,20 +87,26 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		redo.add(redoCommand);
 
 		Command undoneCommand = undo.get(undo.size() - 1);
+		this.model = undoneCommand.model;
+		currCommand = new Command(this.model);
+
 		undo.remove(undo.size() - 1);
 
-		this.model = undoneCommand.model;
 		doInitialModelUpdate(new ArrayList<String>(), this.model);
 	}
 
 	public void redo() {
 		if (redo.isEmpty()) return;
-		undo.add(new Command(this.model));
+
+		undo.add(new Command(currCommand.model));
 
 		Command redoCommand = redo.get(redo.size() - 1);
+		currCommand = new Command(redoCommand.model);
 		this.model = redoCommand.model;
-		doInitialModelUpdate(new ArrayList<String>(), this.model);
+
 		redo.remove(redo.size() - 1);
+
+		doInitialModelUpdate(new ArrayList<String>(), this.model);
 	}
 
 	private void doInitialModelUpdate(ArrayList<String> path, SV currModel) {
@@ -150,7 +156,11 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform myTransform) {
-		return callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
+		boolean handled = callHandleMouse(WidgetUtils.mouseType.DOWN, x, y, myTransform);
+		if (handled) {
+			addToUndo();
+		}
+		return handled;
 	}
 
 	@Override
@@ -163,7 +173,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		boolean handeled = callHandleMouse(mouseType.UP, x, y, myTransform);
 		if (this.model != null) {
 			printModel(this.model);
-//			addToUndo();
+			addToUndo();
 		}
 		return handeled;
 	}
@@ -172,7 +182,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		SO modelObjects = modelObject.getSO();
 		String[] modelAttrs = modelObjects.attributes();
 		for (String attr : modelAttrs) {
-			System.out.println(attr + " -> " + modelObjects.get(attr));
+//			System.out.println(attr + " -> " + modelObjects.get(attr));
 			if(modelObjects.get(attr).toString().equals("{SO }")) {
 				printModel(modelObjects.get(attr));
 			}
@@ -188,7 +198,11 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			redo();
 			return false;
 		}
-		return this.focus != null && this.focus.key(key);
+		boolean used = this.focus != null && this.focus.key(key);
+		if (used) {
+			addToUndo();
+		}
+		return used;
 	}
 
 
@@ -296,20 +310,21 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			if (!(o instanceof  Command)) return false;
 			Command last = (Command) o;
 			SV lastUndo = last.model;
-			return isNotDiff(lastUndo);
+			return isNotDiff(lastUndo, this.model);
 		}
 
-		private boolean isNotDiff(SV lastUndo) {
+		private boolean isNotDiff(SV lastUndo, SV currModel) {
 			SO lastUndoObjects = lastUndo.getSO();
 			String[] lastUndoAttrs = lastUndoObjects.attributes();
-			SO modelObjects = this.model.getSO();
+			SO modelObjects = currModel.getSO();
 			String[] modelAttrs = modelObjects.attributes();
 			for (int i = 0; i < modelAttrs.length; i++) {
 				String undoAttr = lastUndoAttrs[i];
 				String attr = modelAttrs[i];
+//				System.out.println(modelObjects.get(attr).toString());
 				if (modelObjects.get(attr).toString().equals("{SO }")) {
-					boolean subpartChanged = isNotDiff(modelObjects.get(attr));
-					if (subpartChanged) {
+					boolean subpartSame = isNotDiff(modelObjects.get(attr), currModel.get(attr));
+					if (!subpartSame) {
 						return false;
 					}
 				} else {
@@ -318,14 +333,20 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 					try {
 						double oldValueD = lastUndoObjects.get(attr).getDouble();
 						double currValueD = modelObjects.get(attr).getDouble();
-						oldValue = String.valueOf(oldValueD);
-						currValue = String.valueOf(currValueD);
+						if(oldValueD == currValueD) { //if they are the same, then avoid decimal errors
+							oldValue = String.valueOf(oldValueD);
+							currValue = String.valueOf(oldValueD);
+						} else { // otherwise we don't need to worry about decimal errors
+							oldValue = String.valueOf(oldValueD);
+							currValue = String.valueOf(currValueD);
+						}
 					} catch (Exception e) {
 						oldValue = lastUndoObjects.get(attr).toString();
 						currValue = modelObjects.get(attr).toString();
 					}
 					System.out.println(undoAttr + " - " + attr);
 					System.out.println(oldValue + " - " + currValue);
+					System.out.println("");
 					if (!undoAttr.equals(attr) || !(oldValue.equals(currValue))) {
 						return false;
 					}

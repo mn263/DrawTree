@@ -14,7 +14,7 @@ import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 
 public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
-
+// TODO: update the model when this changes.
 	public String state;
 	public ArrayList<Drawable> contents = new ArrayList<>();
 	public SO idle;
