@@ -12,6 +12,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
+import static java.lang.Math.abs;
 
 public class ScrollV extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
 
@@ -106,10 +107,10 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		activeRect.setBackgroundColor(newState);
 		if (mouseType == UP) { //MOVE SCROLL BAR IF "RELEASED" IS PRESSED
 			if (upPolygon.select(x, y, 0, myTransform) != null) {
-				moveBar(-step);
+				moveBar(step);
 			} // MOVE SCROLL BAR IF "DOWN" IS PRESSED
 			if (downPolygon.select(x, y, 0, myTransform) != null) {
-				moveBar(step);
+				moveBar(-step);
 			}
 		}
 		if (mouseType == DOWN) { //MOVE SCROLL BAR IF "SLIDER" IS PRESSED
@@ -131,7 +132,8 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 
 	private void moveSlider(double y) {
 		double slideCoords = toSliderCoords(y);
-		if (model == null || (y == sliderLast.getY() && slideCoords == slideRect.top)) return; //NO NEED TO UPDATE IF IT IS THE SAME
+		if (model == null || (0.01 > abs(y - sliderLast.getY()) &&
+				(0.01 > abs(slideCoords - slideRect.top)))) return; //NO NEED TO UPDATE IF IT IS THE SAME
 		if (y < min) setSlider(min);
 		else if (y > max) setSlider(max);
 		else setSlider(y);
@@ -141,7 +143,8 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		sliderLast = new Point(0, value);
 		double slideCoords = toSliderCoords(value);
 		slideRect.setTop(slideCoords);
-		if(model != null) WidgetUtils.updateModel(model, String.valueOf(value));
+		double adjustedValue = this.max - this.min - value;
+		if(model != null) WidgetUtils.updateModel(model, String.valueOf(adjustedValue));
 	}
 
 	private double toSliderCoords(double value) {
@@ -191,7 +194,9 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 				}
 			}
 			if (sliderLast == null) sliderLast = new Point(0, fromWindowCoords(getSliderTop()));
-			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
+			double adjustedValue = this.max - this.min - Double.valueOf(newValue);
+
+			moveSlider(adjustedValue); //IT WAS A MATCH SO UPDATE THE LABEL
 		}
 	}
 
@@ -329,7 +334,7 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 		double bottom_of_up = activeRect.top + 9;
 		double top_of_down = activeRect.top + scrollLength - 9;
 		double bottom = activeRect.top + scrollLength;
-		upPolygon.points = getPoints(left + 2, bottom_of_up, center, top + 2, left + width - 2, bottom_of_up);
-		downPolygon.points = getPoints(left + 2, top_of_down, center, bottom - 2, left + width - 2, top_of_down);
+		downPolygon.points = getPoints(left + 2, bottom_of_up, center, top + 2, left + width - 2, bottom_of_up);
+		upPolygon.points = getPoints(left + 2, top_of_down, center, bottom - 2, left + width - 2, top_of_down);
 	}
 }
