@@ -38,7 +38,12 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	//	INTERACTABLE
 	@Override
 	public Root getPanel() {
-		throw new NotImplementedException();
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override

@@ -2,9 +2,7 @@ package com.company.draw.shapes;
 
 import com.company.*;
 import com.company.Point;
-import spark.data.SO;
-import spark.data.SOReflect;
-import sun.reflect.generics.reflectiveObjects.*;
+import spark.data.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -97,7 +95,12 @@ public class Ellipse extends SOReflect implements Drawable, Selectable, Interact
 
 	@Override
 	public Root getPanel() {
-		throw new NotImplementedException();
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override
