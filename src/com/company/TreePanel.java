@@ -51,5 +51,6 @@ public  class TreePanel extends JPanel {
 				}
 			}
 		}
+		selected = null;
 	}
 }
