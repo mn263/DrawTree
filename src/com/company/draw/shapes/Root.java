@@ -45,7 +45,11 @@ public class Root extends SOReflect implements Interactable, Drawable {
 			}
 			return;
 		}
-		modelObjects = modelObjects.get(path.get(0)).getSO();
+		try {
+			modelObjects = modelObjects.get(path.get(0)).getSO();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		path.remove(0);
 		updateRoot(modelObjects, path, value);
 	}
