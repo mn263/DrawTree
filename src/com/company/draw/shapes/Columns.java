@@ -3,7 +3,6 @@ package com.company.draw.shapes;
 import com.company.*;
 import com.company.draw.*;
 import spark.data.*;
-import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -60,7 +59,12 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 //	INTERACTABLE
 	@Override
 	public Root getPanel() {
-		throw new NotImplementedException();
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override

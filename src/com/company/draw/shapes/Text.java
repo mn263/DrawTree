@@ -152,7 +152,12 @@ public class Text extends SOReflect implements Drawable, Selectable, Interactabl
 
 	@Override
 	public Root getPanel() {
-		throw new NotImplementedException();
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override

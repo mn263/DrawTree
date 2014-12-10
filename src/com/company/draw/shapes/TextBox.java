@@ -4,7 +4,6 @@ import com.company.*;
 import com.company.Point;
 import com.company.draw.*;
 import spark.data.*;
-import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -12,7 +11,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
-import static java.lang.StrictMath.max;
+import static java.lang.StrictMath.*;
 
 public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
 
@@ -41,7 +40,12 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 	//	INTERACTABLE
 	@Override
 	public Root getPanel() {
-		throw new NotImplementedException();
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override

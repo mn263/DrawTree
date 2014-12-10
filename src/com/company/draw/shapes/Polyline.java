@@ -3,7 +3,6 @@ package com.company.draw.shapes;
 import com.company.*;
 import com.company.Point;
 import spark.data.*;
-import sun.reflect.generics.reflectiveObjects.*;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -96,7 +95,12 @@ public class Polyline extends SOReflect implements Drawable, Selectable, Interac
 
 	@Override
 	public Root getPanel() {
-		throw new NotImplementedException();
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override

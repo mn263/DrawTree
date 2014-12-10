@@ -35,7 +35,12 @@ public class VStack extends SOReflect implements Layout, Drawable, Interactable 
 	// INTERACTABLE
 	@Override
 	public Root getPanel() {
-		return null;
+		SParented parent = myParent();
+		while(!(parent instanceof Interactable)){
+			parent = parent.myParent();
+		}
+		Interactable InteractableParent = (Interactable)parent;
+		return InteractableParent.getPanel();
 	}
 
 	@Override
