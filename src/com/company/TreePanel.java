@@ -40,9 +40,11 @@ public  class TreePanel extends JPanel {
 	public void checkMouseEvent(MouseEvent e) {
 		for(int i = 0; i < drawables.size(); i++) {
 			Drawable drawable = drawables.get(i);
-			if(drawable instanceof Group) {
-				Group group = (Group) drawable;
-				TreePanel.selected = new Select(group);
+//			if(drawable instanceof Group) {
+//				Group group = (Group) drawable;
+//				TreePanel.selected = new Select(group);
+			if(drawable instanceof Select) {
+				TreePanel.selected = (Select) drawable;
 				ArrayList<Integer> path = selected.select(e.getX(), e.getY(), i, new AffineTransform());
 				if (path != null) {
 					return;
