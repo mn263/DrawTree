@@ -144,7 +144,7 @@ public class WidgetUtils {
 			if (drawable instanceof Selectable && !(drawable instanceof Text) && !(drawable instanceof Group) && !(drawable instanceof Path)) {
 				if (isSelectable(drawable, x, y, myTransform)) return true;
 			} else if (drawable instanceof Interactable) {
-				if (drawable instanceof Text && !isSelectable(drawable, x, y, myTransform)) return false;
+				if (drawable instanceof Text && !isSelectable(drawable, x, y, myTransform)) continue;
 
 				Interactable interactable = (Interactable) drawable;
 				boolean wasHandled = false;

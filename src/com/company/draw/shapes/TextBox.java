@@ -46,7 +46,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public boolean key(char key) {
-		throw new NotImplementedException();
+		return this.content.key(key);
 	}
 
 
