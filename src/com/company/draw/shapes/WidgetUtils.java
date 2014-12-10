@@ -65,7 +65,11 @@ public class WidgetUtils {
 	public static void updateModel(SA model, String value) {
 		ArrayList<String> path = new ArrayList<>();
 		for (int i = 0; i < model.size(); i++) {
-			path.add(model.getString(i));
+			try {
+				path.add(model.getString(i));
+			}catch(Exception e){
+				path.add(model.get(i).toString());
+			}
 		}
 		SwingTree.getRoot().updateModel(path, value);
 	}
