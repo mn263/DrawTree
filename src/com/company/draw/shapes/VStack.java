@@ -44,7 +44,16 @@ public class VStack extends SOReflect implements Layout, Drawable, Interactable 
 	}
 
 	@Override
-	public void makeIdle() { }
+	public void makeIdle() {
+		for (int j = 0; j < contents.size(); j++) {
+			SV sv = contents.get(j);
+			SO so = sv.getSO();
+			if (so instanceof Interactable) {
+				Interactable interactable = (Interactable) so;
+				interactable.makeIdle();
+			}
+		}
+	}
 
 	@Override
 	public boolean mouseDown(double x, double y, AffineTransform transform) {

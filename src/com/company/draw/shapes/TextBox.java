@@ -51,7 +51,7 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 
 	@Override
-	public void makeIdle() { }
+	public void makeIdle() { this.rect.setBackgroundColor(this.idle);}
 
 
 	@Override

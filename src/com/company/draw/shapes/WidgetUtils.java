@@ -122,10 +122,10 @@ public class WidgetUtils {
 					}
 				}
 				if (wasHandled) {
-					for (int j = i - 1; j >= 0; j--) {
+					for (int j = 0; j < contents.size(); j++) {
 						sv = contents.get(j);
 						so = sv.getSO();
-						if (so instanceof Interactable) {
+						if (so instanceof Interactable && j != i) {
 							interactable = (Interactable) so;
 							interactable.makeIdle();
 						}
