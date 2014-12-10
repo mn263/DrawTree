@@ -11,10 +11,44 @@ public class Select extends Group implements Selectable {
 
 	//When selected changes we should call repaint
 	private ArrayList<Integer> selected = new ArrayList<>();
+	private boolean checkedSuper = false;
 
-	public Select(){super();}
+	public Select() {
+		super();
+		System.out.print("");
+	}
 	public Select(Group group) {
 		super(group.contents, group.sx, group.sy, group.tx, group.ty, group.rotate);
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		if(!checkedSuper) checkedSuper();
+		int cSize = contents.size();
+//		The original and next we transform and repaint
+		Graphics2D g2 = (Graphics2D) g;
+//		Perform Transformations
+		AffineTransform transform = g2.getTransform();
+		WidgetUtils.transformGraphics(g2, tx, ty, sx, sy, rotate);
+//		Call Draw on all contained objects
+		for (int i = 0; i < cSize; i++) {
+			Drawable drawable = (Drawable) contents.get(i).getSO();
+			drawable.paint(g);
+		}
+		g2.setTransform(transform);
+	}
+
+	private void checkedSuper() {
+		checkedSuper = true;
+		SA currSelection = super.selected;
+		if (currSelection.size() > 0) {
+			TreePanel.selected = this;
+			for (int i = 0; i < currSelection.size(); i++) {
+				String strNum = currSelection.get(i).toString();
+				selected.add(Integer.valueOf(strNum));
+			}
+			selected.add(0); // for this select
+		}
 	}
 
 
