@@ -290,6 +290,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		}
 
 		private SV createNewSV(SV model, SV newSV) {
+			if (model == null) return null;
 			SO modelObjects = model.getSO();
 			String[] modelAttrs = modelObjects.attributes();
 			SO newSO = new SObj();
@@ -314,6 +315,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		}
 
 		private boolean isNotDiff(SV lastUndo, SV currModel) {
+			if (lastUndo == null) return true;
 			SO lastUndoObjects = lastUndo.getSO();
 			String[] lastUndoAttrs = lastUndoObjects.attributes();
 			SO modelObjects = currModel.getSO();
