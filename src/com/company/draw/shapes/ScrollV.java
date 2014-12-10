@@ -11,6 +11,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
+import static java.lang.Math.abs;
 
 public class ScrollV extends SOReflect implements ModelListener, Drawable, Interactable {
 
@@ -149,8 +150,7 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 	}
 
 	private void moveSlider(double y) {
-		if (y == sliderLast.getY()) return; //NO NEED TO UPDATE IF IT IS THE SAME
-
+		if (model == null || (0.01 > abs(y - sliderLast.getY()))) return; //NO NEED TO UPDATE IF IT IS THE SAME
 		for (int i = 0; i < contents.size(); i++) {
 			SO so = contents.get(i).getSO();
 			if (so.get("class") != null && "\"slide\"".equals(so.get("class").toString())) {
@@ -166,7 +166,8 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 		sliderLast = new Point(0, value);
 		double slideCoords = toSliderCoords(value);
 		slide.setTop(slideCoords);
-		WidgetUtils.updateModel(model, String.valueOf(value));
+		double adjustedValue = this.max - this.min - value;
+		WidgetUtils.updateModel(model, String.valueOf(adjustedValue));
 	}
 
 	private double toSliderCoords(double value) {
@@ -239,7 +240,8 @@ public class ScrollV extends SOReflect implements ModelListener, Drawable, Inter
 				}
 			}
 			if (sliderLast == null) sliderLast = new Point(0, fromWindowCoords(getSliderTop()));
-			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
+			double adjustedValue = this.max - this.min - Double.valueOf(newValue);
+			moveSlider(adjustedValue); //IT WAS A MATCH SO UPDATE THE LABEL
 		}
 	}
 }
