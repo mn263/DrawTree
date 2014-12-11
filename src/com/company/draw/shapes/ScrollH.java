@@ -15,7 +15,7 @@ import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 import static java.lang.Math.abs;
 
 public class ScrollH extends SOReflect implements ModelListener, Layout, Drawable, Interactable {
-//	TODO: when loading layout2.draw it didn't initialize properly
+
 	public String state;
 	public ArrayList<Drawable> contents = new ArrayList<>();
 	public SO idle;
