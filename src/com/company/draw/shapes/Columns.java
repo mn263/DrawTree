@@ -18,7 +18,6 @@ import static com.company.draw.shapes.WidgetUtils.*;
  */
 public class Columns extends SOReflect implements Layout, Drawable, Interactable  {
 	// Assumes also that some of its contents objects will have a "columnSpan:" attribute
-//	TODO: make sure that if the button doesn't fit that i drops it to a new row
 	public SA contents;
 	public double nColumns; //If there is no such attribute, then the default is 1.
 	public double gutter;
