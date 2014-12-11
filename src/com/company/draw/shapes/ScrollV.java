@@ -240,12 +240,21 @@ public class ScrollV extends SOReflect implements Layout, ModelListener, Drawabl
 	}
 
 	private void initializeContents() {
+		double red = 255;
+		double green = 255;
+		double blue = 255;
+		if (this.idle != null) {
+			red = idle.get("r").getDouble();
+			green = idle.get("g").getDouble();
+			blue = idle.get("b").getDouble();
+		}
+
 		double left = 0;
 		double top = 0;
 		double width = 20;
 		double height = 190;
 		double thickness = 5;
-		activeRect = new Rect(left, top, width, height, thickness, getFill(10, 140, 100));
+		activeRect = new Rect(left, top, width, height, thickness, getFill((int) red, (int) green, (int) blue));
 		top = 32;
 		height = 136;
 		rangeRect = new Rect(left, top, width, height, thickness, getFill(200, 100, 100));
