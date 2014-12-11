@@ -15,8 +15,7 @@ import static com.company.draw.shapes.WidgetUtils.mouseType.*;
 import static java.lang.StrictMath.max;
 
 public class Button extends SOReflect implements Layout, Drawable, Interactable {
-//	TODO: ask if we should be loading contents programatically still? -- b/c his sample "Curve4.draw" has contents
-//	public SA contents;
+
 	public ArrayList<Drawable> contents = new ArrayList<>();
 	public String label;
 	public SA model;
