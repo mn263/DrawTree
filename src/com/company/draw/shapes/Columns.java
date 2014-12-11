@@ -152,7 +152,6 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 		this.columnWidths = (this.width - (nColumns - 1) * this.gutter) / nColumns;
 
 		putChildrenInRows();
-		updateChildrenLayoutsByGrid();
 	}
 
 	private void putChildrenInRows() {
@@ -240,65 +239,7 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 	public void setVBounds(double top, double bottom) {
 		this.top = top;
 		this.bottom = bottom;
-
-//		int count = 0;
-//		for (ArrayList<Layout> row : grid) {
-//			for (Layout child : row) {
-//				child.setVBounds(count * 50, (count + 1) * 50);
-//			}
-//			count++;
-//		}
-
-
-
-
-
-//		ArrayList<Double> minHeights = getRowHeights(size.MIN);
-//		double minHeight = sumHeights(minHeights);
-//		ArrayList<Double> desiredHeights = getRowHeights(size.DESIRED);
-//		double desiredHeight = sumHeights(desiredHeights);
-//		ArrayList<Double> maxHeights = getRowHeights(size.MAX);
-//		double maxHeight = sumHeights(maxHeights);
-//
-//		double height = bottom - top;
-//		double currTop = top;
-//		if (minHeight > height) {
-//			for (int i = 0; i < grid.size(); i++) {
-//				ArrayList<Layout> row = grid.get(i);
-//				double minRowHeight = minHeights.get(i);
-//				for (Layout child : row) {
-//					child.setVBounds(currTop, currTop + minRowHeight);
-//				}
-//				currTop += minRowHeight;
-//			}
-//		} else if (desiredHeight >= height) {  // Give min, plus excess per row
-//			for (int i = 0; i < grid.size(); i++) {
-//				ArrayList<Layout> row = grid.get(i);
-//				double rowHeight = minHeights.get(i);
-//				for (Layout child : row) {
-//					child.setVBounds(currTop, currTop + rowHeight);
-//				}
-//				currTop += rowHeight;
-//			}
-//		} else if (desiredHeight < height && maxHeight > height) {  // Give desired, plus excess per row
-//			for (int i = 0; i < grid.size(); i++) {
-//				ArrayList<Layout> row = grid.get(i);
-//				double rowHeight = minHeights.get(i);
-//				for (Layout child : row) {
-//					child.setVBounds(currTop, currTop + rowHeight);
-//				}
-//				currTop += rowHeight;
-//			}
-//		} else {  // Give the max height for each row
-//			for (int i = 0; i < grid.size(); i++) {
-//				ArrayList<Layout> row = grid.get(i);
-//				double rowHeight = maxHeights.get(i);
-//				for (Layout child : row) {
-//					child.setVBounds(currTop, currTop + rowHeight);
-//				}
-//				currTop += rowHeight;
-//			}
-//		}
+		updateChildrenLayoutsByGrid();
 	}
 
 
