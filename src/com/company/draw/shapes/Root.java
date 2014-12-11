@@ -278,6 +278,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 		TreePanel.height = e.getComponent().getHeight();
 		setHBounds(tx, TreePanel.width - tx);
 		setVBounds(ty, TreePanel.height - ty);
+		WidgetUtils.repaintAll();
 	}
 
 
