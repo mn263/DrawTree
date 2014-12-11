@@ -11,7 +11,6 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
-import static java.lang.StrictMath.*;
 
 public class TextBox extends SOReflect implements Layout, ModelListener, Drawable, Interactable {
 
@@ -166,20 +165,19 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 
 	@Override
 	public double getMinWidth() {
+		double wCount = desiredChars;
+		if (wCount == 0) wCount = content.text.length() + 1;
 		String wString = "";
-		for (int i = 0; i < desiredChars; i++) {
-			wString += "W";
-		}
+		for (int i = 0; i < wCount; i++) wString += "W";
 		return getText().getMinWidth(wString);
 	}
 
 	@Override
 	public double getDesiredWidth() {
+		double wCount = desiredChars;
+		if (wCount == 0) wCount = content.text.length() + 1;
 		String wString = "";
-		if(desiredChars == 0) desiredChars = max(2, content.text.length());
-		for (int i = 0; i < desiredChars; i++) {
-			wString += "W";
-		}
+		for (int i = 0; i < wCount; i++) wString += "W";
 		int stringWidth = text.getFontMetrics().stringWidth(wString);
 		return stringWidth + 10 * 2;
 	}
@@ -212,6 +210,10 @@ public class TextBox extends SOReflect implements Layout, ModelListener, Drawabl
 		rect.setBackgroundColor(this.idle);
 		text.x = left;
 		text.adjustFontWidth("", rect.width);
+
+		if (rect.width <= text.getTextWidth()) {
+			rect.width = text.getTextWidth() + 3;
+		}
 	}
 
 	@Override
