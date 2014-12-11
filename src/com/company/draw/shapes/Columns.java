@@ -9,6 +9,7 @@ import java.awt.geom.*;
 import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
+import static java.lang.StrictMath.max;
 
 /**
  * This object computes a minimum, desired and maximum column width for each of its children.
@@ -192,8 +193,8 @@ public class Columns extends SOReflect implements Layout, Drawable, Interactable
 	}
 
 	private int getMinColSpan(Layout child) {
-		int colSpan = (int) child.getColSpan();
-		int colWidthSpan = (int) Math.ceil(child.getMinWidth() / (this.columnWidths + gutter));
+		int colSpan = (int) max(child.getColSpan(), 1);
+		int colWidthSpan = (int) Math.ceil(child.getMinWidth() / (this.columnWidths));
 		return Math.max(colSpan, colWidthSpan);
 	}
 
