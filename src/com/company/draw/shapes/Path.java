@@ -57,12 +57,9 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 			SO so = contents.get(i).getSO();
 			Drawable drawable = (Drawable) so;
 			if (drawable instanceof Curve) {
-				Curve curve = (Curve) drawable;
-				curveTop = curve.currTop;
-				curveLeft = curve.currLeft;
-				g2.translate((int) currLeft, (int) currTop);
+//				g2.translate((int) currLeft, (int) currTop);
 				drawable.paint(g2);
-				g2.translate((int) -currLeft, (int) -currTop);
+//				g2.translate((int) -currLeft, (int) -currTop);
 			} else {
 				drawable.paint(g2);
 			}
@@ -409,20 +406,9 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 	}
 
 	private boolean mouseIsOnSlider(WidgetUtils.mouseType mouseType, double x, double y, AffineTransform oldTrans) {
-//		x -= currLeft + 10; // + getSliderGroup().tx;
-//		y -= currTop + 10; // + getSliderGroup().ty;
 		double curveLeft = 0;
 		double curveTop = 0;
 
-		for (int i = 0; i < contents.size(); i++) {
-			SO so = contents.get(i).getSO();
-			Drawable drawable = (Drawable) so;
-			if (drawable instanceof Curve) {
-				Curve curve = (Curve) drawable;
-				curveTop = curve.currTop;
-				curveLeft = curve.currLeft;
-			}
-		}
 		double rotation = getSliderRotation();
 		double oldRotation = getSliderGroup().rotate;
 		getSliderGroup().rotate -= Math.toDegrees(rotation);

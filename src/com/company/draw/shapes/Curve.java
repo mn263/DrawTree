@@ -2,7 +2,6 @@ package com.company.draw.shapes;
 
 import com.company.*;
 import com.company.Point;
-import com.company.draw.*;
 import org.ejml.simple.*;
 import spark.data.*;
 
@@ -12,7 +11,7 @@ import java.util.*;
 
 import static java.lang.Math.*;
 
-public class Curve extends SOReflect implements Drawable, Selectable, Layout {
+public class Curve extends SOReflect implements Drawable, Selectable {
 
 	public SA points;
 	public double thickness;
@@ -22,14 +21,6 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 
 
 	private ArrayList<Point> curvePoints = null;
-
-	private double width = -1;
-	private double height = -1;
-	private double originalWidth = -1;
-	private double originalHeight = -1;
-
-	public double currTop = 0;
-	public double currLeft = 0;
 
 	private ArrayList<Point> pointsList = null;
 	private SimpleMatrix cr;
@@ -214,97 +205,6 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 	}
 
 
-//	LAYOUT
-	@Override
-	public double getColSpan() {
-	return columnSpan;
-}
-
-	private double getOriginalWidth(){
-		if(this.originalWidth == -1) {
-			if (this.width == -1) {
-				curvePoints = getPoints();
-				double minX = curvePoints.get(0).getX();
-				double maxX = curvePoints.get(0).getX();
-				for (Point point : curvePoints) {
-					if (point.getX() < minX) minX = point.getX();
-					if (point.getX() > maxX) maxX = point.getX();
-				}
-				this.originalWidth = maxX - minX + 20;
-			} else {
-				this.originalWidth = this.width;
-			}
-		}
-		return originalWidth;
-	}
-
-	private double getOriginalHeight(){
-		if(this.originalHeight == -1) {
-			if(this.height == -1) {
-				curvePoints = getPoints();
-				double minY = curvePoints.get(0).getY();
-				double maxY = curvePoints.get(0).getX();
-				for (Point point : curvePoints) {
-					if(point.getY() < minY) minY = point.getY();
-					if(point.getY() > maxY) maxY = point.getY();
-				}
-				this.originalHeight = maxY - minY + 20;
-			} else {
-				this.originalHeight = this.height;
-			}
-		}
-		return originalHeight;
-	}
-
-	@Override
-	public double getMinWidth() {
-		return getOriginalWidth();
-	}
-
-	@Override
-	public double getDesiredWidth() {
-		return getOriginalWidth();
-	}
-
-	@Override
-	public double getMaxWidth() {
-		return getOriginalWidth();
-	}
-
-	@Override
-	public double getMinHeight() {
-		return getOriginalHeight();
-	}
-
-	@Override
-	public double getDesiredHeight() {
-		return getOriginalHeight();
-	}
-
-	@Override
-	public double getMaxHeight() {
-		return getOriginalHeight();
-	}
-
-
-	@Override
-	public void setHBounds(double left, double right) {
-		this.width = right - left;
-		if (originalWidth == -1) originalWidth = getOriginalWidth();
-		this.currLeft = left;
-		recalibratePoints();
-	}
-
-	@Override
-	public void setVBounds(double top, double bottom) {
-		this.height = bottom - top;
-		if(originalHeight == -1) originalHeight = getOriginalHeight();
-		currTop = top;
-		recalibratePoints();
-	}
-
-
-
 	///////////////////////////////////////////////////////////////////////////////////
 	/////PRIVATE CLASS METHODS/////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////
@@ -370,22 +270,6 @@ public class Curve extends SOReflect implements Drawable, Selectable, Layout {
 		newT.set(2, 0, slideVal);
 		newT.set(3, 0, 1);
 		return newT;
-	}
-
-	private void recalibratePoints() {
-		ArrayList<Point> originalPoints = getPoints();
-		double vertDiffRatio = 1 + ((this.height - this.originalHeight) / this.originalHeight);
-		double horzDiffRatio = 1 + ((this.width - this.originalWidth) / this.originalWidth);
-		this.pointsList = new ArrayList<>();
-		this.curvePoints = new ArrayList<>();
-		for (Point point : originalPoints) {
-			point.setX((point.getX() + currLeft) * horzDiffRatio);
-			point.setY((point.getY() + currTop) * vertDiffRatio);
-//			point.setX(point.getX() * horzDiffRatio);
-//			point.setY(point.getY() * vertDiffRatio);
-			pointsList.add(point);
-			curvePoints.add(point);
-		}
 	}
 
 	private ArrayList<Point> getPoints() {
