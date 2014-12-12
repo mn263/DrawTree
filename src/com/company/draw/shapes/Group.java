@@ -22,6 +22,7 @@ public class Group extends SOReflect implements Drawable, Selectable, Interactab
 	public double height;
 	public double columnSpan;
 	public SV model;
+	public SA selected;
 
 	public Group(){}
 	public Group(SA contents, double sx, double sy, double tx, double ty, double rotate, double width, double height) {

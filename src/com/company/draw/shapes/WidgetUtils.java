@@ -94,6 +94,14 @@ public class WidgetUtils {
 		return transform;
 	}
 
+	public static AffineTransform getBackwardsTransform(double tx, double ty, double sx, double sy, double rotate) {
+		AffineTransform transform = new AffineTransform();
+		transform.translate((int) tx, (int) ty);
+		transform.rotate(-Math.toRadians(rotate));
+		if (sx != 0 && sy != 0) transform.scale(sx, sy);
+		return transform;
+	}
+
 	public static void transformGraphics(Graphics2D g2, double tx, double ty, double sx, double sy, double rotate) {
 		g2.translate((int) tx, (int) ty);
 		g2.rotate(-Math.toRadians(rotate));
