@@ -41,7 +41,7 @@ public class Select extends Group implements Selectable {
 	private void checkedSuper() {
 		checkedSuper = true;
 		SA currSelection = super.selected;
-		if (currSelection.size() > 0) {
+		if (currSelection != null && currSelection.size() > 0) {
 			TreePanel.selected = this;
 			for (int i = 0; i < currSelection.size(); i++) {
 				String strNum = currSelection.get(i).toString();
