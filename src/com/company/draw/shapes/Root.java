@@ -311,7 +311,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 			if (!(o instanceof  Command)) return false;
 			Command last = (Command) o;
 			SV lastUndo = last.model;
-			return isNotDiff(lastUndo, this.model);
+			return isNotDiff(lastUndo, model);
 		}
 
 		private boolean isNotDiff(SV lastUndo, SV currModel) {
@@ -325,7 +325,7 @@ public class Root extends SOReflect implements Layout, Interactable, Drawable {
 				String attr = modelAttrs[i];
 //				System.out.println(modelObjects.get(attr).toString());
 				if (modelObjects.get(attr).toString().equals("{SO }")) {
-					boolean subpartSame = isNotDiff(modelObjects.get(attr), currModel.get(attr));
+					boolean subpartSame = isNotDiff(lastUndoObjects.get(attr), currModel.get(attr));
 					if (!subpartSame) {
 						return false;
 					}
