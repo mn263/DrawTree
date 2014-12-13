@@ -12,6 +12,7 @@ import java.util.*;
 
 import static com.company.draw.shapes.WidgetUtils.*;
 import static com.company.draw.shapes.WidgetUtils.mouseType.*;
+import static java.lang.Math.abs;
 
 public class ScrollH extends SOReflect implements ModelListener, Layout, Drawable, Interactable {
 //	TODO: when loading layout2.draw it didn't initialize properly
@@ -189,7 +190,14 @@ public class ScrollH extends SOReflect implements ModelListener, Layout, Drawabl
 				}
 			}
 			if (sliderLast == null) sliderLast = new Point(fromWindowCoords(getSliderLeft()), 0);
-			moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
+			double slideCoords = toSliderCoords(Double.valueOf(newValue));
+			if (10 < abs(slideCoords - getSliderLeft())) {
+				sliderLast.setX(-1);
+				moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
+				repaintAll();
+			} else {
+				moveSlider(Double.valueOf(newValue)); //IT WAS A MATCH SO UPDATE THE LABEL
+			}
 		}
 	}
 
