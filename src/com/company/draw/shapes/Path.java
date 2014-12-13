@@ -71,6 +71,7 @@ public class Path extends SOReflect implements Drawable, Selectable, Interactabl
 		double rotation = getSliderRotation();
 		double oldRotation = getSliderGroup().rotate;
 		getSliderGroup().rotate -= Math.toDegrees(rotation);
+		getSliderGroup().rotate -= 90;
 		g2.translate((int) currLeft + curveLeft, (int) currTop + curveTop);
 		getSliderGroup().paint(g2);
 		g2.translate((int) -(currLeft + curveLeft), (int) -(currTop + curveTop));
